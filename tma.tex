@@ -1,0 +1,334 @@
+%% This package may be freely used, especially by, but not limited to, students, lecturers, and
+%% staff of the Open University. It has been created by the efforts of many who are now or
+%% have been connected with the Open University Students Association. No acknowledgement is
+%% _required_ for using this package within the production of a _Tutor Marked Assessment._
+%%
+%%
+%% Adapted by Peter McFarlane from various sources.
+%% All errors of style or content are mine or subsequent contributor.
+%% Acknowledgements to Bob Margolis, and also Rob Lynas (from whom some macros are plagiarised).
+%% Further contributions from Steve Mayer and Tim Dale.
+%% My apologies for not annotating this file, I shall do so soon (yeah, right).
+%% Annotations, in part, and further modification by Geoff Riley.
+%%
+%%
+%% Package Options
+%%    [alph]      (default) question numbering as 1(b)(iii)
+%%    [roman]     varies question numbering to sequence used by M381 i.e. 1(ii)(c)
+%%    [cleveref]  question numbering creates automatic referencing for use with cleveref package
+%%    [pdfbookmark] add PDF bookmarks for each question using hyperref package
+%%    [legacy]    enables old definitions of \vec and \C for backward compatibility
+%%
+%% To use a package option, place the option(s) before the package name:
+%%    \usepackage[roman,cleveref,legacy]{tma}
+%%
+%% v1.12 2024/11/08
+%%    Standardized package name to 'tma' to make it compatible with CTAN
+%%    Avoided redefining standard LaTeX commands
+%%    Consolidated geometry settings
+%%    Adjusted loading order of packages
+%%    Improved code readability and comments
+%%    Added 'legacy' option to allow old definitions of \vec and \C
+%%
+\ProvidesPackage{tma}[2024/11/08 v1.12 TMA document style]
+\NeedsTeXFormat{LaTeX2e}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package Initialization
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\name}{\relax}
+\newcommand{\tma}{\relax}
+\newcommand{\course}{\relax}
+\newcommand{\pin}{\relax}
+
+\title{\textbf{TMA: \course-\tma}}
+\author{\textbf{\name\space\pin}}
+
+\newcommand{\myname}[1]{\renewcommand{\name}{#1}}
+\newcommand{\mytma}[1]{\renewcommand{\tma}{#1}}
+\newcommand{\mycourse}[1]{\renewcommand{\course}{#1}}
+\newcommand{\mypin}[1]{\renewcommand{\pin}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package Loading
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{wasysym}
+\RequirePackage{bm}
+\RequirePackage{upgreek}
+\RequirePackage{graphicx}
+\RequirePackage{lastpage}
+\RequirePackage{xifthen}
+\RequirePackage{verbatim}
+\RequirePackage{fancyhdr}
+\RequirePackage{geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Geometry Settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\geometry{
+  headheight=10mm,
+  headsep=5mm,
+  bottom=25mm,
+  footskip=15mm,
+  left=30mm,
+  right=30mm,
+  marginparwidth=0mm,
+  marginparsep=0mm,
+  includemp
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Margin Notes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\marginnote}[1]{\marginpar{#1}}
+\newcommand{\marginnotes}{
+  \geometry{
+    marginparwidth=40mm,
+    marginparsep=5mm,
+    left=20mm,
+    right=15mm
+  }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Question Numbering
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcounter{question}
+\newcounter{qpart}[question]
+\newcounter{qsubpart}[qpart]
+\renewcommand{\thequestion}{\arabic{question}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Option Handling
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\typeout{Defining boolean flags.}
+% Define boolean flags
+\newif\iftma@roman
+\newif\iftma@usecleveref
+\newif\iftma@usepdfbookmark
+\newif\iftma@legacy
+
+\typeout{Setting default options.}
+% Set default options
+\tma@romanfalse          % Default numbering is 'alph'
+\tma@useclevereffalse    % Default is not to use cleveref
+\tma@usepdfbookmarkfalse % Default is not to use pdfbookmark
+\tma@legacyfalse         % Default is not to use legacy definitions
+
+\typeout{Defingin commands with default values.}
+% Define commands with default values
+\renewcommand{\theqpart}{\alph{qpart}}
+\renewcommand{\theqsubpart}{\roman{qsubpart}}
+\newcommand{\tma@crefname}[3]{\relax}
+\newcommand{\tma@stepcounter}[1]{\stepcounter{#1}}
+\newcommand{\tma@bookmark}[3][]{\relax}
+\newcommand{\tma@pageref}[1]{\pageref{#1}}
+
+\typeout{Declaring options.}
+% Declare options
+\DeclareOption{roman}{
+	\tma@romantrue
+}
+
+\DeclareOption{alph}{
+	\tma@romanfalse
+}
+
+\DeclareOption{cleveref}{
+	\tma@useclevereftrue
+}
+
+\DeclareOption{pdfbookmark}{
+	\tma@usepdfbookmarktrue
+}
+
+\DeclareOption{legacy}{
+	\tma@legacytrue
+}
+
+\typeout{Processing options.}
+% Process options
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Set Up Package Based on Options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Set question numbering
+\iftma@roman
+	\renewcommand{\theqpart}{\roman{qpart}}
+	\renewcommand{\theqsubpart}{\alph{qsubpart}}
+\else
+	\renewcommand{\theqpart}{\alph{qpart}}
+	\renewcommand{\theqsubpart}{\roman{qsubpart}}
+\fi
+
+% Load hyperref if necessary
+\iftma@usepdfbookmark
+	\RequirePackage[
+		bookmarks=true,
+		colorlinks=true,
+		linkcolor=blue
+	]{hyperref}
+\fi
+
+% Load cleveref if necessary
+\iftma@usecleveref
+	% Ensure hyperref is loaded before cleveref
+	\@ifpackageloaded{hyperref}{}{%
+		\RequirePackage{hyperref}
+	}
+	\RequirePackage{cleveref}
+	% Redefine commands for cleveref
+	\renewcommand{\tma@crefname}[3]{\crefname{#1}{#2}{#3}}
+	\renewcommand{\tma@stepcounter}[1]{\refstepcounter{#1}}
+\fi
+
+% Redefine commands for pdfbookmark
+\iftma@usepdfbookmark
+	\renewcommand{\tma@bookmark}[3][0]{\pdfbookmark[#1]{#2}{#3}}
+	\renewcommand{\tma@pageref}[1]{\pageref*{#1}}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Question Environment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Set up cref names if cleveref is used
+\iftma@usecleveref
+  \tma@crefname{question}{question}{questions}
+  \tma@crefname{qpart}{part}{parts}
+  \tma@crefname{qsubpart}{section}{sections}
+\fi
+
+\newenvironment{question}[1][0]{%
+	\typeout{Define question environment.}
+  \ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
+  \tma@stepcounter{question}%
+  \tma@bookmark{Question \thequestion}{question\thequestion}%
+  \makebox[0pt][r]{\large{Q \thequestion.\quad }}%
+}{%
+  \par \vspace{3em}%
+}
+
+\newcommand{\qpart}[1][0]{%
+	\typeout{Define qpart command.}
+  \ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
+  \tma@stepcounter{qpart}%
+  \tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
+  \par%
+  \makebox[0pt][r]{\large{(\theqpart)\quad }}%
+}
+
+\newcommand{\qsubpart}[1][0]{%
+	\typeout{Define qsubpart command.}
+  \ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
+  \tma@stepcounter{qsubpart}%
+  \tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
+  \par%
+  \makebox[0pt][r]{\large{(\theqsubpart)\quad }}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Mathematical Commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Differential Operators
+\newcommand{\dd}{\ensuremath{\mathop{}\!\mathrm{d}}}
+\newcommand{\e}{\ensuremath{\mathrm{e}}}
+\newcommand{\ii}{\ensuremath{\mathrm{i}}}
+
+%% Number Sets
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\Complex}{\ensuremath{\mathbb{C}}} % Changed from \C to \Complex
+\newcommand{\Rr}{\ensuremath{\mathcal{R}}}
+
+%% Vector Notation
+\newcommand{\vect}[1]{\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
+\newcommand{\ve}[1]{\ensuremath{\bm{#1}}} % Using \bm for bold math symbols
+
+%% Superscript Notations
+\newcommand{\st}{\textsuperscript{st}}
+\newcommand{\nd}{\textsuperscript{nd}}
+\newcommand{\rd}{\textsuperscript{rd}}
+\newcommand{\nth}{\textsuperscript{th}}
+
+% Additional Symbols
+\newcommand{\rect}{\ensuremath{\sqsubset\!\!\sqsupset}}
+
+%% Combinatorial Notations
+\newcommand{\comb}[2]{\ensuremath{{}^{#1}C_{#2}}}
+\newcommand{\perm}[2]{\ensuremath{{}^{#1}P_{#2}}}
+
+%% Mathematical Operators
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\Wnd}{Wnd}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Orb}{Orb}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\Fix}{Fix}
+
+%% Derivatives
+\newcommand{\deriv}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\pderiv}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\psderiv}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+
+% Legacy Definitions
+\iftma@legacy
+	% Redefine \vec to old definition
+	\renewcommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
+	% Redefine \C to old definition
+	\providecommand{\C}{\ensuremath{\mathbb{C}}}
+	\renewcommand{\C}{\ensuremath{\mathbb{C}}}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Theorem Environment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+%% Define \blacksmiley without loading wasysym
+%%\newcommand{\blacksmiley}{\ensuremath{\unicode{263B}}} % Unicode for ☻
+\renewcommand{\qedsymbol}{\blacksmiley}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Miscellaneous Settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\numberwithin{equation}{question}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Header and Footer Settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\fancyhf{} % Clear all headers and footers
+\fancyhead[L]{\textrm{\name\ \pin}}
+\fancyhead[C]{\textrm{\course\ TMA-\tma}}
+\fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
+\renewcommand{\headrulewidth}{0pt} % Remove header rule
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% End of Package
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\endinput

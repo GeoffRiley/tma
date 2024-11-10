@@ -1,0 +1,154 @@
+\documentclass{article}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+
+\title{The \texttt{tma} Package}
+\author{Geoff Riley \\ \href{mailto:geoffr@adaso.com.com}{geoffr@adaso.com}}
+\date{Version 1.12, 2024/11/08}
+
+\begin{document}
+	
+	\maketitle
+	
+	\tableofcontents
+	
+	\section{Introduction}
+	
+	The \texttt{tma} package provides a set of macros and environments to assist in writing question papers or solutions to Tutor Marked Assessments (TMAs) for Open University courses. It simplifies the formatting of questions, parts, subparts, and includes useful mathematical commands.
+	
+	\section{Installation}
+	
+	To install the package, place the `tma.sty` file in your LaTeX directory or project folder. If using a TeX distribution, you may place it in the local texmf tree.
+	
+	\section{Package Options}
+	
+	\begin{description}
+		\item[\texttt{alph}] (default) Question numbering as 1(b)(iii).
+		\item[\texttt{roman}] Question numbering as 1(ii)(c).
+		\item[\texttt{cleveref}] Enables automatic referencing with the \texttt{cleveref} package.
+		\item[\texttt{pdfbookmark}] Adds PDF bookmarks for each question using the \texttt{hyperref} package.
+		\item[\texttt{legacy}] Enables old definitions of \verb|\vec| and \verb|\C| for backward compatibility with earlier versions of the package. \emph{Deprecated}.
+	\end{description}
+	
+	\section{Usage}
+	
+	Include the package in your LaTeX document:
+	
+	\begin{verbatim}
+		\documentclass{article}
+		\usepackage[alph,cleveref]{tma}
+	\end{verbatim}
+	
+	Set your personal information:
+	
+	\begin{verbatim}
+		\myname{Your Name}
+		\mycourse{Course Code}
+		\mytma{TMA Number}
+		\mypin{Your PIN}
+	\end{verbatim}
+	
+	\section{Commands and Environments}
+	
+	\subsection{Question Environment}
+	
+	Begin answering a question with the \texttt{question} environment:
+	
+	\begin{verbatim}
+		\begin{question}
+		% Question text
+		\end{question}
+	\end{verbatim}
+
+	Questions are automatically numbered from 1 unless an integer parameter is given in square brackets after the opening of the environment, for example:
+	
+	\begin{verbatim}
+		\begin{question}[6] % set the question number to be 6
+		% Question text
+		\end{question}
+	\end{verbatim}
+
+\subsection{Parts and Subparts}
+
+Within a question environment, divisions are achieved using \verb|\qpart| and \verb|\qsubpart| to create parts and subparts:
+
+\begin{verbatim}
+	\qpart % For parts
+	\qsubpart % For subparts
+\end{verbatim}
+
+Again, the numbering for parts and subparts begin at 1 unless otherwise prescribed by an integer within square brackets after the appropriate command.
+
+\subsection{Mathematical Commands}
+
+The package provides several mathematical commands:
+
+\begin{itemize}
+\item  \verb|\N|, \verb|\Z|, \verb|\Q|, \verb|\R|, \verb|\Complex|: Number sets.
+\item  \verb|\vect{v}|: Vector notation with an arrow over the variable.
+\item  \verb|\ve{v}|: Bold vector notation.
+\item  \verb|\dd|, \verb|\e|, \verb|\ii|: Differential operator, Euler's number, imaginary unit.
+\item  Superscript ordinals: \verb|\st|, \verb|\nd|, \verb|\rd|, \verb|\nth|.
+\end{itemize}
+
+\section{Examples}
+
+\subsection{Sample Question}
+
+\begin{verbatim}
+\begin{question}
+  Prove that the set \N{} of natural numbers is infinite.
+  
+  \qpart
+    What does it mean for a set to be infinite?
+    
+  \qpart
+    Assume, for contradiction the \N{} is a finite set. 
+    Under this assumption, what can you say about the 
+    number of elements in \N{} and the existence of a 
+    largest natural number?
+    
+  \qpart
+    Explain how the successor function $s(n) = n + 1$ 
+    leads to a contradiction when applied to the largest 
+    natural number assumption of part (b).
+    
+  \qpart
+    Based on the contradiction found in part (c), conclude 
+    whether the set \N{} is finite or infinte, and briefly 
+    explain why.
+\end{question}
+\end{verbatim}
+
+Note that the default part numbering is in the form (a), (b), (c)\dots If the option \verb|[roman]| is given when loading the \verb|tma| package, then the numbering will be (i), (ii), (iii)\dots instead.
+
+\subsection{Using Mathematical Commands}
+
+\begin{verbatim}
+Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$.
+\end{verbatim}
+
+\section{Change Log}
+
+\begin{itemize}
+\item **v1.12 (2024/11/08)**: Fixed error with \verb|\renewcommand{\C}|; changed to \verb|\providecommand{\C}|.
+\item **v1.11 (2024/11/08)**: Added 'legacy' option to allow old definitions of \verb|\vec| and \verb|\C|.
+\item **v1.10 (2024/09/10)**: Ensured commands are correctly defined before being redefined!
+\item **v1.09 (2024/09/10)**: Improved code readability.
+\item **v1.08 (2024/09/05)**: Consolidated geometry settings and adjusted package loading order.
+\item **v1.07 (2024/09/04)**: Avoided redefining standard LaTeX commands to avoid clashes. Fixed error with \verb|\ExecuteOptions| in package file. Implemented flags to handle the various options simpler.
+\item **v1.06 (2024/08/28)**: Updated definitions of \verb|\comb|, \verb|\samp| to correctly work after a superscript.
+\item **v1.05 (2024/08/28)**: Updated definitions of \verb|\ve|, \verb|\vec| to allow use in both maths and text mode.
+\item **v1.04 (2024/08/26)**: Updated usage of 'fancyhdr' to remove deprecated function.
+\end{itemize}
+
+\section{License}
+
+This work may be distributed and/or modified under the conditions of the LaTeX Project Public License (LPPL), version 1.3c or later.
+
+\section{Acknowledgments}
+
+Special thanks to Peter McFarlane, Bob Margolis, Rob Lynas, Steve Mayer, Tim Dale and to all contributors and, especially, the Open University community.
+
+\end{document}

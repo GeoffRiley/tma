@@ -1,0 +1,222 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[pdfbookmark]{tma}
+
+\myname{Peter McFarlane}
+\mypin{A1234567}
+\mycourse{\LaTeX 101}
+\mytma{sample}
+
+%\marginnotes
+
+\begin{document}
+\maketitle
+
+\hfill\fbox{Update for 2024/11/08 v1.12}
+
+%% Notes for the latest update
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+\rule[0.4pt-1em]{0.4pt}{1em}\hrulefill\rule[0.4pt-1em]{0.4pt}{1em}\vskip 10pt
+
+This document is provided as an example of how to use the \textbf{tma} package.
+
+With the 8\nth\,November 2024 version of the package there has been a rewrite of 
+the majority of the package along with the renaming of a couple of the commands.
+\verb|\C|, representing the set of complex numbers, has been renamed to \verb|\Complex|,
+and \verb|\vec{}|, for setting traditional vectors, has been renamed to \verb|\vect{}|.
+In both instances, the renaming has been done to avoid naming clashes from other packages.
+
+To use the options start your document with:
+\begin{verbatim}
+\documentclass[a4paper,12pt]{article}
+\usepackage[OPTION]{tma}
+
+\myname{...
+\end{verbatim}
+
+Where \textbf{OPTION} is one of the following
+\begin{description}
+  \item[{[}roman{]}] Questions numbered as 1, 1(i), 1(i)(a)\dots
+  \item[{[}alph{]}] \emph{Default} Questions numbered as 1, 1(a), 1(a)(i)\dots
+\end{description}
+
+The 26\nth\,October 2016 version of the package added two further options which allow extended referencing and the adding of 
+bookmarks for questions into pdf output.
+
+\begin{description}
+  \item[{[}cleveref{]}] Prepares the questions, qparts and subqparts to be referenced using the \verb|cleveref| package.
+  \item[{[}pdfbookmark{]}] Automatically adds pdf bookmarks for each question, qpart and subqpart. This uses the \verb|hyperref| package.
+\end{description}
+
+The 8\nth\,November 2024 version added one further option.
+
+\begin{description}
+	\item[{[}legacy{]}] reactivate the old conflicting commands of \verb|\C| and \verb|\vec|. This is intended for use \textbf{only} when using the current package with an old document.
+\end{description}
+
+See the \verb|notes.pdf| file for further details of available options.
+
+\vskip 10pt
+\rule{0.4pt}{1em}\hrulefill\rule{0.4pt}{1em}
+
+\end{minipage}
+\end{center}
+\pagebreak
+
+\begin{question}
+\qpart
+We have $1=10^0$ and $1+2+3+4=10^1$. Prove that there are no other powers of ten which are the sum of the first $n$ integers.
+
+We have:
+\begin{gather*}
+	\sum_{i=1}^n i=\frac{(n)(n+1)}{2}
+\intertext{Let}
+	\frac{(n)(n+1)}{2}=10^x\\
+	\Rightarrow (n)(n+1)=2^{x+1}5^x
+\end{gather*}
+
+Now, either $n$ is odd, or $n+1$ is odd.
+
+Consider the case where $n$ is odd:\\
+By the Fundamental Theorem of Arithmetic, $n$ can only have the prime factors 2 or 5.  Since it is odd, it can only be a perfect power of 5. Now, $n+1$ also can only have the prime factors of 2 or 5.  If $n$ is divisible by 5, then $n+1$ is not divisible by 5.  Therefore $n+1$ is a perfect power of 2. Therefore:
+\begin{gather*}
+	n=5^x\qquad \text{and}\qquad n+1=2^{x+1}\\
+	\Rightarrow x=0
+	\intertext{(for any higher $x$, $5^x\gg 2^{x+1}$)}\\
+	\Rightarrow n=1
+\end{gather*}
+
+Now consider the case where $n+1$ is odd:\\
+By similar arguments to above, $n+1$ must be a perfect power of 5 and $n$ must be a perfect power of 2.
+\begin{gather*}
+	n=2^{x+1}\qquad \text{and}\qquad n+1=5^{x}\\
+	\Rightarrow x=1
+	\intertext{(for any higher $x$, $5^x\gg 2^{x+1}$)}\\
+	\Rightarrow n=4
+\end{gather*}
+
+Therefore $n=1$ and $n=4$ are the only solutions to the original problem.  \hfill \qed\\[1cm]
+
+\qpart[3]
+\qsubpart
+Show that:
+\begin{gather*}
+	 \sum_{x=1}^{n}x(x+1)=\frac{n(n+1)(n+2)}{3}\\
+\end{gather*}
+
+
+Let
+\begin{gather*}
+	f(n)=\frac{n(n+1)(n+2)}{3}\\
+\end{gather*}
+
+Now, adding the n+1 term to the above
+\begin{gather}\notag
+\begin{aligned}
+	f(n)+(n+1)(n+2)&=\frac{n(n+1)(n+2)}{3}+(n+1)(n+2)\\
+	&=\frac{\left(n^3+3n^2+2n+\right)}{3}+n^2+3n+2\\
+	&=\frac{\left(n^3+6n^2+11n+6\right)}{3}\\
+	&=\frac{\left((n+1)(n+2)(n+3)\right)}{3}\\
+	&=f(n+1)
+\end{aligned}
+\end{gather}
+
+Therefore, if $f(n)$ is valid, then so is $f(n+1)$.
+
+Since $1\times2=2=\frac{1\times2\times3}{3}=f(1)$, then $f(n)$ is valid for all $n\geq1$. \hfill \qed\\[1cm]
+
+\qsubpart
+Show that:
+\begin{gather*}
+	 \sum_{x=1}^{n}x^4=\frac{n(n+1)(2n+1)(3n^2+3n-1)}{30}\\
+\end{gather*}
+
+
+Let
+\begin{gather*}
+	f(n)=\frac{n(n+1)(2n+1)(3n^2+3n-1)}{30}\\
+\end{gather*}
+
+Now, adding the n+1 term to the above
+\begin{align}
+	f(n)+(n+1)^4&=\frac{n(n+1)(2n+1)(3n^2+3n-1)}{30}+(n+1)^4\notag \\
+	&=\frac{1}{30}(6n^5+15n^4+10n^3-n)+(n^4+4n^3+6n^2+4n+1)\notag \\
+	&=\frac{1}{30}(6n^5+15n^4+10n^3-n+30n^4+120n^3+180n^2+120n+30)\notag \\
+	&=\frac{1}{30}(6n^5+45n^4+130n^3+180n^2+119n+30)\label{a}
+\end{align}
+
+Now,
+\begin{align}
+	f(n+1)&=\frac{(n+1)\big((n+1)+1\big)\big(2(n+1)+1\big)\big(3(n+1)^2+3(n+1)-1\big)}{30}\notag \\
+	&=\frac{1}{30}(n+1)(n+2)(2n+3)(3n^2+9n+5)\notag \\
+	&=\frac{1}{30}(6n^5+45n^4+130n^3+180n^2+119n+30)\label{b}
+\end{align}
+
+Comparing equation~\eqref{a} with equation~\eqref{b} we see that
+\begin{gather}\notag
+f(n)+(n+1)^4=f(n+1)
+\end{gather}
+
+Therefore, if $f(n)$ is valid, then so is $f(n+1)$.
+
+Since $1^4=1=\frac{1\times2\times3\times5}{30}=f(1)$, then $f(n)$ is valid for all $n\geq1$.\hfill \qed
+
+\end{question}
+
+
+\begin{question}[3]
+Find the general solution of the equation
+\begin{equation}
+\label{e}
+3\deriv{^2y}{x^2}+4\deriv{y}{x}+y=x^2
+\end{equation}
+The auxillary equation is
+\begin{equation}
+3\lambda^2+4\lambda+1=0
+\end{equation}
+which factorises to
+\begin{equation}
+(\lambda+1)(3\lambda+1)=0
+\end{equation}
+and so has solutions
+\begin{equation}
+\lambda=-1 \mbox{\ and\ }\lambda=-\frac{1}{3}
+\end{equation}
+As both roots are real and distinct, the complementary function is
+\begin{equation}
+\label{d}
+y_c=C\e^{-x}+D\e^{-\frac{1}{3}x}
+\end{equation}
+Now, let us find the particular integral.  As the right hand side of equation \ref{e} is $x^2$, our trial solution is the polynomial
+\begin{equation}
+y_p=px^2+qx+r
+\end{equation}
+\begin{equation}
+\Rightarrow \deriv{y_p}{x}=2px+q
+\end{equation}
+\begin{equation}
+\Rightarrow \deriv{^2y_p}{x^2}=2p
+\end{equation}
+Substituting the trial particular integral into equation \ref{e}
+\begin{equation}
+6p+8px+4q+px^2+qx+r=x^2
+\end{equation}
+\begin{equation}
+\Rightarrow px^2+(8p+q)x+(6p+4q+r)=x^2
+\end{equation}
+\begin{equation}
+\Rightarrow p=1,\ \ q=-8,\ \ r=26
+\end{equation}
+Thus the particular integral is
+\begin{equation}
+\label{c}
+y_p=x^2-8x+26
+\end{equation}
+and combining equation \ref{d} with equation \ref{c}, by the rule of superposition, we get the general solution of equation \ref{e} to be
+\begin{equation}
+y=C\e^{-x}+D\e^{-\frac{1}{3}x}+x^2-8x+26
+\end{equation}
+\end{question}
+\end{document}
+

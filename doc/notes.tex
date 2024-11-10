@@ -1,0 +1,221 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[pdfbookmark]{tma}
+\usepackage{multirow}
+\usepackage{hologo}
+
+\myname{Peter McFarlane {\scriptsize with additions by} Geoff Riley}
+\mypin{A1234567}
+\mycourse{\LaTeX 101}
+\mytma{notes}
+
+\fancyhead[L]{tma.sty notes}
+\fancyhead[C]{}
+
+\newcommand{\MiKTeX}{\hologo{MiKTeX}}
+
+\begin{document}
+	\maketitle
+	
+	\hfill\fbox{Update for 2024/11/08 v1.04}
+	
+	\section*{Notes}
+	\thispagestyle{empty}
+	
+	This document describes Peter McFarlane's \verb|tma| package.  To use it, the \verb|tma.sty| file should be in the 
+	same directory/folder as your main \verb|.tex| source file or in the file path for your compiler. Using \MiKTeX\footnote{The latest version of \MiKTeX\ is always downloadable from \url{https://miktex.org/}.} v24.1
+	on Windows, installed for all users, this would be:\\
+	\verb|C:\Program Files\MiKTex\tex\latex\tma|\\
+	(you need to create the \verb|tma| folder).
+	
+	Once you have added \verb|tma.sty| to the directory, it is necessary to let \MiKTeX\ know that it is there. So
+	load \MiKTeX, go to \MiKTeX\ Settings and press the `Refresh FNDB' (\textbf{F}ile \textbf{N}ame \textbf{D}ata\textbf{B}ase) button that tells \LaTeX\ to remake the
+	database of all the files, then it will find \verb|tma.sty|. See:\\
+	\url{http://docs.miktex.org/manual/configuring.html#fndbupdate}.
+	
+	Other \TeX\ installations will have similar centralised file storage settings for style files.
+	
+	The contents of the file in which you write a TMA should look like this:
+	\begin{verbatim}
+		\documentclass[a4paper,12pt]{article}
+		\usepackage{tma}
+		%% or include options [roman] or [alph]:
+		% \usepackage[roman]{tma} % For Roman numerals in subparts
+		% \usepackage[alph]{tma}  % For the default alphabetical letters in subparts
+		
+		\myname{Nosmo King}
+		\mypin{A1234567}
+		\mycourse{L101}
+		\mytma{01}
+		
+		\begin{document}
+			
+			\include{question_01}
+			\include{question_02}
+			
+		\end{document}
+	\end{verbatim}
+	
+	Using \verb|\include| and writing your questions in separate files is unnecessary.  But do start each
+	question with \verb|\begin{question}| and end it with \verb|\end{question}|, whether or not you use
+	separate files for each question, or write all the questions in the main text.
+	
+	If you wish to have margin notes, then include \verb|\marginnotes| in your preamble, whereupon
+	\verb|\marginnote{}| is equivalent to \verb|\marginpar{}| and places the context of the brackets in the margin.
+	
+	The question numbers and question parts appear in the margin.
+	
+	The normal sequence for numbering of questions is Arabic numerals for the main question numbers,
+	letters for	the parts, and Roman numerals for the subparts. If you are on a module that uses Roman
+	numerals for the part, such as M381, then you can pass the option \verb|[roman]| to the
+	\verb|\usepackage| command to vary the numbering system. See below for further details of options.
+	
+	If you want to skip a question (i.e. jump straight from question 1 to question 3, then use (for example)
+	\verb|\begin{question}[3]|. To get parts of questions (a), (b), (c) etc, use \verb|\qpart|. To skip part
+	question numbers \verb|\qpart[3]| would force a (c).  For subparts (i), (ii), (iii), etc, then use \verb|\qsubpart|.
+	
+	There is a slight gap between paragraphs and no indent, although, as mentioned, the
+	question numbers are in the left-hand margin.
+	
+	\subsection*{Options}
+	
+	When requesting the \verb|tma| package with the \verb|\usepackage| command, it is possible to pass one or 
+	more optional parameters to influence how the package will operate.  Just as it is typical to let the 
+	\verb|\documentclass| have options specifying the paper and font size, so can many other packages being given options.
+	
+	\begin{table}[h]
+		\centering
+		\begin{tabular}[2]{lp{0.8\textwidth}}
+			\hline
+			\noalign{\vskip 3pt}
+			\textbf{\sc Option}      & \textbf{\sc Effect} \\
+			\hline
+			\noalign{\vskip 3pt}
+			\verb|[alph]|        & (default) question numbering as 1(b)(iii) \\
+			\verb|[roman]|       & varies question numbering to sequence used by M381 i.e. 1(ii)(c) \\
+			\verb|[cleveref]|    & question numbering creates automatic referencing for use with \verb|cleveref| package \\
+			\verb|[pdfbookmark]| & add pdf bookmarks for each question using \verb|hyperref| package \\
+			\verb|[legacy]|      & add backward compatibility for old versions of \verb|tma| package \\
+			\hline
+		\end{tabular}
+		\caption{Options available for \texttt{tma.sty}}
+		\label{tab:options}
+	\end{table}
+	
+	To use a package option, place the option(s) before the package name in square brackets, for example:\\
+	\verb|\usepackage[roman,cleveref]{tma}|
+	
+	
+	\subsection*{New commands}
+	
+	New commands provided by the package include the following:
+	
+	\hfil\verb|\R|\qquad\R\hfil\verb|\N|\qquad\N\hfil\verb|\Z|\qquad\Z\hfil\verb|\Q|\qquad\Q\hfil\verb|\Complex|\qquad\Complex
+	
+	In typeset mathematics, constants such as \e , \ii \ $(\sqrt{-1})$, and $\uppi$ should be not be italic,
+	nor should \dd \ (as in $\deriv{y}{x}$ or $\int \e^x \,\dd x$). Hence:
+	
+	\hfil\verb|\dd|\qquad\dd\hfil\verb|\e|\qquad\e\hfil\verb|\ii|\qquad\ii\hfil\verb|\uppi|\qquad$\uppi$
+	
+	(\verb|\d| produces a dot over the following character. \verb|\i| produces a dotless i to enable accents
+	over a na\"\i ve \i. \verb|\uppi| is provided by the upgreek package (and can be used for all Greek
+	letters).  \verb|\dd| also adds a small space before the $\dd x$ so that it is slightly separated from the
+	integral equation instead of being part of it.
+	
+	\qquad \qquad \verb|\deriv{y}{x}|\qquad  $\genfrac{}{}{}{0}{\dd y}{\dd x}$	%
+	\qquad \qquad \verb|\pderiv{y}{x}|\qquad  $\genfrac{}{}{}{0}{\partial y}{\partial x}$
+	
+	\qquad \qquad \verb|\psderiv{z}{x}{y}|\qquad  $\genfrac{}{}{}{0}{\partial ^2z}{\partial y\partial x}$ %
+	
+	Other commands, some of which have been plagiarised from other peoples' style files, include mathematical
+	functions for the principle logarithm and various group theory and complex analysis functions.  Also, a
+	\verb|\rect| is included for M208 people (other shapes are included by virtue of the \verb|wasysym| package).
+	Commands available are given in table~\ref{tab:commands}; the upper set of commands will work in text or maths mode, whilst the lower commands are only designed to work in maths mode.
+	
+	\subsection*{Backward compatibility}
+	
+	As of version 1.04 of the \verb|tma| package, two commands have been renamed to avoid clashes with other libraries. \verb|\C| has been renamed \verb|\Complex|, and \verb|\vec| has been renamed \verb|\vect|. In order to allow order documents to still use the new version of the package, an additional option has been provided, \verb|[legacy]|, and this will reimplement the old names.  These old names, however, are now deprecated and may be removed in future issues.
+	
+	\begin{table}[t]
+		\centering
+		\begin{tabular}[3]{lll}
+			\hline
+			\noalign{\vskip 3pt}
+			\textbf{\sc Command} & \textbf{\sc Example} & \textbf{\sc Note} \\
+			\hline
+			\noalign{\vskip 3pt}
+			\verb|\Rr|         & \Rr         & (for a region)                                \\
+			\verb|\ve{j}|      & $\ve{j}$    & for emboldened vectors                        \\
+			\verb|\vect{AB}|   & $\vect{AB}$ & for traditional vectors                       \\
+			\verb|1\st|        & $1\st$      & also \verb|\nd|, \verb|\rd|, \verb|\nth|      \\
+			\verb|\rect|       & \rect       &  \\
+			\verb|\comb{3}{5}| & \comb{5}{3} &  \\
+			\verb|\perm{3}{5}| & \perm{5}{0} &  \\[4pt]
+			\hline
+			\noalign{\vskip 4pt}
+			\verb|\re|         & $\re $      & \verb|\Re| will produce the traditional $\Re$ \\
+			\verb|\im|         & $\im $      & \verb|\Im| will produce $\Im$                 \\
+			\verb|\Log|        & $\Log $     &  \\
+			\verb|\Arg|        & $\Arg $     &  \\
+			\verb|\Wnd|        & $\Wnd $     &  \\
+			\verb|\Res|        & $\Res $     &  \\
+			\verb|\Ker|        & $\Ker $     &  \\
+			\verb|\Res|        & $\Res $     &  \\
+			\verb|\Orb|        & $\Orb $     &  \\
+			\verb|\Stab|       & $\Stab $    &  \\
+			\verb|\Fix|        & $\Fix $     &  \\ \hline
+		\end{tabular}
+		\caption{Mathematical commands that are made available with \texttt{tma.sty}}
+		\label{tab:commands}
+	\end{table}
+	
+	\newpage
+	\subsection*{Packages automatically loaded}
+	
+	Some standard packages are automatically loaded when the \verb|tma| package is used. These, in turn, load other packages. A summary of the packages so loaded is listed in table~\ref{tab:packages}.
+	
+	\begin{table}[t]
+		\centering
+		\begin{tabular}{cl}
+			\hline
+			\noalign{\vskip 3pt}
+			\textbf{\sc Package}   & \textbf{\sc Notes} \\
+			\hline
+			\noalign{\vskip 3pt}
+			\texttt{amssymb}   & {Also loads \texttt{amsfonts}} \\
+			\texttt{amsmath}   & {Also loads \texttt{amstext}, \texttt{amsgen}, \texttt{amsbsy} and \texttt{amsopn}} \\
+			\texttt{amsthm}    & \\
+			\texttt{upgreek}   & \\
+			\texttt{wasysym}   & \\
+			\texttt{bm}        &  \begin{minipage}[t]{0.8\textwidth}
+				This allows you to embolden maths formulae: \\
+				\verb|$\int \e^x \dd x=\bm{\int \e^x \dd x}$| \\
+				$$\int \e^x \dd x=\bm{\int \e^x \dd x}$$
+			\end{minipage}\\
+			\texttt{fancyhdr}  & \\
+			\texttt{geometry}  & {Also loads \texttt{keyval}, \texttt{ifvtex} and \texttt{iftex}} \\
+			\texttt{xifthen}   & {Also loads \texttt{calc}, \texttt{ifthen} and \texttt{ifmtarg}} \\
+			\texttt{verbatim}  & \\
+			\texttt{graphicx}  & {Also loads \texttt{graphics} and \texttt{trig}} \\
+			\texttt{lastpage}  & {Also loads \texttt{lastpage2e} and \texttt{lastpagemodern}} \\[4pt]
+			\hline
+			\noalign{\vskip 4pt}
+			\texttt{cleveref}  & {This is only loaded if the \verb|cleveref| option is given to the style.} \\
+			\texttt{hyperref}  & {This is only loaded if the \verb|cleveref| or \verb|pdfbookmark| option is given to the style.} \\
+			\hline
+		\end{tabular}
+		\caption{Packages auto-loaded by \texttt{tma.sty}}
+		\label{tab:packages}
+	\end{table}
+	
+	Note that the latter two packages are conditionally loaded only when the appropriate option is specified.
+	
+	\subsection*{\dots and finally}
+	
+	Any comments, ideas, or suggestions (either of style or for more macros) are welcomed.
+	
+	\vskip 1in
+	
+	$$\dots\quad\infty\quad\maltese\quad\infty\quad\dots$$
+	
+\end{document}
+
