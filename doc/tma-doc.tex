@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{tma}
 \usepackage{geometry}
 \geometry{margin=1in}
 \usepackage[colorlinks=true,linkcolor=blue]{hyperref}
@@ -97,7 +98,7 @@ The package provides several mathematical commands:
 \subsection{Sample Question}
 
 \begin{verbatim}
-\begin{question}
+\begin{question}[4]
   Prove that the set \N{} of natural numbers is infinite.
   
   \qpart
@@ -116,19 +117,74 @@ The package provides several mathematical commands:
     
   \qpart
     Based on the contradiction found in part (c), conclude 
-    whether the set \N{} is finite or infinte, and briefly 
+    whether the set \N{} is finite or infinite, and briefly 
     explain why.
 \end{question}
 \end{verbatim}
 
 Note that the default part numbering is in the form (a), (b), (c)\dots If the option \verb|[roman]| is given when loading the \verb|tma| package, then the numbering will be (i), (ii), (iii)\dots instead.
 
+\begin{center}
+\begin{minipage}{0.7\textwidth}
+    \begin{question}[4]
+  Prove that the set \N{} of natural numbers is infinite.
+  
+  \qpart
+    What does it mean for a set to be infinite?
+    
+  \qpart
+    Assume, for contradiction the \N{} is a finite set. 
+    Under this assumption, what can you say about the 
+    number of elements in \N{} and the existence of a 
+    largest natural number?
+    
+  \qpart
+    Explain how the successor function $s(n) = n + 1$ 
+    leads to a contradiction when applied to the largest 
+    natural number assumption of part (b).
+    
+  \qpart
+    Based on the contradiction found in part (c), conclude 
+    whether the set \N{} is finite or infinite, and briefly 
+    explain why.
+\end{question}
+\end{minipage}
+\end{center}
+
 \subsection{Using Mathematical Commands}
 
 \begin{verbatim}
-Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$.
+        Relationship between number sets:
+        \begin{itemize}
+          \item \N{} (Natural numbers) $\subseteq \Z$ (Integers);
+          every natural number is also an integer.
+          \item \Z{} (Integers) $\subseteq \Q$ (Rational numbers);
+          every integer is also a rational number.
+          \item \Q{} (Rational numbers) $\subseteq \R$ (Real numbers);
+          every rational number is also a real number.
+          \item \Complex{} (Complex numbers) $\supseteq \R$ (Real number);
+          complex numbers include real numbers as a subset, since they
+          can be represented by $a+\ii b$ where $a$ and $b$ are real numbers.
+        \end{itemize}
+        Hence, $\N\subseteq\Z\subseteq\Q\subseteq\R\subseteq\Complex$.
+        
+        Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$
 \end{verbatim}
 
+\begin{center}
+    \begin{minipage}{0.7\textwidth}
+        Relationship between number sets:
+        \begin{itemize}
+          \item \N{} (Natural numbers) $\subseteq \Z$ (Integers); every natural number is also an integer.
+          \item \Z{} (Integers) $\subseteq \Q$ (Rational numbers); every integer is also a rational number.
+          \item \Q{} (Rational numbers) $\subseteq \R$ (Real numbers); every rational number is also a real number.
+          \item \Complex{} (Complex numbers) $\supseteq \R$ (Real number); complex numbers include real numbers as a subset, since they can be represented by $a+\ii b$ where $a$ and $b$ are real numbers.
+        \end{itemize}
+        Hence, $\N\subseteq\Z\subseteq\Q\subseteq\R\subseteq\Complex$.
+        
+        Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$
+    \end{minipage}
+\end{center}
 \section{Change Log}
 
 \begin{itemize}
