@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage{tma}
+\usepackage{lipsum}
+
+\begin{document}
+	
+	\begin{question}
+		This is the question text.
+		
+		\qpart \qsubpart
+		This is the text for subpart (\theqsubpart) of part (\theqpart).
+		
+	\end{question}
+	
+	\begin{question}
+		This is the question text.
+		
+		\qpart
+		This is introductory text for part (\theqpart).
+		
+		\qsubpart
+		This is text for subpart (\theqsubpart) of part (\theqpart).
+		
+		\qsubpart
+		This is another subpart (\theqsubpart).
+		
+	\end{question}
+	
+	\begin{question}
+		\qpart %
+		\qsubpart %
+		\lipsum[1][2]
+		
+		\qsubpart %
+		\lipsum[1][3-6]
+	\end{question}
+	\begin{question}
+		\lipsum[1][1-4]
+		
+		\qpart %
+		\lipsum[2][1]
+		
+		\qpart %
+		\qsubpart %
+		\lipsum[3][1]
+		
+		\qsubpart %
+		\lipsum[4][1]
+		
+		\qsubpart %
+		\lipsum[5][1]
+				
+		\qsubpart %
+		\lipsum[6][1]
+		
+		\qpart %
+		\lipsum[7][1]
+		
+	\end{question}
+	
+\end{document}

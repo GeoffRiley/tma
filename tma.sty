@@ -37,6 +37,10 @@
 %% To use a package option, place the option(s) before the package name:
 %%    \usepackage[roman,cleveref]{tma}
 %%
+%% v1.13 2024/11/16
+%%    Arranged for \qsubpart to go on the same line as the \qpart when 
+%%    there is no intervening text
+%%    \qsubpart indents further than \qpart
 %% v1.12 2024/11/08
 %%    Standardized package name to 'tma' to make it compatible with CTAN
 %%    Avoided redefining standard LaTeX commands
@@ -44,8 +48,7 @@
 %%    Adjusted loading order of packages
 %%    Improved code readability and comments
 %%    Added 'legacy' option to allow old definitions of \vec and \C
-%%
-\ProvidesPackage{tma}[2024/11/08 v1.12 TMA document style]
+\ProvidesPackage{tma}[2024/11/16 v1.13 TMA document style]
 \NeedsTeXFormat{LaTeX2e}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -65,6 +68,9 @@
 \newcommand{\mycourse}[1]{\renewcommand{\course}{#1}}
 \newcommand{\mypin}[1]{\renewcommand{\pin}{#1}}
 
+\newcommand{\tma@questionstring}{\relax}
+\newcommand{\setquestionstring}[1]{\renewcommand{\tma@questionstring}{#1}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package Loading
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -81,21 +87,22 @@
 \RequirePackage{verbatim}
 \RequirePackage{fancyhdr}
 \RequirePackage{geometry}
+\RequirePackage{calc}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Geometry Settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \geometry{
-  headheight=10mm,
-  headsep=5mm,
-  bottom=25mm,
-  footskip=15mm,
-  left=30mm,
-  right=30mm,
-  marginparwidth=0mm,
-  marginparsep=0mm,
-  includemp
+	headheight=10mm,
+	headsep=5mm,
+	bottom=25mm,
+	footskip=15mm,
+	left=30mm,
+	right=30mm,
+	marginparwidth=0mm,
+	marginparsep=0mm,
+	includemp
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,12 +111,12 @@
 
 \newcommand{\marginnote}[1]{\marginpar{#1}}
 \newcommand{\marginnotes}{
-  \geometry{
-    marginparwidth=40mm,
-    marginparsep=5mm,
-    left=20mm,
-    right=15mm
-  }
+	\geometry{
+		marginparwidth=40mm,
+		marginparsep=5mm,
+		left=20mm,
+		right=15mm
+	}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -124,7 +131,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Option Handling
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\typeout{Defining boolean flags.}
 % Define boolean flags
 \newif\iftma@roman
 \newif\iftma@usecleveref
@@ -179,39 +185,41 @@
 
 % Set question numbering
 \iftma@roman
-	\renewcommand{\theqpart}{\roman{qpart}}
-	\renewcommand{\theqsubpart}{\alph{qsubpart}}
+\renewcommand{\theqpart}{\roman{qpart}}
+\renewcommand{\theqsubpart}{\alph{qsubpart}}
 \else
-	\renewcommand{\theqpart}{\alph{qpart}}
-	\renewcommand{\theqsubpart}{\roman{qsubpart}}
+\renewcommand{\theqpart}{\alph{qpart}}
+\renewcommand{\theqsubpart}{\roman{qsubpart}}
 \fi
 
 % Load hyperref if necessary
 \iftma@usepdfbookmark
-	\RequirePackage[
-		bookmarks=true,
-		colorlinks=true,
-		linkcolor=blue
-	]{hyperref}
+\RequirePackage[
+bookmarks=true,
+colorlinks=true,
+linkcolor=blue
+]{hyperref}
 \fi
 
 % Load cleveref if necessary
 \iftma@usecleveref
-	% Ensure hyperref is loaded before cleveref
-	\@ifpackageloaded{hyperref}{}{%
-		\RequirePackage{hyperref}
-	}
-	\RequirePackage{cleveref}
-	% Redefine commands for cleveref
-	\renewcommand{\tma@crefname}[3]{\crefname{#1}{#2}{#3}}
-	\renewcommand{\tma@stepcounter}[1]{\refstepcounter{#1}}
+% Ensure hyperref is loaded before cleveref
+\@ifpackageloaded{hyperref}{}{%
+	\RequirePackage{hyperref}
+}
+\RequirePackage{cleveref}
+% Redefine commands for cleveref
+\renewcommand{\tma@crefname}[3]{\crefname{#1}{#2}{#3}}
+\renewcommand{\tma@stepcounter}[1]{\refstepcounter{#1}}
 \fi
 
 % Redefine commands for pdfbookmark
 \iftma@usepdfbookmark
-	\renewcommand{\tma@bookmark}[3][0]{\pdfbookmark[#1]{#2}{#3}}
-	\renewcommand{\tma@pageref}[1]{\pageref*{#1}}
+\renewcommand{\tma@bookmark}[3][0]{\pdfbookmark[#1]{#2}{#3}}
+\renewcommand{\tma@pageref}[1]{\pageref*{#1}}
 \fi
+
+\setquestionstring{Q}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Question Environment
@@ -219,37 +227,88 @@
 
 % Set up cref names if cleveref is used
 \iftma@usecleveref
-  \tma@crefname{question}{question}{questions}
-  \tma@crefname{qpart}{part}{parts}
-  \tma@crefname{qsubpart}{section}{sections}
+\tma@crefname{question}{question}{questions}
+\tma@crefname{qpart}{part}{parts}
+\tma@crefname{qsubpart}{section}{sections}
 \fi
 
 \newenvironment{question}[1][0]{%
-	\typeout{Define question environment.}
-  \ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
-  \tma@stepcounter{question}%
-  \tma@bookmark{Question \thequestion}{question\thequestion}%
-  \makebox[0pt][r]{\large{Q \thequestion.\quad }}%
+	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
+	\tma@stepcounter{question}%
+	\tma@bookmark{Question \thequestion}{question\thequestion}%
+	\makebox[0pt][r]{\large{\tma@questionstring~\thequestion.\quad }}%
 }{%
-  \par \vspace{3em}%
+	\par \vspace{3em}%
 }
 
+% Define indentation lengths
+\newlength{\qpartindent}
+\setlength{\qpartindent}{0em} % Indent for \qpart
+
+\newlength{\qsubpartindent}
+\setlength{\qsubpartindent}{2em} % Additional indent for \qsubpart
+
+\newlength{\tmalabelsep}
+\setlength{\tmalabelsep}{0.5em} % Space between label and text
+
+% Define label widths
+\newlength{\qpartlabelwidth}
+\settowidth{\qpartlabelwidth}{\large{(m)}\hspace{1em}} % Width for the widest \qpart label
+
+\newlength{\qsubpartlabelwidth}
+\settowidth{\qsubpartlabelwidth}{\large{(viii)}\hspace{1em}} % Width for the widest \qsubpart label
+
 \newcommand{\qpart}[1][0]{%
-	\typeout{Define qpart command.}
-  \ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
-  \tma@stepcounter{qpart}%
-  \tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
-  \par%
-  \makebox[0pt][r]{\large{(\theqpart)\quad }}%
+	\ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
+	\tma@stepcounter{qpart}%
+	\tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
+	\par%
+	\makebox[0pt][r]{\large{(\theqpart)\quad }}%
 }
 
 \newcommand{\qsubpart}[1][0]{%
-	\typeout{Define qsubpart command.}
-  \ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
-  \tma@stepcounter{qsubpart}%
-  \tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
-  \par%
-  \makebox[0pt][r]{\large{(\theqsubpart)\quad }}%
+	\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
+	\tma@stepcounter{qsubpart}%
+	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
+	\par%
+	\makebox[0pt][r]{\large{(\theqsubpart)\quad }}%
+}
+
+\renewcommand{\qpart}[1][0]{%
+	\ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{}%
+	\setcounter{qsubpart}{0}% Reset subpart counter
+	\tma@stepcounter{qpart}%
+	\tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
+	% Apply indentation only at the beginning of a paragraph
+	\ifvmode
+	\noindent
+	\hspace*{\qpartindent}%
+	\fi
+	% Place the label
+	\makebox[\qpartlabelwidth][l]{\large{(\theqpart)}}%
+	\hspace*{\tmalabelsep}%
+	\ignorespaces%
+}
+
+\renewcommand{\qsubpart}[1][0]{%
+	\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{}%
+	\tma@stepcounter{qsubpart}%
+	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
+	% Apply indentation only at the beginning of a paragraph
+	\ifvmode
+	\noindent
+	\hspace*{\qsubpartindent}%
+	\fi
+	% Place the label
+	\makebox[\qsubpartlabelwidth][l]{\large{(\theqsubpart)}}%
+	\hspace*{\tmalabelsep}%
+	\ignorespaces%
+}
+
+% Reset \leftskip and \parindent at the end of paragraphs
+\everypar{%
+	\global\leftskip=0pt%
+	\global\parindent=15pt% or your default value
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -305,11 +364,11 @@
 
 % Legacy Definitions
 \iftma@legacy
-	% Redefine \vec to old definition
-	\renewcommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
-	% Redefine \C to old definition
-	\providecommand{\C}{\ensuremath{\mathbb{C}}}
-	\renewcommand{\C}{\ensuremath{\mathbb{C}}}
+% Redefine \vec to old definition
+\renewcommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
+% Redefine \C to old definition
+\providecommand{\C}{\ensuremath{\mathbb{C}}}
+\renewcommand{\C}{\ensuremath{\mathbb{C}}}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
