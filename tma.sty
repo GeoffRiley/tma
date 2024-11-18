@@ -185,38 +185,38 @@
 
 % Set question numbering
 \iftma@roman
-\renewcommand{\theqpart}{\roman{qpart}}
-\renewcommand{\theqsubpart}{\alph{qsubpart}}
+	\renewcommand{\theqpart}{\roman{qpart}}
+	\renewcommand{\theqsubpart}{\alph{qsubpart}}
 \else
-\renewcommand{\theqpart}{\alph{qpart}}
-\renewcommand{\theqsubpart}{\roman{qsubpart}}
+	\renewcommand{\theqpart}{\alph{qpart}}
+	\renewcommand{\theqsubpart}{\roman{qsubpart}}
 \fi
 
 % Load hyperref if necessary
 \iftma@usepdfbookmark
-\RequirePackage[
-bookmarks=true,
-colorlinks=true,
-linkcolor=blue
-]{hyperref}
+	\RequirePackage[
+		bookmarks=true,
+		colorlinks=true,
+		linkcolor=blue
+	]{hyperref}
 \fi
 
 % Load cleveref if necessary
 \iftma@usecleveref
-% Ensure hyperref is loaded before cleveref
-\@ifpackageloaded{hyperref}{}{%
-	\RequirePackage{hyperref}
-}
-\RequirePackage{cleveref}
-% Redefine commands for cleveref
-\renewcommand{\tma@crefname}[3]{\crefname{#1}{#2}{#3}}
-\renewcommand{\tma@stepcounter}[1]{\refstepcounter{#1}}
+	% Ensure hyperref is loaded before cleveref
+	\@ifpackageloaded{hyperref}{}{%
+		\RequirePackage{hyperref}
+	}
+	\RequirePackage{cleveref}
+	% Redefine commands for cleveref
+	\renewcommand{\tma@crefname}[3]{\crefname{#1}{#2}{#3}}
+	\renewcommand{\tma@stepcounter}[1]{\refstepcounter{#1}}
 \fi
 
 % Redefine commands for pdfbookmark
 \iftma@usepdfbookmark
-\renewcommand{\tma@bookmark}[3][0]{\pdfbookmark[#1]{#2}{#3}}
-\renewcommand{\tma@pageref}[1]{\pageref*{#1}}
+	\renewcommand{\tma@bookmark}[3][0]{\pdfbookmark[#1]{#2}{#3}}
+	\renewcommand{\tma@pageref}[1]{\pageref*{#1}}
 \fi
 
 \setquestionstring{Q}
@@ -227,16 +227,18 @@ linkcolor=blue
 
 % Set up cref names if cleveref is used
 \iftma@usecleveref
-\tma@crefname{question}{question}{questions}
-\tma@crefname{qpart}{part}{parts}
-\tma@crefname{qsubpart}{section}{sections}
+	\tma@crefname{question}{question}{questions}
+	\tma@crefname{qpart}{part}{parts}
+	\tma@crefname{qsubpart}{section}{sections}
 \fi
 
+\newlength{\makeboxwidth}
 \newenvironment{question}[1][0]{%
 	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
 	\tma@stepcounter{question}%
 	\tma@bookmark{Question \thequestion}{question\thequestion}%
-	\makebox[0pt][r]{\large{\tma@questionstring~\thequestion.\quad }}%
+	\settowidth{\makeboxwidth}{\large{\tma@questionstring~\thequestion.}}
+	\makebox[0pt][r]{\large{\tma@questionstring~\thequestion.}}\par%
 }{%
 	\par \vspace{3em}%
 }
@@ -281,8 +283,8 @@ linkcolor=blue
 	\tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
 	% Apply indentation only at the beginning of a paragraph
 	\ifvmode
-	\noindent
-	\hspace*{\qpartindent}%
+		\noindent
+		\hspace*{\qpartindent}%
 	\fi
 	% Place the label
 	\makebox[\qpartlabelwidth][l]{\large{(\theqpart)}}%
@@ -296,8 +298,8 @@ linkcolor=blue
 	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
 	% Apply indentation only at the beginning of a paragraph
 	\ifvmode
-	\noindent
-	\hspace*{\qsubpartindent}%
+		\noindent
+		\hspace*{\qsubpartindent}%
 	\fi
 	% Place the label
 	\makebox[\qsubpartlabelwidth][l]{\large{(\theqsubpart)}}%
@@ -364,11 +366,11 @@ linkcolor=blue
 
 % Legacy Definitions
 \iftma@legacy
-% Redefine \vec to old definition
-\renewcommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
-% Redefine \C to old definition
-\providecommand{\C}{\ensuremath{\mathbb{C}}}
-\renewcommand{\C}{\ensuremath{\mathbb{C}}}
+	% Redefine \vec to old definition
+	\renewcommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
+	% Redefine \C to old definition
+	\providecommand{\C}{\ensuremath{\mathbb{C}}}
+	\renewcommand{\C}{\ensuremath{\mathbb{C}}}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%

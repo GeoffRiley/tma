@@ -1,0 +1,46 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[cleveref]{tma}
+\usepackage{lipsum}
+
+\myname{Geoff I. Riley}
+\mypin{ABCDEFGH}
+\mycourse{\LaTeX}
+\mytma{test}
+
+%\marginnotes
+
+\begin{document}
+	%\maketitle
+	Using the default \verb|[alph]| option swaps the numbering systems for \verb|qpart| and \verb|qsubpart|. This is the opposite of the \verb|[roman]| option mode.
+	
+	Expected tags at end of each line.
+	
+	\setquestionstring{Question}
+	
+	\begin{question}
+	\qpart\qsubpart
+	\lipsum[1-2] \emph{(a)(i)}\label{para:1.1.1}
+	
+	\qsubpart
+	\lipsum[3-4] \emph{(a)(ii)}\label{para:1.1.2}
+	
+	\qsubpart
+	\lipsum[5-6] \emph{(a)(iii)}\label{para:1.1.3}
+	
+	\qpart
+	\lipsum[7-8] \emph{(b)}\label{para:1.2}
+	
+	\qsubpart
+	\lipsum[9-10] \emph{(b)(i)}\label{para:1.2.1}
+	
+	\qsubpart
+	\lipsum[11-12] \emph{(b)(ii)}\label{para:1.2.2}
+	
+	\qpart
+	\lipsum[13-14] \emph{(c)}\label{para:3}
+\end{question}
+
+Cleveref allows references to specify single references like \cref{para:1.2} or ranges like \crefrange{para:1.1.1}{para:1.2.2}
+
+\end{document}
