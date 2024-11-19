@@ -37,6 +37,11 @@
 %% To use a package option, place the option(s) before the package name:
 %%    \usepackage[roman,cleveref]{tma}
 %%
+%% v1.14 2024/11/19
+%%    Allow replacement of Question marker tag using \setquestionstring{}
+%%    References with cleveref not working
+%%    Replaced my attempts at keeping \qpart and \qsubpart on the same line with 
+%%    Steve Mayers contribution
 %% v1.13 2024/11/16
 %%    Arranged for \qsubpart to go on the same line as the \qpart when 
 %%    there is no intervening text
@@ -48,7 +53,7 @@
 %%    Adjusted loading order of packages
 %%    Improved code readability and comments
 %%    Added 'legacy' option to allow old definitions of \vec and \C
-\ProvidesPackage{tma}[2024/11/16 v1.13 TMA document style]
+\ProvidesPackage{tma}[2024/11/19 v1.14 TMA document style]
 \NeedsTeXFormat{LaTeX2e}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,6 +93,8 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{geometry}
 \RequirePackage{calc}
+\RequirePackage[UKenglish]{isodate} % use UK format for date
+\cleanlookdateon % remove th,st, rd from date
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Geometry Settings
@@ -137,14 +144,12 @@
 \newif\iftma@usepdfbookmark
 \newif\iftma@legacy
 
-\typeout{Setting default options.}
 % Set default options
 \tma@romanfalse          % Default numbering is 'alph'
 \tma@useclevereffalse    % Default is not to use cleveref
 \tma@usepdfbookmarkfalse % Default is not to use pdfbookmark
 \tma@legacyfalse         % Default is not to use legacy definitions
 
-\typeout{Defingin commands with default values.}
 % Define commands with default values
 \renewcommand{\theqpart}{\alph{qpart}}
 \renewcommand{\theqsubpart}{\roman{qsubpart}}
@@ -153,7 +158,6 @@
 \newcommand{\tma@bookmark}[3][]{\relax}
 \newcommand{\tma@pageref}[1]{\pageref{#1}}
 
-\typeout{Declaring options.}
 % Declare options
 \DeclareOption{roman}{
 	\tma@romantrue
@@ -175,7 +179,6 @@
 	\tma@legacytrue
 }
 
-\typeout{Processing options.}
 % Process options
 \ProcessOptions\relax
 
@@ -215,8 +218,8 @@
 
 % Redefine commands for pdfbookmark
 \iftma@usepdfbookmark
-	\renewcommand{\tma@bookmark}[3][0]{\pdfbookmark[#1]{#2}{#3}}
 	\renewcommand{\tma@pageref}[1]{\pageref*{#1}}
+	\renewcommand{\tma@bookmark}[3][0]{\pdfbookmark[#1]{#2}{#3}}
 \fi
 
 \setquestionstring{Q}
@@ -233,84 +236,31 @@
 \fi
 
 \newlength{\makeboxwidth}
+\newlength{\qsubwidth}
 \newenvironment{question}[1][0]{%
 	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
 	\tma@stepcounter{question}%
 	\tma@bookmark{Question \thequestion}{question\thequestion}%
-	\settowidth{\makeboxwidth}{\large{\tma@questionstring~\thequestion.}}
-	\makebox[0pt][r]{\large{\tma@questionstring~\thequestion.}}\par%
+	\settowidth{\makeboxwidth}{\large{\hspace{0.3em}\thequestion}}%
+	\makebox[\makeboxwidth][r]{\large{\tma@questionstring~\thequestion}}\par%
 }{%
 	\par \vspace{3em}%
 }
-
-% Define indentation lengths
-\newlength{\qpartindent}
-\setlength{\qpartindent}{0em} % Indent for \qpart
-
-\newlength{\qsubpartindent}
-\setlength{\qsubpartindent}{2em} % Additional indent for \qsubpart
-
-\newlength{\tmalabelsep}
-\setlength{\tmalabelsep}{0.5em} % Space between label and text
-
-% Define label widths
-\newlength{\qpartlabelwidth}
-\settowidth{\qpartlabelwidth}{\large{(m)}\hspace{1em}} % Width for the widest \qpart label
-
-\newlength{\qsubpartlabelwidth}
-\settowidth{\qsubpartlabelwidth}{\large{(viii)}\hspace{1em}} % Width for the widest \qsubpart label
 
 \newcommand{\qpart}[1][0]{%
 	\ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
 	\tma@stepcounter{qpart}%
 	\tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
 	\par%
-	\makebox[0pt][r]{\large{(\theqpart)\quad }}%
+	\hspace*{-1.5em}\makebox[0pt][r]{\large{(\theqpart)\hspace{1.2em} }}%
 }
 
 \newcommand{\qsubpart}[1][0]{%
 	\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
 	\tma@stepcounter{qsubpart}%
-	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
-	\par%
-	\makebox[0pt][r]{\large{(\theqsubpart)\quad }}%
-}
-
-\renewcommand{\qpart}[1][0]{%
-	\ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{}%
-	\setcounter{qsubpart}{0}% Reset subpart counter
-	\tma@stepcounter{qpart}%
-	\tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
-	% Apply indentation only at the beginning of a paragraph
-	\ifvmode
-		\noindent
-		\hspace*{\qpartindent}%
-	\fi
-	% Place the label
-	\makebox[\qpartlabelwidth][l]{\large{(\theqpart)}}%
-	\hspace*{\tmalabelsep}%
-	\ignorespaces%
-}
-
-\renewcommand{\qsubpart}[1][0]{%
-	\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{}%
-	\tma@stepcounter{qsubpart}%
-	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
-	% Apply indentation only at the beginning of a paragraph
-	\ifvmode
-		\noindent
-		\hspace*{\qsubpartindent}%
-	\fi
-	% Place the label
-	\makebox[\qsubpartlabelwidth][l]{\large{(\theqsubpart)}}%
-	\hspace*{\tmalabelsep}%
-	\ignorespaces%
-}
-
-% Reset \leftskip and \parindent at the end of paragraphs
-\everypar{%
-	\global\leftskip=0pt%
-	\global\parindent=15pt% or your default value
+	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}
+	\settowidth{\qsubwidth}{\theqsubpart}
+	\ifthenelse{\value{qsubpart}>1}{\par \hspace*{-3em}{\large{(\theqsubpart)\hspace{1.6em-\qsubwidth}}}}{\hspace*{-2.5em}{\large{(\theqsubpart)\hspace{1.2em}}}}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
