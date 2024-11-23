@@ -37,7 +37,12 @@
 %% To use a package option, place the option(s) before the package name:
 %%    \usepackage[roman,cleveref]{tma}
 %%
-%% v1.14 2024/11/19
+%% v1.16 2024/11/22
+%%    Added File, Properties to pdf files using the hyperref setup system when in pdfbookmark mode
+%% v1.15 2024/11/21
+%%    Define \setdate{} and \thedate to allow the header date to be used within
+%%    the document, eg header and footer
+%% v1.14 2024/11/17
 %%    Allow replacement of Question marker tag using \setquestionstring{}
 %%    References with cleveref not working
 %%    Replaced my attempts at keeping \qpart and \qsubpart on the same line with 
@@ -53,7 +58,7 @@
 %%    Adjusted loading order of packages
 %%    Improved code readability and comments
 %%    Added 'legacy' option to allow old definitions of \vec and \C
-\ProvidesPackage{tma}[2024/11/19 v1.14 TMA document style]
+\ProvidesPackage{tma}[2024/11/21 v1.15 TMA document style]
 \NeedsTeXFormat{LaTeX2e}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -64,6 +69,7 @@
 \newcommand{\tma}{\relax}
 \newcommand{\course}{\relax}
 \newcommand{\pin}{\relax}
+\newcommand{\thedate}{\relax}
 
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
@@ -72,9 +78,11 @@
 \newcommand{\mytma}[1]{\renewcommand{\tma}{#1}}
 \newcommand{\mycourse}[1]{\renewcommand{\course}{#1}}
 \newcommand{\mypin}[1]{\renewcommand{\pin}{#1}}
+\newcommand{\setdate}[1]{\date{#1}\renewcommand{\thedate}{#1}}
 
 \newcommand{\tma@questionstring}{\relax}
 \newcommand{\setquestionstring}[1]{\renewcommand{\tma@questionstring}{#1}}
+\setdate{\today}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package Loading
@@ -197,11 +205,20 @@
 
 % Load hyperref if necessary
 \iftma@usepdfbookmark
-	\RequirePackage[
-		bookmarks=true,
-		colorlinks=true,
-		linkcolor=blue
-	]{hyperref}
+	\AtBeginDocument{%
+		\hypersetup{%
+			bookmarks=true,%
+			colorlinks=true,%
+			linkcolor=blue,%
+			urlcolor=blue,%
+			pdfstartview=FitH,%
+			pdftitle={\mytma{}},%
+			pdfauthor={\myname{}},%
+			pdfkeywords={\mypin{}},%
+			pdfsubject={\mycourse{}}%
+		}%
+	}
+	\RequirePackage{hyperref}
 \fi
 
 % Load cleveref if necessary
@@ -235,14 +252,11 @@
 	\tma@crefname{qsubpart}{section}{sections}
 \fi
 
-\newlength{\makeboxwidth}
-\newlength{\qsubwidth}
 \newenvironment{question}[1][0]{%
 	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
 	\tma@stepcounter{question}%
 	\tma@bookmark{Question \thequestion}{question\thequestion}%
-	\settowidth{\makeboxwidth}{\large{\hspace{0.3em}\thequestion}}%
-	\makebox[\makeboxwidth][r]{\large{\tma@questionstring~\thequestion}}\par%
+	\makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
 }{%
 	\par \vspace{3em}%
 }
@@ -255,12 +269,13 @@
 	\hspace*{-1.5em}\makebox[0pt][r]{\large{(\theqpart)\hspace{1.2em} }}%
 }
 
+\newlength{\tma@qsubwidth}
 \newcommand{\qsubpart}[1][0]{%
 	\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
 	\tma@stepcounter{qsubpart}%
 	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}
-	\settowidth{\qsubwidth}{\theqsubpart}
-	\ifthenelse{\value{qsubpart}>1}{\par \hspace*{-3em}{\large{(\theqsubpart)\hspace{1.6em-\qsubwidth}}}}{\hspace*{-2.5em}{\large{(\theqsubpart)\hspace{1.2em}}}}%
+	\settowidth{\tma@qsubwidth}{\theqsubpart}
+	\ifthenelse{\value{qsubpart}>1}{\par \hspace*{-3em}{\large{(\theqsubpart)\hspace{1.6em-\tma@qsubwidth}}}}{\hspace*{-2.5em}{\large{(\theqsubpart)\hspace{1.2em}}}}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -282,7 +297,7 @@
 
 %% Vector Notation
 \newcommand{\vect}[1]{\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
-\newcommand{\ve}[1]{\ensuremath{\bm{#1}}} % Using \bm for bold math symbols
+\newcommand{\ve}[1]{\ensuremath{\textbf{#1}}}
 
 %% Superscript Notations
 \newcommand{\st}{\textsuperscript{st}}

@@ -1,8 +1,21 @@
-\documentclass{article}
+\documentclass[a4paper,12pt]{article}
 \usepackage{tma}
+
+\myname{Geoff I. Riley}
+\mypin{ABCDEFGH}
+\mycourse{\LaTeX}
+\mytma{test}
+\setdate{Feb 1980}
+
+% Header suggestion by Claude Heiland-Allen
+\fancyhead[L]{\textrm{\name\ \pin\ \course\ TMA-\tma\ \thedate}}
+\fancyhead[C]{\relax}
+
 \usepackage{lipsum}
 
 \begin{document}
+
+	\maketitle
 	
 	\begin{question}
 		This is the question text.
