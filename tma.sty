@@ -10,7 +10,7 @@
 % version 2005/12/01 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-% 
+%
 % The Current Maintainer of this work is G. I. Riley.
 %
 %% This package may be freely used, especially by, but not limited to, students, lecturers, and
@@ -37,6 +37,13 @@
 %% To use a package option, place the option(s) before the package name:
 %%    \usepackage[roman,cleveref]{tma}
 %%
+%%
+%% v1.18 2025/02/16
+%%    PDF metadata doesn't set correctly so I have removed it: the cause is an
+%%    incompatibility between LaTeX unicode and the PDF restricted character allowance
+%% v1.17 2025/02/13
+%%    Rewritten with LaTeX-3 syntax from the `xparse' package to make commands less fragile
+%%    Finally got alignment of part and subpart numbering to line up correctly
 %% v1.16 2024/11/22
 %%    Added File, Properties to pdf files using the hyperref setup system when in pdfbookmark mode
 %% v1.15 2024/11/21
@@ -45,10 +52,10 @@
 %% v1.14 2024/11/17
 %%    Allow replacement of Question marker tag using \setquestionstring{}
 %%    References with cleveref not working
-%%    Replaced my attempts at keeping \qpart and \qsubpart on the same line with 
+%%    Replaced my attempts at keeping \qpart and \qsubpart on the same line with
 %%    Steve Mayers contribution
 %% v1.13 2024/11/16
-%%    Arranged for \qsubpart to go on the same line as the \qpart when 
+%%    Arranged for \qsubpart to go on the same line as the \qpart when
 %%    there is no intervening text
 %%    \qsubpart indents further than \qpart
 %% v1.12 2024/11/08
@@ -58,30 +65,30 @@
 %%    Adjusted loading order of packages
 %%    Improved code readability and comments
 %%    Added 'legacy' option to allow old definitions of \vec and \C
-\ProvidesPackage{tma}[2024/11/21 v1.15 TMA document style]
+\ProvidesPackage{tma}[2025/02/16 v1.18 TMA document style]
 \NeedsTeXFormat{LaTeX2e}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package Initialization
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\name}{\relax}
-\newcommand{\tma}{\relax}
-\newcommand{\course}{\relax}
-\newcommand{\pin}{\relax}
-\newcommand{\thedate}{\relax}
+\NewDocumentCommand{\name}{}{\relax}
+\NewDocumentCommand{\tma}{}{\relax}
+\NewDocumentCommand{\course}{}{\relax}
+\NewDocumentCommand{\pin}{}{\relax}
+\NewDocumentCommand{\thedate}{}{\relax}
 
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
 
-\newcommand{\myname}[1]{\renewcommand{\name}{#1}}
-\newcommand{\mytma}[1]{\renewcommand{\tma}{#1}}
-\newcommand{\mycourse}[1]{\renewcommand{\course}{#1}}
-\newcommand{\mypin}[1]{\renewcommand{\pin}{#1}}
-\newcommand{\setdate}[1]{\date{#1}\renewcommand{\thedate}{#1}}
+\NewDocumentCommand{\myname}{m}{\RenewDocumentCommand{\name}{}{#1}}
+\NewDocumentCommand{\mytma}{m}{\RenewDocumentCommand{\tma}{}{#1}}
+\NewDocumentCommand{\mycourse}{m}{\RenewDocumentCommand{\course}{}{#1}}
+\NewDocumentCommand{\mypin}{m}{\RenewDocumentCommand{\pin}{}{#1}}
+\NewDocumentCommand{\setdate}{m}{\date{#1}\RenewDocumentCommand{\thedate}{}{#1}}
 
-\newcommand{\tma@questionstring}{\relax}
-\newcommand{\setquestionstring}[1]{\renewcommand{\tma@questionstring}{#1}}
+\NewDocumentCommand{\tma@questionstring}{}{\relax}
+\NewDocumentCommand{\setquestionstring}{m}{\RenewDocumentCommand{\tma@questionstring}{}{#1}}
 \setdate{\today}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -109,29 +116,29 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \geometry{
-	headheight=10mm,
-	headsep=5mm,
-	bottom=25mm,
-	footskip=15mm,
-	left=30mm,
-	right=30mm,
-	marginparwidth=0mm,
-	marginparsep=0mm,
-	includemp
+    headheight=10mm,
+    headsep=5mm,
+    bottom=25mm,
+    footskip=15mm,
+    left=30mm,
+    right=30mm,
+    marginparwidth=0mm,
+    marginparsep=0mm,
+    includemp
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Margin Notes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\marginnote}[1]{\marginpar{#1}}
-\newcommand{\marginnotes}{
-	\geometry{
-		marginparwidth=40mm,
-		marginparsep=5mm,
-		left=20mm,
-		right=15mm
-	}
+\NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
+\NewDocumentCommand{\marginnotes}{}{
+    \geometry{
+        marginparwidth=40mm,
+        marginparsep=5mm,
+        left=20mm,
+        right=15mm
+    }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -141,7 +148,7 @@
 \newcounter{question}
 \newcounter{qpart}[question]
 \newcounter{qsubpart}[qpart]
-\renewcommand{\thequestion}{\arabic{question}}
+\RenewDocumentCommand{\thequestion}{}{\arabic{question}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Option Handling
@@ -159,36 +166,64 @@
 \tma@legacyfalse         % Default is not to use legacy definitions
 
 % Define commands with default values
-\renewcommand{\theqpart}{\alph{qpart}}
-\renewcommand{\theqsubpart}{\roman{qsubpart}}
-\newcommand{\tma@crefname}[3]{\relax}
-\newcommand{\tma@stepcounter}[1]{\stepcounter{#1}}
-\newcommand{\tma@bookmark}[3][]{\relax}
-\newcommand{\tma@pageref}[1]{\pageref{#1}}
+\RenewDocumentCommand{\theqpart}{}{\alph{qpart}}
+\RenewDocumentCommand{\theqsubpart}{}{\roman{qsubpart}}
+\NewDocumentCommand{\tma@crefname}{mmm}{\relax}
+\NewDocumentCommand{\tma@stepcounter}{m}{\stepcounter{#1}}
+\NewDocumentCommand{\tma@bookmark}{O{}mm}{\relax}
+\NewDocumentCommand{\tma@pageref}{m}{\pageref{#1}}
 
 % Declare options
-\DeclareOption{roman}{
-	\tma@romantrue
+\DeclareOption{roman}{%
+    \tma@romantrue%
 }
 
-\DeclareOption{alph}{
-	\tma@romanfalse
+\DeclareOption{alph}{%
+    \tma@romanfalse%
 }
 
-\DeclareOption{cleveref}{
-	\tma@useclevereftrue
+\DeclareOption{cleveref}{%
+    \tma@useclevereftrue%
 }
 
-\DeclareOption{pdfbookmark}{
-	\tma@usepdfbookmarktrue
+\DeclareOption{pdfbookmark}{%
+    \tma@usepdfbookmarktrue%
 }
 
-\DeclareOption{legacy}{
-	\tma@legacytrue
+\DeclareOption{legacy}{%
+    \tma@legacytrue%
+}
+
+\DeclareOption*{%
+    \PackageWarning{tma}{Unknown option `\CurrentOption'}%
 }
 
 % Process options
 \ProcessOptions\relax
+
+\typeout{**************** OPTION RESULTS **********}
+\iftma@usepdfbookmark
+\typeout{pdfbookmark is TRUE}
+\else
+\typeout{pdfbookmark is FALSE}
+\fi
+\iftma@roman
+\typeout{roman is TRUE}
+\else
+\typeout{roman is FALSE}
+\fi
+\iftma@usecleveref
+\typeout{cleveref is TRUE}
+\else
+\typeout{cleveref is FALSE}
+\fi
+\iftma@legacy
+\typeout{legacy is TRUE}
+\else
+\typeout{legacy is FALSE}
+\fi
+\typeout{************* END OPTION RESULTS **********}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Set Up Package Based on Options
@@ -196,47 +231,49 @@
 
 % Set question numbering
 \iftma@roman
-	\renewcommand{\theqpart}{\roman{qpart}}
-	\renewcommand{\theqsubpart}{\alph{qsubpart}}
+\RenewDocumentCommand{\theqpart}{}{\roman{qpart}}
+\RenewDocumentCommand{\theqsubpart}{}{\alph{qsubpart}}
 \else
-	\renewcommand{\theqpart}{\alph{qpart}}
-	\renewcommand{\theqsubpart}{\roman{qsubpart}}
+\RenewDocumentCommand{\theqpart}{}{\alph{qpart}}
+\RenewDocumentCommand{\theqsubpart}{}{\roman{qsubpart}}
 \fi
-
 % Load hyperref if necessary
 \iftma@usepdfbookmark
-	\AtBeginDocument{%
-		\hypersetup{%
-			bookmarks=true,%
-			colorlinks=true,%
-			linkcolor=blue,%
-			urlcolor=blue,%
-			pdfstartview=FitH,%
-			pdftitle={\mytma{}},%
-			pdfauthor={\myname{}},%
-			pdfkeywords={\mypin{}},%
-			pdfsubject={\mycourse{}}%
-		}%
-	}
-	\RequirePackage{hyperref}
+\AtBeginDocument{%
+    \typeout{******************** doing hypersetup ****************}
+    \hypersetup{%
+        bookmarks=true,%
+        colorlinks=true,%
+        linkcolor=blue,%
+        urlcolor=blue,%
+        pdfstartview=FitH,%
+        %pdftitle=\tma{},%
+        %pdfauthor=\name{},%
+        %pdfkeywords={PIN:\pin{}},%
+        %pdfsubject={\course{}},%
+        %debug=true%
+    }%
+    \typeout{******************** hypersetup done ****************}
+}
+\RequirePackage[unicode]{hyperref}
 \fi
 
 % Load cleveref if necessary
 \iftma@usecleveref
-	% Ensure hyperref is loaded before cleveref
-	\@ifpackageloaded{hyperref}{}{%
-		\RequirePackage{hyperref}
-	}
-	\RequirePackage{cleveref}
-	% Redefine commands for cleveref
-	\renewcommand{\tma@crefname}[3]{\crefname{#1}{#2}{#3}}
-	\renewcommand{\tma@stepcounter}[1]{\refstepcounter{#1}}
+% Ensure hyperref is loaded before cleveref
+\@ifpackageloaded{hyperref}%
+{}%
+{\RequirePackage[unicode]{hyperref}}
+\RequirePackage{cleveref}
+% Redefine commands for cleveref
+\RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
+\RenewDocumentCommand{\tma@stepcounter}{m}{\refstepcounter{#1}}
 \fi
 
 % Redefine commands for pdfbookmark
 \iftma@usepdfbookmark
-	\renewcommand{\tma@pageref}[1]{\pageref*{#1}}
-	\renewcommand{\tma@bookmark}[3][0]{\pdfbookmark[#1]{#2}{#3}}
+\RenewDocumentCommand{\tma@pageref}{m}{\pageref*{#1}}
+\RenewDocumentCommand{\tma@bookmark}{O{0} +m +m}{\pdfbookmark[#1]{#2}{#3}}
 \fi
 
 \setquestionstring{Q}
@@ -247,35 +284,35 @@
 
 % Set up cref names if cleveref is used
 \iftma@usecleveref
-	\tma@crefname{question}{question}{questions}
-	\tma@crefname{qpart}{part}{parts}
-	\tma@crefname{qsubpart}{section}{sections}
+\tma@crefname{question}{question}{questions}
+\tma@crefname{qpart}{part}{parts}
+\tma@crefname{qsubpart}{section}{sections}
 \fi
 
-\newenvironment{question}[1][0]{%
-	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
-	\tma@stepcounter{question}%
-	\tma@bookmark{Question \thequestion}{question\thequestion}%
-	\makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
+\NewDocumentEnvironment{question}{O{0}}{%
+    \ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
+    \tma@stepcounter{question}%
+    \tma@bookmark{Question \thequestion}{question\thequestion}%
+    \makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
 }{%
-	\par \vspace{3em}%
+    \par \vspace{3em}%
 }
 
-\newcommand{\qpart}[1][0]{%
-	\ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
-	\tma@stepcounter{qpart}%
-	\tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
-	\par%
-	\hspace*{-1.5em}\makebox[0pt][r]{\large{(\theqpart)\hspace{1.2em} }}%
+\NewDocumentCommand{\qpart}{O{0}}{%
+    \ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
+    \tma@stepcounter{qpart}%
+    \tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
+    \par%
+    \makebox[0pt][r]{\large{(\theqpart)\hspace{1.5em} }}%
 }
 
-\newlength{\tma@qsubwidth}
-\newcommand{\qsubpart}[1][0]{%
-	\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
-	\tma@stepcounter{qsubpart}%
-	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}
-	\settowidth{\tma@qsubwidth}{\theqsubpart}
-	\ifthenelse{\value{qsubpart}>1}{\par \hspace*{-3em}{\large{(\theqsubpart)\hspace{1.6em-\tma@qsubwidth}}}}{\hspace*{-2.5em}{\large{(\theqsubpart)\hspace{1.2em}}}}%
+\NewDocumentCommand{\qsubpart}{O{0}}{%
+    \ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
+    \tma@stepcounter{qsubpart}%
+    \tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
+    \ifthenelse{\value{qsubpart}>1}%
+    {\par}{}%
+    \hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -283,34 +320,34 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Differential Operators
-\newcommand{\dd}{\ensuremath{\mathop{}\!\mathrm{d}}}
-\newcommand{\e}{\ensuremath{\mathrm{e}}}
-\newcommand{\ii}{\ensuremath{\mathrm{i}}}
+\NewDocumentCommand{\dd}{}{\ensuremath{\mathop{}\!\mathrm{d}}}
+\NewDocumentCommand{\e}{}{\ensuremath{\mathrm{e}}}
+\NewDocumentCommand{\ii}{}{\ensuremath{\mathrm{i}}}
 
 %% Number Sets
-\newcommand{\N}{\ensuremath{\mathbb{N}}}
-\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
-\newcommand{\Q}{\ensuremath{\mathbb{Q}}}
-\newcommand{\R}{\ensuremath{\mathbb{R}}}
-\newcommand{\Complex}{\ensuremath{\mathbb{C}}} % Changed from \C to \Complex
-\newcommand{\Rr}{\ensuremath{\mathcal{R}}}
+\NewDocumentCommand{\N}{}{\ensuremath{\mathbb{N}}}
+\NewDocumentCommand{\Z}{}{\ensuremath{\mathbb{Z}}}
+\NewDocumentCommand{\Q}{}{\ensuremath{\mathbb{Q}}}
+\NewDocumentCommand{\R}{}{\ensuremath{\mathbb{R}}}
+\NewDocumentCommand{\Complex}{}{\ensuremath{\mathbb{C}}} % Changed from \C to \Complex
+\NewDocumentCommand{\Rr}{}{\ensuremath{\mathcal{R}}}
 
 %% Vector Notation
-\newcommand{\vect}[1]{\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
-\newcommand{\ve}[1]{\ensuremath{\textbf{#1}}}
+\NewDocumentCommand{\vect}{m}{\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
+\NewDocumentCommand{\ve}{m}{\ensuremath{\textbf{#1}}}
 
 %% Superscript Notations
-\newcommand{\st}{\textsuperscript{st}}
-\newcommand{\nd}{\textsuperscript{nd}}
-\newcommand{\rd}{\textsuperscript{rd}}
-\newcommand{\nth}{\textsuperscript{th}}
+\NewDocumentCommand{\st}{}{\textsuperscript{st}}
+\NewDocumentCommand{\nd}{}{\textsuperscript{nd}}
+\NewDocumentCommand{\rd}{}{\textsuperscript{rd}}
+\NewDocumentCommand{\nth}{}{\textsuperscript{th}}
 
 % Additional Symbols
-\newcommand{\rect}{\ensuremath{\sqsubset\!\!\sqsupset}}
+\NewDocumentCommand{\rect}{}{\ensuremath{\sqsubset\!\!\sqsupset}}
 
 %% Combinatorial Notations
-\newcommand{\comb}[2]{\ensuremath{{}^{#1}C_{#2}}}
-\newcommand{\perm}[2]{\ensuremath{{}^{#1}P_{#2}}}
+\NewDocumentCommand{\comb}{mm}{\ensuremath{{}^{#1}C_{#2}}}
+\NewDocumentCommand{\perm}{mm}{\ensuremath{{}^{#1}P_{#2}}}
 
 %% Mathematical Operators
 \DeclareMathOperator{\re}{Re}
@@ -325,17 +362,17 @@
 \DeclareMathOperator{\Fix}{Fix}
 
 %% Derivatives
-\newcommand{\deriv}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
-\newcommand{\pderiv}[2]{\frac{\partial #1}{\partial #2}}
-\newcommand{\psderiv}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+\NewDocumentCommand{\deriv}{mm}{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+\NewDocumentCommand{\pderiv}{mm}{\frac{\partial #1}{\partial #2}}
+\NewDocumentCommand{\psderiv}{mmm}{\frac{\partial^2 #1}{\partial #2 \partial #3}}
 
 % Legacy Definitions
 \iftma@legacy
-	% Redefine \vec to old definition
-	\renewcommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
-	% Redefine \C to old definition
-	\providecommand{\C}{\ensuremath{\mathbb{C}}}
-	\renewcommand{\C}{\ensuremath{\mathbb{C}}}
+% Redefine \vec to old definition
+\RenewDocumentCommand{\vec}{m}{\ensuremath{\overrightarrow{#1}}}
+% Redefine \C to old definition
+\ProvideDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
+\RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -345,14 +382,14 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 % Define \blacksmiley without loading wasysym
-%\newcommand{\blacksmiley}{\ensuremath{\unicode{263B}}} % Unicode for ☻
-\renewcommand{\qedsymbol}{\blacksmiley}
+\ProvideDocumentCommand{\blacksmiley}{}{\ensuremath{\unicode{263B}}} % Unicode for ☻
+\RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Miscellaneous Settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
 \numberwithin{equation}{question}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
@@ -366,7 +403,7 @@
 \fancyhead[L]{\textrm{\name\ \pin}}
 \fancyhead[C]{\textrm{\course\ TMA-\tma}}
 \fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
-\renewcommand{\headrulewidth}{0pt} % Remove header rule
+\RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% End of Package
