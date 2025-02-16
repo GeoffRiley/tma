@@ -1,6 +1,31 @@
-\documentclass[twoside]{article}
+\documentclass[a4paper,11pt,twoside]{article}
+
+\makeatletter
+\newenvironment{desc}
+  {\if@nobreak
+    \vskip-\lastskip
+    \vspace*{-2.5ex}%
+    \fi
+    %\decl
+    }
+  {%\enddecl
+  }
+\makeatother
+
 \usepackage{tma}
 \usepackage{geometry}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepgfplotslibrary[units]
+\usetikzlibrary{angles,
+	quotes,
+	calc,
+	arrows.meta,
+	decorations.markings}
+\usepackage{siunitx}
+
+\pgfplotsset{compat=1.6}
+
 \geometry{margin=1in}
 \usepackage[colorlinks=true,linkcolor=blue]{hyperref}
 \fancyhf{}
@@ -8,27 +33,26 @@
 \setlength{\headwidth}{\textwidth}
 \fancyhead[LE,RO]{\thepage}
 
-
 \title{The \texttt{tma} Package}
 \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com.com}{geoffr@adaso.com}}
-\date{Version 1.12, 2024/11/08}
+\date{Version 1.15, 2024/11/21}
 
 \begin{document}
-	
+
 	\maketitle
-	
+
 	\tableofcontents
-	
+
 	\section{Introduction}
-	
+
 	The \texttt{tma} package provides a set of macros and environments to assist in writing question papers or solutions to Tutor Marked Assessments (TMAs) for Open University courses. It simplifies the formatting of questions, parts, subparts, and includes useful mathematical commands.
-	
+
 	\section{Installation}
-	
+
 	To install the package, place the `tma.sty` file in your LaTeX directory or project folder. If using a TeX distribution, you may place it in the local texmf tree.
-	
+
 	\section{Package Options}
-	
+
 	\begin{description}
 		\item[\texttt{alph}] (default) Question numbering as 1(b)(iii).
 		\item[\texttt{roman}] Question numbering as 1(ii)(c).
@@ -36,33 +60,41 @@
 		\item[\texttt{pdfbookmark}] Adds PDF bookmarks for each question using the \texttt{hyperref} package.
 		\item[\texttt{legacy}] Enables old definitions of \verb|\vec| and \verb|\C| for backward compatibility with earlier versions of the package. \emph{Deprecated}.
 	\end{description}
-	
+
 	\section{Usage}
-	
+
 	Include the package in your LaTeX document:
-	
+
 	\begin{verbatim}
-		\documentclass{article}
+		\documentclass[a4paper,11pt]{article}
 		\usepackage[alph,cleveref]{tma}
 	\end{verbatim}
-	
+
 	Set your personal information:
-	
+
 	\begin{verbatim}
 		\myname{Your Name}
 		\mycourse{Course Code}
 		\mytma{TMA Number}
 		\mypin{Your PIN}
 	\end{verbatim}
-	
-	\section{Commands and Environments}
-	
-	\subsection{Question Environment}
-	
-	Begin answering a question with the \texttt{question} environment:
-	
+
+	If you wish to set a specific date for your report:
+
 	\begin{verbatim}
-		\begin{question}
+		\setdate{21 November 2024}
+	\end{verbatim}
+
+	You can retrieve the report date within the report using the \verb|\thedate| command.
+
+	\section{Commands and Environments}
+
+	\subsection{Question Environment}
+
+	Begin answering a question with the \texttt{question} environment:
+
+	\begin{verbatim}
+	\begin{question}
 		% Question text
 	\end{question}
 \end{verbatim}
@@ -70,7 +102,7 @@
 Questions are automatically numbered from 1 unless an integer parameter is given in square brackets after the opening of the environment, for example:
 
 \begin{verbatim}
-	\begin{question}[6] % set the question number to be 6
+\begin{question}[6] % set the question number to be 6
 	% Question text
 \end{question}
 \end{verbatim}
@@ -91,11 +123,11 @@ Again, the numbering for parts and subparts begin at 1 unless otherwise prescrib
 The package provides several mathematical commands:
 
 \begin{itemize}
-\item  \verb|\N|, \verb|\Z|, \verb|\Q|, \verb|\R|, \verb|\Complex|: Number sets.
-\item  \verb|\vect{v}|: Vector notation with an arrow over the variable.
-\item  \verb|\ve{v}|: Bold vector notation.
-\item  \verb|\dd|, \verb|\e|, \verb|\ii|: Differential operator, Euler's number, imaginary unit.
-\item  Superscript ordinals: \verb|\st|, \verb|\nd|, \verb|\rd|, \verb|\nth|.
+\item \verb|\N|, \verb|\Z|, \verb|\Q|, \verb|\R|, \verb|\Complex|: Number sets.
+\item \verb|\vect{v}|: Vector notation with an arrow over the variable.
+\item \verb|\ve{v}|: Bold vector notation.
+\item \verb|\dd|, \verb|\e|, \verb|\ii|: Differential operator, Euler's number, imaginary unit.
+\item Superscript ordinals: \verb|\st|, \verb|\nd|, \verb|\rd|, \verb|\nth|.
 \end{itemize}
 
 \section{Examples}
@@ -105,24 +137,24 @@ The package provides several mathematical commands:
 \begin{verbatim}
 \begin{question}[4]
   Prove that the set \N{} of natural numbers is infinite.
-  
+
   \qpart
     What does it mean for a set to be infinite?
-    
+
   \qpart
-    Assume, for contradiction the \N{} is a finite set. 
-    Under this assumption, what can you say about the 
-    number of elements in \N{} and the existence of a 
+    Assume, for contradiction the \N{} is a finite set.
+    Under this assumption, what can you say about the
+    number of elements in \N{} and the existence of a
     largest natural number?
-    
+
   \qpart
-    Explain how the successor function $s(n) = n + 1$ 
-    leads to a contradiction when applied to the largest 
+    Explain how the successor function $s(n) = n + 1$
+    leads to a contradiction when applied to the largest
     natural number assumption of part (b).
-    
+
   \qpart
-    Based on the contradiction found in part (c), conclude 
-    whether the set \N{} is finite or infinite, and briefly 
+    Based on the contradiction found in part (c), conclude
+    whether the set \N{} is finite or infinite, and briefly
     explain why.
 \end{question}
 \end{verbatim}
@@ -131,29 +163,79 @@ Note that the default part numbering is in the form (a), (b), (c)\dots If the op
 
 \begin{center}
 \begin{minipage}{0.7\textwidth}
-    \begin{question}[4]
+\begin{question}[4]
   Prove that the set \N{} of natural numbers is infinite.
-  
+
   \qpart
     What does it mean for a set to be infinite?
-    
+
   \qpart
-    Assume, for contradiction the \N{} is a finite set. 
-    Under this assumption, what can you say about the 
-    number of elements in \N{} and the existence of a 
+    Assume, for contradiction the \N{} is a finite set.
+    Under this assumption, what can you say about the
+    number of elements in \N{} and the existence of a
     largest natural number?
-    
+
   \qpart
-    Explain how the successor function $s(n) = n + 1$ 
-    leads to a contradiction when applied to the largest 
+    Explain how the successor function $s(n) = n + 1$
+    leads to a contradiction when applied to the largest
     natural number assumption of part (b).
-    
+
   \qpart
-    Based on the contradiction found in part (c), conclude 
-    whether the set \N{} is finite or infinite, and briefly 
+    Based on the contradiction found in part (c), conclude
+    whether the set \N{} is finite or infinite, and briefly
     explain why.
 \end{question}
 \end{minipage}
+\end{center}
+
+\subsection{Using subsections}
+
+\begin{verbatim}
+  \setquestionstring{Question}
+  \begin{question}[5]
+    Find the roots of $x^2 +5x +6 = 0$
+    \qpart %
+    \qsubpart %
+    The quadratic equation is \[
+    x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
+    \]
+    \qsubpart %
+    When $a=1$, $b=5$ and $c=6$:
+    \begin{align}
+      x &= \frac{-(5)\pm\sqrt{(5)^2-4\times1\times6}}{2\times1} \\
+        &= \frac{-5\pm\sqrt{25-24}}{2}
+        &= \frac{-5\pm\sqrt{1}}{2}
+    \end{align}
+    \qsubpart %
+    So, $x=\frac{-5+1}{2}$ or $x=\frac{-5-1}{2}$.\\[0.5cm]
+
+    Therefore the roots of $x^2 +5x +6 = 0$ are $x=-2$ or $x=-3$.
+  \end{question}
+\end{verbatim}
+
+\begin{center}
+	\begin{minipage}{0.7\textwidth}
+		\setquestionstring{Question}
+		\begin{question}[5]
+			Find the roots of $x^2 +5x +6 = 0$
+			\qpart %
+			\qsubpart %
+			The quadratic equation is \[
+			x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
+			\]
+			\qsubpart %
+			When $a=1$, $b=5$ and $c=6$:
+			\begin{align}
+				x &= \frac{-(5)\pm\sqrt{(5)^2-4\times1\times6}}{2\times1} \\
+				&= \dfrac{-5\pm\sqrt{25-24}}{2} \\
+				&= \dfrac{-5\pm\sqrt{1}}{2}
+			\end{align}
+			\qsubpart %
+			So, $x=\frac{-5+1}{2}=-2$ or $x=\frac{-5-1}{2}=-3$.\\[0.5cm]
+
+			Therefore the roots of $x^2 +5x +6 = 0$ are $x=-2$ or $x=-3$.
+		\end{question}
+	\end{minipage}
 \end{center}
 
 \subsection{Using Mathematical Commands}
@@ -171,9 +253,23 @@ Note that the default part numbering is in the form (a), (b), (c)\dots If the op
           complex numbers include real numbers as a subset, since they
           can be represented by $a+\ii b$ where $a$ and $b$ are real numbers.
         \end{itemize}
-        Hence, $\N\subseteq\Z\subseteq\Q\subseteq\R\subseteq\Complex$.
-        
+        Hence, $\N\subseteq\Z\subseteq\Q\subseteq\R\subseteq\Complex$.\\[0.5cm]
+
         Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$
+
+        A combination is a selection of objects without regard to order.
+        \begin{align}
+        	C(n,r) &= \comb{n}{r}\\
+        	&= \frac{n!}{r!(n-r)!}
+        \end{align}
+        Where $n$ is the total number of objects, $r$ is the number of objects to be selected and $!$ denotes the factorial (e.g., $5! = 5\times4\times3\times2\times1$).
+
+        A permutation is an arrangement of objects in a specific order.
+        \begin{align}
+        	P(n.r) &= \perm{n}{r}\\
+        	&= \frac{n!}{(n-r)!}
+        \end{align}
+        Where $n$ is the total number of objects, $r$ is the number of objects to be selected and $!$ denotes the factorial.
 \end{verbatim}
 
 \begin{center}
@@ -185,23 +281,143 @@ Note that the default part numbering is in the form (a), (b), (c)\dots If the op
           \item \Q{} (Rational numbers) $\subseteq \R$ (Real numbers); every rational number is also a real number.
           \item \Complex{} (Complex numbers) $\supseteq \R$ (Real number); complex numbers include real numbers as a subset, since they can be represented by $a+\ii b$ where $a$ and $b$ are real numbers.
         \end{itemize}
-        Hence, $\N\subseteq\Z\subseteq\Q\subseteq\R\subseteq\Complex$.
-        
-        Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$
+        Hence, $\N\subseteq\Z\subseteq\Q\subseteq\R\subseteq\Complex$.\\[0.5cm]
+
+        Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$\\[0.5cm]
+
+        A combination is a selection of objects without regard to order.
+    	\begin{align}
+        	C(n,r) &= \comb{n}{r}\\
+        	&= \frac{n!}{r!(n-r)!}
+        \end{align}
+        Where $n$ is the total number of objects, $r$ is the number of objects to be selected and $!$ denotes the factorial (e.g., $5! = 5\times4\times3\times2\times1$).
+
+        A permutation is an arrangement of objects in a specific order.
+        \begin{align}
+        	P(n,r) &= \perm{n}{r}\\
+        	&= \frac{n!}{(n-r)!}
+        \end{align}
+        Where $n$ is the total number of objects, $r$ is the number of objects to be selected and $!$ denotes the factorial.
     \end{minipage}
 \end{center}
+
+\section{Vectors}
+\begin{verbatim}
+	\begin{question}[6]
+	Figure~\ref{fig:q6_vectors} shows the vectors involved in this problem.
+	\qpart % (a)
+	The given angles are bearings, from the compass North with a clockwise
+	positive reading.
+	\begin{align*}
+		|\ve{b}| &= 120\qquad|\ve{w}| = 30\\
+		\intertext{The vector \ve{b} in component form is made using the
+			acute angle in the lower quadrant, i.e. $\ang{180}-\ang{120}=\ang{60}$,
+			this implies that the \ve{j}-component is negative:}
+		\ve{b} &= 170 \sin(\ang{60})\ve{i} - 170 \cos(\ang{60})\ve{j}\\
+		&=\frac{170\sqrt{3}}{2}\ve{i} - \frac{170}{2}\ve{j}\\
+		\vdots
+	\end{align*}
+	Therefore, the two vectors in component form are:\[
+	\ve{b}=(147.22\,\ve{i} - 85.00\,\ve{j})\,\unit{\km\per\hour}
+	\] and \[
+	\ve{w}=(21.21\,\ve{i} + 21.21\,\ve{j})\,\unit{\km\per\hour}
+	\] (all to 2 d.p.)
+	\end{question}
+\end{verbatim}
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[
+		>=Latex,
+		]
+		% Vector setup
+\coordinate (ij) at (10,2) ;
+\node (vi) at ($(ij)+(1,0)$) {$\ve{i}$};
+\node (vj) at ($(ij)+(0,1)$) {$\ve{j}$};
+%
+\coordinate (vecbase) at (3,1.5);
+\coordinate (vecnorth) at ($(vecbase)+(0,1)$);
+\node (vw) at (4,2.5) {$\ve{w}$};
+\node (vb) at (4,0) {$\ve{b}$};
+% Compass setup
+\coordinate (Compass) at (7,2);
+\node (CN) at ($(Compass)+(0,1)$) {$N$};
+\coordinate (CS) at ($(Compass)-(0,0.5)$);
+\coordinate (CW) at ($(Compass)-(0.5,0)$);
+\coordinate (CE) at ($(Compass)+(0.5,0)$);
+% Drawing
+\begin{scope}[very thick, decoration={markings,mark=at position 0.8 with \arrow{>}}]
+	\draw[postaction={decorate}] (ij)--(vi);
+	\draw[postaction={decorate}] (ij)--(vj);
+	\draw[postaction={decorate}] (vecbase)--(vw) ;
+	\draw[postaction={decorate}] (vecbase)--(vb) ;
+\end{scope}
+\draw[dotted] ($(vecbase)-(0,2)$)--($(vecbase)+(0,2)$) ;
+\draw[-Latex,thick] (CS) -- (CN);
+\draw[thick] (CW) -- (CE);
+\draw (Compass) circle [radius=0.25];
+\pic [draw, angle radius=0.5cm, angle eccentricity=2, "$\ang{45}$"] {angle=vw--vecbase--vecnorth};
+\pic [draw, angle radius=0.4cm, angle eccentricity=2.5, "$\ang{120}$"] {angle=vb--vecbase--vecnorth};
+% Key
+\node[draw,text width=6cm,align=justify] at (8,0.5) {$\ve{w}=\qty{30}{\km\per\hour}$ from south-west\\$\ve{b}=\qty{170}{\km\per\hour}$ bearing \ang{120}};
+	\end{tikzpicture}
+	\caption{Vectors}
+	\label{fig:q6_vectors}
+\end{figure}
+\begin{center}
+\begin{minipage}{0.7\textwidth}
+\begin{question}[6]
+Figure~\ref{fig:q6_vectors} shows the vectors involved in this problem.
+\qpart % (a)
+The given angles are bearings, from the compass North with a clockwise
+positive reading.
+\begin{align*}
+	|\ve{b}| &= 120\qquad|\ve{w}| = 30\\
+	\intertext{The vector \ve{b} in component form is made using the
+		acute angle in the lower quadrant, i.e. $\ang{180}-\ang{120}=\ang{60}$,
+		this implies that the \ve{j}-component is negative:}
+	\ve{b} &= 170 \sin(\ang{60})\ve{i} - 170 \cos(\ang{60})\ve{j}\\
+	&=\frac{170\sqrt{3}}{2}\ve{i} - \frac{170}{2}\ve{j}\\
+	\vdots
+\end{align*}
+Therefore, the two vectors in component form are:\[
+\ve{b}=(147.22\,\ve{i} - 85.00\,\ve{j})\,\unit{\km\per\hour}
+\] and \[
+\ve{w}=(21.21\,\ve{i} + 21.21\,\ve{j})\,\unit{\km\per\hour}
+\] (all to 2 d.p.)
+\end{question}
+\end{minipage}
+\end{center}
+
+Note, the command \verb|\ang{}| is found in the package  \href{https://ctan.org/pkg/siunitx}{\texttt{siunitx}}.
+
+\section{Command summary}
+
+\begin{desc}
+	\verb|\st|\\
+	\verb|\nd|\\
+	\verb|\rd|\\
+	\verb|\nth|
+\end{desc}
+Commands to set ordinal indicators after numbers. For example, 1\st, 2\nd, 3\rd and 4\nth.
+
 \section{Change Log}
 
 \begin{itemize}
-\item **v1.12 (2024/11/08)**: Fixed error with \verb|\renewcommand{\C}|; changed to \verb|\providecommand{\C}|.
-\item **v1.11 (2024/11/08)**: Added 'legacy' option to allow old definitions of \verb|\vec| and \verb|\C|.
-\item **v1.10 (2024/09/10)**: Ensured commands are correctly defined before being redefined!
-\item **v1.09 (2024/09/10)**: Improved code readability.
-\item **v1.08 (2024/09/05)**: Consolidated geometry settings and adjusted package loading order.
-\item **v1.07 (2024/09/04)**: Avoided redefining standard LaTeX commands to avoid clashes. Fixed error with \verb|\ExecuteOptions| in package file. Implemented flags to handle the various options simpler.
-\item **v1.06 (2024/08/28)**: Updated definitions of \verb|\comb|, \verb|\samp| to correctly work after a superscript.
-\item **v1.05 (2024/08/28)**: Updated definitions of \verb|\ve|, \verb|\vec| to allow use in both maths and text mode.
-\item **v1.04 (2024/08/26)**: Updated usage of 'fancyhdr' to remove deprecated commands.
+\item \textbf{v1.18 (2025/02/16)}: PDF metadata doesn't set correctly so I have removed it: the cause is an incompatibility between \LaTeX\ unicode and the PDF restricted character allowance.
+\item \textbf{v1.17 (2025/02/13)}: Rewritten with \LaTeX-3 syntax from the `xparse' package to make commands less fragile. Finally got alignment of part and subpart numbering to line up correctly.
+\item \textbf{v1.16 (2024/11/22)}: Added File, Properties to pdf files using the hyperref setup system when in pdfbookmark mode.
+\item \textbf{v1.15 (2024/11/21)}: Added \verb|\setdate{}| and \verb|\thedate| for setting and using a fixed report date.
+\item \textbf{v1.14 (2024/11/17)}: Allow setting of question string with \verb|\setquestionstring{}|; set indentation for \verb|\qpart| and \verb|\qsubpart| from Steve Mayers contribution.
+\item \textbf{v1.13 (2024/11/16)}: Attempt at placing part and subpart marks on the same line when there is no intervening text.
+\item \textbf{v1.12 (2024/11/08)}: Fixed error with \verb|\renewcommand{\C}|; changed to \\ \verb|\providecommand{\C}|.
+\item \textbf{v1.11 (2024/11/08)}: Added 'legacy' option to allow old definitions of \verb|\vec| and \verb|\C|.
+\item \textbf{v1.10 (2024/09/10)}: Ensured commands are correctly defined before being redefined!
+\item \textbf{v1.09 (2024/09/10)}: Improved code readability.
+\item \textbf{v1.08 (2024/09/05)}: Consolidated geometry settings and adjusted package loading order.
+\item \textbf{v1.07 (2024/09/04)}: Avoided redefining standard \LaTeX\ commands to avoid clashes. Fixed error with \verb|\ExecuteOptions| in package file. Implemented flags to handle the various options simpler.
+\item \textbf{v1.06 (2024/08/28)}: Updated definitions of \verb|\comb|, \verb|\perm| to correctly work after a superscript.
+\item \textbf{v1.05 (2024/08/28)}: Updated definitions of \verb|\ve|, \verb|\vec| to allow use in both maths and text mode.
+\item \textbf{v1.04 (2024/08/26)}: Updated usage of 'fancyhdr' to remove deprecated commands.
 \end{itemize}
 
 \section{License}

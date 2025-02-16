@@ -1,0 +1,42 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[alph]{tma}
+\usepackage{lipsum}
+
+\myname{Geoff I. Riley}
+\mypin{ABCDEFGH}
+\mycourse{\LaTeX}
+\mytma{test}
+
+%\marginnotes
+
+\begin{document}
+	%\maketitle
+	Using the default \verb|[alph]| option swaps the numbering systems for \verb|qpart| and \verb|qsubpart|. This is the opposite of the \verb|[roman]| option mode.
+	
+	Expected tags at end of each line.
+	
+	\begin{question}
+	\qpart\qsubpart
+	\lipsum[1][1-4] \emph{(a)(i)}
+	
+	\qsubpart
+	\lipsum[1][5-6] \emph{(a)(ii)}
+	
+	\qsubpart
+	\lipsum[1][7] \emph{(a)(iii)}
+	
+	\qpart
+	\lipsum[2][1-3] \emph{(b)}
+	
+	\qsubpart
+	\lipsum[2][4-5] \emph{(b)(i)}
+	
+	\qsubpart
+	\lipsum[2][6-8] \emph{(b)(ii)}
+	
+	\qpart
+	\lipsum[3][1] \emph{(c)}
+\end{question}
+
+\end{document}
