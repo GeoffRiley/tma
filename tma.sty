@@ -10,7 +10,7 @@
 % version 2005/12/01 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-% 
+%
 % The Current Maintainer of this work is G. I. Riley.
 %
 %% This package may be freely used, especially by, but not limited to, students, lecturers, and
@@ -37,6 +37,10 @@
 %% To use a package option, place the option(s) before the package name:
 %%    \usepackage[roman,cleveref]{tma}
 %%
+%%
+%% v1.18 2025/02/16
+%%    PDF metadata doesn't set correctly so I have removed it: the cause is an
+%%    incompatibility between LaTeX unicode and the PDF restricted character allowance
 %% v1.17 2025/02/13
 %%    Rewritten with LaTeX-3 syntax from the `xparse' package to make commands less fragile
 %%    Finally got alignment of part and subpart numbering to line up correctly
@@ -48,10 +52,10 @@
 %% v1.14 2024/11/17
 %%    Allow replacement of Question marker tag using \setquestionstring{}
 %%    References with cleveref not working
-%%    Replaced my attempts at keeping \qpart and \qsubpart on the same line with 
+%%    Replaced my attempts at keeping \qpart and \qsubpart on the same line with
 %%    Steve Mayers contribution
 %% v1.13 2024/11/16
-%%    Arranged for \qsubpart to go on the same line as the \qpart when 
+%%    Arranged for \qsubpart to go on the same line as the \qpart when
 %%    there is no intervening text
 %%    \qsubpart indents further than \qpart
 %% v1.12 2024/11/08
@@ -61,7 +65,7 @@
 %%    Adjusted loading order of packages
 %%    Improved code readability and comments
 %%    Added 'legacy' option to allow old definitions of \vec and \C
-\ProvidesPackage{tma}[2025/02/13 v1.17 TMA document style]
+\ProvidesPackage{tma}[2025/02/16 v1.18 TMA document style]
 \NeedsTeXFormat{LaTeX2e}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -112,15 +116,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \geometry{
-	headheight=10mm,
-	headsep=5mm,
-	bottom=25mm,
-	footskip=15mm,
-	left=30mm,
-	right=30mm,
-	marginparwidth=0mm,
-	marginparsep=0mm,
-	includemp
+    headheight=10mm,
+    headsep=5mm,
+    bottom=25mm,
+    footskip=15mm,
+    left=30mm,
+    right=30mm,
+    marginparwidth=0mm,
+    marginparsep=0mm,
+    includemp
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -129,12 +133,12 @@
 
 \NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
 \NewDocumentCommand{\marginnotes}{}{
-	\geometry{
-		marginparwidth=40mm,
-		marginparsep=5mm,
-		left=20mm,
-		right=15mm
-	}
+    \geometry{
+        marginparwidth=40mm,
+        marginparsep=5mm,
+        left=20mm,
+        right=15mm
+    }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -170,28 +174,56 @@
 \NewDocumentCommand{\tma@pageref}{m}{\pageref{#1}}
 
 % Declare options
-\DeclareOption{roman}{
-	\tma@romantrue
+\DeclareOption{roman}{%
+    \tma@romantrue%
 }
 
-\DeclareOption{alph}{
-	\tma@romanfalse
+\DeclareOption{alph}{%
+    \tma@romanfalse%
 }
 
-\DeclareOption{cleveref}{
-	\tma@useclevereftrue
+\DeclareOption{cleveref}{%
+    \tma@useclevereftrue%
 }
 
-\DeclareOption{pdfbookmark}{
-	\tma@usepdfbookmarktrue
+\DeclareOption{pdfbookmark}{%
+    \tma@usepdfbookmarktrue%
 }
 
-\DeclareOption{legacy}{
-	\tma@legacytrue
+\DeclareOption{legacy}{%
+    \tma@legacytrue%
+}
+
+\DeclareOption*{%
+    \PackageWarning{tma}{Unknown option `\CurrentOption'}%
 }
 
 % Process options
 \ProcessOptions\relax
+
+\typeout{**************** OPTION RESULTS **********}
+\iftma@usepdfbookmark
+\typeout{pdfbookmark is TRUE}
+\else
+\typeout{pdfbookmark is FALSE}
+\fi
+\iftma@roman
+\typeout{roman is TRUE}
+\else
+\typeout{roman is FALSE}
+\fi
+\iftma@usecleveref
+\typeout{cleveref is TRUE}
+\else
+\typeout{cleveref is FALSE}
+\fi
+\iftma@legacy
+\typeout{legacy is TRUE}
+\else
+\typeout{legacy is FALSE}
+\fi
+\typeout{************* END OPTION RESULTS **********}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Set Up Package Based on Options
@@ -199,47 +231,49 @@
 
 % Set question numbering
 \iftma@roman
-	\RenewDocumentCommand{\theqpart}{}{\roman{qpart}}
-	\RenewDocumentCommand{\theqsubpart}{}{\alph{qsubpart}}
+\RenewDocumentCommand{\theqpart}{}{\roman{qpart}}
+\RenewDocumentCommand{\theqsubpart}{}{\alph{qsubpart}}
 \else
-	\RenewDocumentCommand{\theqpart}{}{\alph{qpart}}
-	\RenewDocumentCommand{\theqsubpart}{}{\roman{qsubpart}}
+\RenewDocumentCommand{\theqpart}{}{\alph{qpart}}
+\RenewDocumentCommand{\theqsubpart}{}{\roman{qsubpart}}
 \fi
-
 % Load hyperref if necessary
 \iftma@usepdfbookmark
-	\AtBeginDocument{%
-		\hypersetup{%
-			bookmarks=true,%
-			colorlinks=true,%
-			linkcolor=blue,%
-			urlcolor=blue,%
-			pdfstartview=FitH,%
-			pdftitle={\mytma{}},%
-			pdfauthor={\myname{}},%
-			pdfkeywords={\mypin{}},%
-			pdfsubject={\mycourse{}}%
-		}%
-	}
-	\RequirePackage{hyperref}
+\AtBeginDocument{%
+    \typeout{******************** doing hypersetup ****************}
+    \hypersetup{%
+        bookmarks=true,%
+        colorlinks=true,%
+        linkcolor=blue,%
+        urlcolor=blue,%
+        pdfstartview=FitH,%
+        %pdftitle=\tma{},%
+        %pdfauthor=\name{},%
+        %pdfkeywords={PIN:\pin{}},%
+        %pdfsubject={\course{}},%
+        %debug=true%
+    }%
+    \typeout{******************** hypersetup done ****************}
+}
+\RequirePackage[unicode]{hyperref}
 \fi
 
 % Load cleveref if necessary
 \iftma@usecleveref
-	% Ensure hyperref is loaded before cleveref
-	\@ifpackageloaded{hyperref}{}{%
-		\RequirePackage{hyperref}
-	}
-	\RequirePackage{cleveref}
-	% Redefine commands for cleveref
-	\RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
-	\RenewDocumentCommand{\tma@stepcounter}{m}{\refstepcounter{#1}}
+% Ensure hyperref is loaded before cleveref
+\@ifpackageloaded{hyperref}%
+{}%
+{\RequirePackage[unicode]{hyperref}}
+\RequirePackage{cleveref}
+% Redefine commands for cleveref
+\RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
+\RenewDocumentCommand{\tma@stepcounter}{m}{\refstepcounter{#1}}
 \fi
 
 % Redefine commands for pdfbookmark
 \iftma@usepdfbookmark
-	\RenewDocumentCommand{\tma@pageref}{m}{\pageref*{#1}}
-	\RenewDocumentCommand{\tma@bookmark}{O{0} +m +m}{\pdfbookmark[#1]{#2}{#3}}
+\RenewDocumentCommand{\tma@pageref}{m}{\pageref*{#1}}
+\RenewDocumentCommand{\tma@bookmark}{O{0} +m +m}{\pdfbookmark[#1]{#2}{#3}}
 \fi
 
 \setquestionstring{Q}
@@ -250,18 +284,18 @@
 
 % Set up cref names if cleveref is used
 \iftma@usecleveref
-	\tma@crefname{question}{question}{questions}
-	\tma@crefname{qpart}{part}{parts}
-	\tma@crefname{qsubpart}{section}{sections}
+\tma@crefname{question}{question}{questions}
+\tma@crefname{qpart}{part}{parts}
+\tma@crefname{qsubpart}{section}{sections}
 \fi
 
 \NewDocumentEnvironment{question}{O{0}}{%
-	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
-	\tma@stepcounter{question}%
-	\tma@bookmark{Question \thequestion}{question\thequestion}%
-	\makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
+    \ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
+    \tma@stepcounter{question}%
+    \tma@bookmark{Question \thequestion}{question\thequestion}%
+    \makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
 }{%
-	\par \vspace{3em}%
+    \par \vspace{3em}%
 }
 
 \NewDocumentCommand{\qpart}{O{0}}{%
@@ -334,11 +368,11 @@
 
 % Legacy Definitions
 \iftma@legacy
-	% Redefine \vec to old definition
-	\RenewDocumentCommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
-	% Redefine \C to old definition
-	\providecommand{\C}{\ensuremath{\mathbb{C}}}
-	\RenewDocumentCommand{\C}{\ensuremath{\mathbb{C}}}
+% Redefine \vec to old definition
+\RenewDocumentCommand{\vec}{m}{\ensuremath{\overrightarrow{#1}}}
+% Redefine \C to old definition
+\ProvideDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
+\RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
