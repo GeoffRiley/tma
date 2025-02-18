@@ -38,6 +38,11 @@
 %%    \usepackage[roman,cleveref]{tma}
 %%
 %%
+%% v1.19 2025/02/18
+%%    PDF metadata (apparently) solved with help from Steve Mayers; all down to the use of
+%%    commands being used as string containers. New (LaTeX3) commands are robust and fail to
+%%    expand within the context of the metadata and bookmarks, old (LaTeX2e) commands are
+%%    fragile and correctly expanded. I have a mix of old commands and new variables now.
 %% v1.18 2025/02/16
 %%    PDF metadata doesn't set correctly so I have removed it: the cause is an
 %%    incompatibility between LaTeX unicode and the PDF restricted character allowance
@@ -65,27 +70,43 @@
 %%    Adjusted loading order of packages
 %%    Improved code readability and comments
 %%    Added 'legacy' option to allow old definitions of \vec and \C
-\ProvidesPackage{tma}[2025/02/16 v1.18 TMA document style]
+\ProvidesPackage{tma}[2025/02/18 v1.19 TMA document style]
 \NeedsTeXFormat{LaTeX2e}
+
+\RequirePackage{expl3} % LaTeX3 "experimental"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package Initialization
 %%%%%%%%%%%%%%%%%%%%%%%%%%
+\ExplSyntaxOn
+\tl_new:N \g_tma_constant_name
+\tl_new:N \g_tma_constant_tma
+\tl_new:N \g_tma_constant_course
+\tl_new:N \g_tma_constant_pin
+\tl_new:N \g_tma_constant_thedate
 
-\NewDocumentCommand{\name}{}{\relax}
-\NewDocumentCommand{\tma}{}{\relax}
-\NewDocumentCommand{\course}{}{\relax}
-\NewDocumentCommand{\pin}{}{\relax}
-\NewDocumentCommand{\thedate}{}{\relax}
+\tl_gset:Nn \g_tma_constant_name {name}
+\tl_gset:Nn \g_tma_constant_tma {tma}
+\tl_gset:Nn \g_tma_constant_course {course}
+\tl_gset:Nn \g_tma_constant_pin {pin}
+\tl_gset:Nn \g_tma_constant_thedate {the~date}
+
+\newcommand{\name}{\g_tma_constant_name}
+\newcommand{\tma}{\g_tma_constant_tma}
+\newcommand{\course}{\g_tma_constant_course}
+\newcommand{\pin}{\g_tma_constant_pin}
+\newcommand{\thedate}{\g_tma_constant_thedate}
+
+\NewDocumentCommand{\myname}{m}{\tl_gset:Nn \g_tma_constant_name{#1}}
+\NewDocumentCommand{\mytma}{m}{\tl_gset:Nn \g_tma_constant_tma{#1}}
+\NewDocumentCommand{\mycourse}{m}{\tl_gset:Nn \g_tma_constant_course{#1}}
+\NewDocumentCommand{\mypin}{m}{\tl_gset:Nn \g_tma_constant_pin{#1}}
+\NewDocumentCommand{\setdate}{m}{\date{#1}\tl_gset:Nn \g_tma_constant_thedate{#1}}
+\ExplSyntaxOff
 
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
 
-\NewDocumentCommand{\myname}{m}{\RenewDocumentCommand{\name}{}{#1}}
-\NewDocumentCommand{\mytma}{m}{\RenewDocumentCommand{\tma}{}{#1}}
-\NewDocumentCommand{\mycourse}{m}{\RenewDocumentCommand{\course}{}{#1}}
-\NewDocumentCommand{\mypin}{m}{\RenewDocumentCommand{\pin}{}{#1}}
-\NewDocumentCommand{\setdate}{m}{\date{#1}\RenewDocumentCommand{\thedate}{}{#1}}
 
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
 \NewDocumentCommand{\setquestionstring}{m}{\RenewDocumentCommand{\tma@questionstring}{}{#1}}
@@ -148,7 +169,7 @@
 \newcounter{question}
 \newcounter{qpart}[question]
 \newcounter{qsubpart}[qpart]
-\RenewDocumentCommand{\thequestion}{}{\arabic{question}}
+\renewcommand{\thequestion}{\arabic{question}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Option Handling
@@ -166,11 +187,11 @@
 \tma@legacyfalse         % Default is not to use legacy definitions
 
 % Define commands with default values
-\RenewDocumentCommand{\theqpart}{}{\alph{qpart}}
-\RenewDocumentCommand{\theqsubpart}{}{\roman{qsubpart}}
+\renewcommand{\theqpart}{\alph{qpart}}
+\renewcommand{\theqsubpart}{\roman{qsubpart}}
 \NewDocumentCommand{\tma@crefname}{mmm}{\relax}
 \NewDocumentCommand{\tma@stepcounter}{m}{\stepcounter{#1}}
-\NewDocumentCommand{\tma@bookmark}{O{}mm}{\relax}
+\NewDocumentCommand{\tma@bookmark}{O{0}mm}{\relax}
 \NewDocumentCommand{\tma@pageref}{m}{\pageref{#1}}
 
 % Declare options
@@ -231,31 +252,27 @@
 
 % Set question numbering
 \iftma@roman
-\RenewDocumentCommand{\theqpart}{}{\roman{qpart}}
-\RenewDocumentCommand{\theqsubpart}{}{\alph{qsubpart}}
+\renewcommand{\theqpart}{\roman{qpart}}
+\renewcommand{\theqsubpart}{\alph{qsubpart}}
 \else
-\RenewDocumentCommand{\theqpart}{}{\alph{qpart}}
-\RenewDocumentCommand{\theqsubpart}{}{\roman{qsubpart}}
+\renewcommand{\theqpart}{\alph{qpart}}
+\renewcommand{\theqsubpart}{\roman{qsubpart}}
 \fi
 % Load hyperref if necessary
 \iftma@usepdfbookmark
 \AtBeginDocument{%
-    \typeout{******************** doing hypersetup ****************}
     \hypersetup{%
-        bookmarks=true,%
         colorlinks=true,%
         linkcolor=blue,%
         urlcolor=blue,%
         pdfstartview=FitH,%
-        %pdftitle=\tma{},%
-        %pdfauthor=\name{},%
-        %pdfkeywords={PIN:\pin{}},%
-        %pdfsubject={\course{}},%
-        %debug=true%
+        pdftitle={TMA~\tma}, %
+        pdfauthor={\name~—~\pin}, %
+        pdfkeywords={OUCU:~\pin, TMA~\tma}, %
+        pdfsubject=\course%
     }%
-    \typeout{******************** hypersetup done ****************}
 }
-\RequirePackage[unicode]{hyperref}
+\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}
 \fi
 
 % Load cleveref if necessary
@@ -263,7 +280,7 @@
 % Ensure hyperref is loaded before cleveref
 \@ifpackageloaded{hyperref}%
 {}%
-{\RequirePackage[unicode]{hyperref}}
+{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
 \RequirePackage{cleveref}
 % Redefine commands for cleveref
 \RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
@@ -273,7 +290,9 @@
 % Redefine commands for pdfbookmark
 \iftma@usepdfbookmark
 \RenewDocumentCommand{\tma@pageref}{m}{\pageref*{#1}}
-\RenewDocumentCommand{\tma@bookmark}{O{0} +m +m}{\pdfbookmark[#1]{#2}{#3}}
+\RenewDocumentCommand{\tma@bookmark}{O{0} +m +m}{%
+    \pdfbookmark[#1]{#2}{#3}%
+}
 \fi
 
 \setquestionstring{Q}
