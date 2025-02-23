@@ -1,4 +1,8 @@
-\documentclass[a4paper,11pt,twoside]{article}
+\documentclass{ltxdoc}
+\PassOptionsToClass{a4paper,11pt,twoside}{article}
+\AtBeginDocument{\OnlyDescription}
+\AtBeginDocument{\CodelineIndex\EnableCrossrefs}
+\AtEndDocument{\PrintIndex}
 
 \makeatletter
 \newenvironment{desc}
@@ -11,26 +15,23 @@
   {%\enddecl
   }
 
-\def\cmd@font{\normalfont\ttfamily\selectfont}
-\newcommand{\cmd}[2][]{%
-    \ifblank{#1}{%
-    \cmd@font{\textbackslash#2}%
-    }{}%
-    \normalfont\selectfont%
-    \def\@cmd{#2}%
-    \index{#2@\texttt{\textbackslash\@cmd}}%
-    \index{command!#2@\texttt{\textbackslash\@cmd}}%
-}%
+%\def\cmd@font{\normalfont\ttfamily\selectfont}
+%\newcommand{\cmd}[2][]{%
+%    \ifblank{#1}{%
+%    \cmd@font{\textbackslash#2}%
+%    }{}%
+%    \normalfont\selectfont%
+%    \def\@cmd{#2}%
+%    \index{#2@\texttt{\textbackslash\@cmd}}%
+%    \index{command!#2@\texttt{\textbackslash\@cmd}}%
+%}%
 
 \def\opt@font{\normalfont\ttfamily\selectfont}
-\newcommand{\opt}[2][]{%
-    \ifblank{#1}{%
-        \opt@font{#2}%
-    }{}%
+\newcommand{\opt}[1]{%
+    \opt@font{#1}%
     \normalfont\selectfont%
-    \def\@opt{#2}%
-    \index{#2@\texttt{\@opt}}%
-    \index{option!#2@\texttt{\@opt}}%
+    \index{#1@{\texttt{#1~(option)}}}%
+    \index{option!#1@\texttt{#1}}%
 }%
 
 \def\env@font{\normalfont\ttfamily\selectfont}
@@ -90,11 +91,11 @@
 	\section{Package Options}
 
 	\begin{description}
-		\item[\texttt{alph}]\opt[1]{alph} (default) Question numbering as 1(b)(iii).
-		\item[\texttt{roman}]\opt[1]{roman} Question numbering as 1(ii)(c).
-		\item[\texttt{cleveref}]\opt[1]{cleveref} Enables automatic referencing with the \texttt{cleveref} package.
-		\item[\texttt{pdfbookmark}]\opt[1]{pdfbookmark} Adds PDF bookmarks for each question using the \texttt{hyperref} package.
-		\item[\texttt{legacy}]\opt[1]{legacy} Enables old definitions of \cmd{vec} and \cmd{C} for backward compatibility with earlier versions of the package. \emph{Deprecated}.
+		\item[\opt{alph}] (default) Question numbering as 1(b)(iii).
+		\item[\opt{roman}] Question numbering as 1(ii)(c).
+		\item[\opt{cleveref}] Enables automatic referencing with the \texttt{cleveref} package.
+		\item[\opt{pdfbookmark}] Adds PDF bookmarks for each question using the \texttt{hyperref} package.
+		\item[\opt{legacy}] Enables old definitions of \cs{vec} and \cs{C} for backward compatibility with earlier versions of the package. \emph{Deprecated}.
 	\end{description}
 
 	\section{Usage}
@@ -106,7 +107,7 @@
 		\usepackage[alph,cleveref]{tma}
 	\end{verbatim}
 
-	Set your personal information\index{personal information}\cmd[1]{myname}\cmd[1]{mycourse}\cmd[1]{mytma}\cmd[1]{mypin}:
+	Set your personal information\index{personal information} using the macros \cs{myname}, \cs{mycourse}, \cs{mytma} and \cs{mypin}:
 
 	\begin{verbatim}
 		\myname{Your Name}
@@ -115,19 +116,19 @@
 		\mypin{Your PIN}
 	\end{verbatim}
 
-	If you wish to set a specific date\cmd[1]{setdate} for your report use:
+	If you wish to set a specific date for your report, use \cs{setdate}:
 
 	\begin{verbatim}
 		\setdate{21 November 2024}
 	\end{verbatim}
 
-	This is a free format field, any rendition of `date' may be given. You can retrieve the report date later using the \cmd{thedate} command.
+	This is a free format field, any rendition of `date' may be given. You can retrieve the report date later using the \cs{thedate} command.
 
 	\section{Commands and Environments}
 
 	\subsection{Question Environment}
 
-	Begin answering a question with the \env{question} environment:
+	\PrintEnvName{question} Begin answering a question with the \env{question} environment:
 
 	\begin{verbatim}
 	\begin{question}
@@ -467,7 +468,5 @@ This work may be distributed and/or modified under the conditions of the LaTeX P
 \section{Acknowledgments}
 
 Special thanks to Peter McFarlane, Bob Margolis, Rob Lynas, Steve Mayer, Tim Dale and to all contributors and, especially, the Open University community.
-
-\printindex
 
 \end{document}
