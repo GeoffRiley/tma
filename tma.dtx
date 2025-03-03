@@ -1,6 +1,30 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2025 by <+author+> <<+email+>>
+% ---------------------------------------------------------------------------
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is <+maintainer+>.
+%
+% This work consists of the files OU_tma.dtx and OU_tma.ins
+% and the derived filebase OU_tma.sty.
+%
+% \fi
+%
 % \iffalse
+%<*driver>
+\ProvidesFile{tma.dtx}
+%</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<package>\ProvidesFile{tma.dtx}
+%<package>\ProvidesPackage{tma.dtx}
 %<package>  [2025-02-18 v1.19 TMA package]
 %<*driver>
 \documentclass{ltxdoc}
@@ -25,25 +49,6 @@
 \end{document}
 %</driver>
 % \fi
-% ^^A -*-LaTeX-*-
-%
-% ^^A These shouldn't come out in .ist files, hence the module
-% ^^A comments, or in the printed version, hence temporary comment
-% ^^A category for `<'
-%\catcode`\<=14
-% ^^A <+package|shortvrb>\NeedsTeXFormat{LaTeX2e}[1994/12/01]
-%<+package>
-%<+package>\providecommand\DeclareRelease[1]{}
-%<+package>\providecommand\DeclareCurrentRelease[1]{}
-%<+package>
-%<+package>\DeclareRelease{v1.17}{2025-02-13}
-%<+package>                      {tma-2016-02-15.sty}
-%<+package>\DeclareRelease{v1.18}{2025-02-16}
-%<+package>                      {tma-2025-02-16.sty}
-%<+package>\DeclareCurrentRelease{v1.19}{2025-02-18}
-%<+package>
-%<+package>\ProvidesPackage{tma}
-%\catcode`\<=12
 % \GetFileInfo{tma.sty}
 % \title{The \textsf{tma} Package\thanks{This document
 %  corresponds to \textsf{tma}~\fileversion, dated~\filedate.}}
@@ -52,20 +57,63 @@
 % \maketitle
 %
 % \begin{abstract}
-% The \textsf{tma} package provides macros and environments to assist in writing Tutor Marked Assessments (TMAs) for Open University courses.
+% The \textsf{tma} package provides macros and environments to assist in writing Tutor
+% Marked Assessments (TMAs) for Open University courses.
 % \end{abstract}
 %
 % \tableofcontents
 % \section{Introduction}
 %
 % The \textsf{tma} package simplifies the creation of TMAs by providing...
+%
+% \section{Usage}
+%
+% Put text here.
+%
+%
+% \DescribeMacro{\name}{}
+%
+%
+% \DescribeMacro{\tma}{}
+%
+%
+% \DescribeMacro{\course}{}
+%
+%
+% \DescribeMacro{\pin}{}
+%
+%
+% \DescribeMacro{\thedate}{}
+%
+%
+% \DescribeMacro{\thequestion}{}
+%
+%
+% \DescribeMacro{\theqpart}{}
+%
+%
+% \DescribeMacro{\theqsubpart}{}
+%
+%
+% \DescribeMacro{\theqpart}{}
+%
+%
+% \DescribeMacro{\theqsubpart}{}
+%
+%
+% \DescribeMacro{\theqpart}{}
+%
+%
+% \DescribeMacro{\theqsubpart}{}
+%
+
 % \MaybeStop{}
 %
-% \section{Package Code}
+% \section{Implementation}
 %
-% \begin{macrocode}
+%    \begin{macrocode}
 %% tma.sty
-%% Copyright 2024 G. I. Riley
+%% Copyright 2025 G. I. Riley
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -73,72 +121,78 @@
 % The latest version of this license is in
 %   http://www.latex-project.org/lppl.txt
 % and version 1.3 or later is part of all distributions of LaTeX
-% version 2005/12/01 or later.
+% version 2005-12-01 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
 %
 % The Current Maintainer of this work is G. I. Riley.
 %
-%% This package may be freely used, especially by, but not limited to, students, lecturers, and
-%% staff of the Open University. It has been created by the efforts of many who are now or
-%% have been connected with the Open University Students Association. No acknowledgement is
-%% _required_ for using this package within the production of a _Tutor Marked Assessment._
-%%
-%%
-%% Adapted by Peter McFarlane from various sources.
-%% All errors of style or content are mine or subsequent contributor.
-%% Acknowledgements to Bob Margolis, and also Rob Lynas (from whom some macros are plagiarised).
-%% Further contributions from Steve Mayer and Tim Dale.
-%% My apologies for not annotating this file, I shall do so soon (yeah, right).
-%% Annotations, in part, and further modification by Geoff Riley.
-%%
-%%
-%% Package Options
-%%    [alph]      (default) question numbering as 1(b)(iii)
-%%    [roman]     varies question numbering to sequence used by M381 i.e. 1(ii)(c)
-%%    [cleveref]  question numbering creates automatic referencing for use with cleveref package
-%%    [pdfbookmark] add PDF bookmarks for each question using hyperref package
-%%    [legacy]    enables old definitions of \vec and \C for backward compatibility
-%%
-%% To use a package option, place the option(s) before the package name:
-%%    \usepackage[roman,cleveref]{tma}
-%%
-%%
-%% v1.19 2025/02/18
-%%    PDF metadata (apparently) solved with help from Steve Mayers; all down to the use of
-%%    commands being used as string containers. New (LaTeX3) commands are robust and fail to
-%%    expand within the context of the metadata and bookmarks, old (LaTeX2e) commands are
-%%    fragile and correctly expanded. I have a mix of old commands and new variables now.
-%% v1.18 2025/02/16
-%%    PDF metadata doesn't set correctly so I have removed it: the cause is an
-%%    incompatibility between LaTeX unicode and the PDF restricted character allowance
-%% v1.17 2025/02/13
-%%    Rewritten with LaTeX-3 syntax from the `xparse' package to make commands less fragile
-%%    Finally got alignment of part and subpart numbering to line up correctly
-%% v1.16 2024/11/22
-%%    Added File, Properties to pdf files using the hyperref setup system when in pdfbookmark mode
-%% v1.15 2024/11/21
-%%    Define \setdate{} and \thedate to allow the header date to be used within
-%%    the document, eg header and footer
-%% v1.14 2024/11/17
-%%    Allow replacement of Question marker tag using \setquestionstring{}
-%%    References with cleveref not working
-%%    Replaced my attempts at keeping \qpart and \qsubpart on the same line with
-%%    Steve Mayers contribution
-%% v1.13 2024/11/16
-%%    Arranged for \qsubpart to go on the same line as the \qpart when
-%%    there is no intervening text
-%%    \qsubpart indents further than \qpart
-%% v1.12 2024/11/08
-%%    Standardized package name to 'tma' to make it compatible with CTAN
-%%    Avoided redefining standard LaTeX commands
-%%    Consolidated geometry settings
-%%    Adjusted loading order of packages
-%%    Improved code readability and comments
-%%    Added 'legacy' option to allow old definitions of \vec and \C
-\ProvidesPackage{tma}[2025/02/18 v1.19 TMA document style]
-\NeedsTeXFormat{LaTeX2e}
-
+%% This package may be freely used, especially by, but not limited to, students,
+%% lecturers, and staff of the Open University. It has been created by the
+%% efforts of many who are now or have been connected with the Open University
+%% Students Association. No acknowledgement is _required_ for using this package
+%% within the production of a _Tutor Marked Assessment._
+%    \end{macrocode}
+%
+% Adapted by Peter McFarlane from various sources.
+% All errors of style or content are mine or subsequent contributor.
+% Acknowledgements to Bob Margolis, and also Rob Lynas (from whom some macros
+% are plagiarised).
+% Further contributions from Steve Mayer and Tim Dale.
+% Annotations, in part, and further modification by Geoff Riley.
+%
+%
+% Package Options
+%    \verb|[alph]|      (default) question numbering as 1(b)(iii)
+%    \verb|[roman]|     varies question numbering to sequence used by M381
+%                i.e. 1(ii)(c)
+%    \verb|[cleveref]|  question numbering creates automatic referencing for
+%                use with cleveref package
+%    \verb|[pdfbookmark]| add PDF bookmarks for each question using hyperref package
+%    \verb|[legacy]|    enables old definitions of \verb|\vec| and \verb|\C| for backward
+%                compatibility
+%
+% To use a package option, place the option(s) before the package name:
+%    \verb|\usepackage[roman,cleveref]{tma}|
+%
+%
+% \changes{v1.19}{2025-02-18}{
+%    PDF metadata (apparently) solved with help from Steve Mayers; all down to
+%    the use of commands being used as string containers. New (\LaTeX3) commands
+%    are robust and fail to expand within the context of the metadata and
+%    bookmarks, old (\LaTeX2e) commands are fragile and correctly expanded. I
+%    have a mix of old commands and new variables now.}
+% \changes{v1.18}{2025-02-16}{
+%    PDF metadata doesn't set correctly so I have removed it: the cause is an
+%    incompatibility between \LaTeX\ unicode and the PDF restricted character
+%    allowance.}
+% \changes{v1.17}{2025-02-13}{
+%    Rewritten with \LaTeX3\ syntax from the `xparse' package to make commands
+%    less fragile.
+%    Finally got alignment of part and subpart numbering to line up correctly.}
+% \changes{v1.16}{2024-11-22}{
+%    Added File, Properties to pdf files using the hyperref setup system when
+%    in pdfbookmark mode.}
+% \changes{v1.15}{2024-11-21}{
+%    Define \verb|\setdate{}| and \verb|\thedate| to allow the header date to be used within
+%    the document, eg header and footer.}
+% \changes{v1.14}{2024-11-17}{
+%    Allow replacement of Question marker tag using \verb|\setquestionstring{}|.
+%    References with cleveref not working.
+%    Replaced my attempts at keeping \verb|\qpart| and \verb|\qsubpart| on the same line with
+%    Steve Mayers contribution.}
+% \changes{v1.13}{2024-11-16}{
+%    Arranged for \verb|\qsubpart| to go on the same line as the \verb|\qpart| when
+%    there is no intervening text
+%    \verb|\qsubpart| indents further than \verb|\qpart|.}
+% \changes{v1.12}{2024-11-08}{
+%    Standardized package name to 'tma' to make it compatible with CTAN.
+%    Avoided redefining standard \LaTeX\ commands.
+%    Consolidated geometry settings.
+%    Adjusted loading order of packages.
+%    Improved code readability and comments.
+%    Added 'legacy' option to allow old definitions of \verb|\vec| and \verb|\C|.}
+%    \begin{macrocode}
 \RequirePackage{expl3} % LaTeX3 "experimental"
 %    \end{macrocode}
 %
@@ -166,11 +220,16 @@
 \newcommand{\pin}{\g_tma_constant_pin}
 \newcommand{\thedate}{\g_tma_constant_thedate}
 
-\NewDocumentCommand{\myname}{m}{\tl_gset:Nn \g_tma_constant_name{#1}}
-\NewDocumentCommand{\mytma}{m}{\tl_gset:Nn \g_tma_constant_tma{#1}}
-\NewDocumentCommand{\mycourse}{m}{\tl_gset:Nn \g_tma_constant_course{#1}}
-\NewDocumentCommand{\mypin}{m}{\tl_gset:Nn \g_tma_constant_pin{#1}}
-\NewDocumentCommand{\setdate}{m}{\date{#1}\tl_gset:Nn \g_tma_constant_thedate{#1}}
+\NewDocumentCommand{\myname}{m}{%
+	\tl_gset:Nn \g_tma_constant_name{#1}}
+\NewDocumentCommand{\mytma}{m}{%
+	\tl_gset:Nn \g_tma_constant_tma{#1}}
+\NewDocumentCommand{\mycourse}{m}{%
+	\tl_gset:Nn \g_tma_constant_course{#1}}
+\NewDocumentCommand{\mypin}{m}{%
+	\tl_gset:Nn \g_tma_constant_pin{#1}}
+\NewDocumentCommand{\setdate}{m}{%
+	\date{#1}\tl_gset:Nn \g_tma_constant_thedate{#1}}
 \ExplSyntaxOff
 
 \title{\textbf{TMA: \course-\tma}}
@@ -178,7 +237,8 @@
 
 
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
-\NewDocumentCommand{\setquestionstring}{m}{\RenewDocumentCommand{\tma@questionstring}{}{#1}}
+\NewDocumentCommand{\setquestionstring}{m}{%
+	\RenewDocumentCommand{\tma@questionstring}{}{#1}}
 \setdate{\today}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -380,7 +440,8 @@
 \NewDocumentEnvironment{question}{O{0}}{%
 	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
 	\tma@stepcounter{question}%
-	\tma@bookmark{Question \thequestion}{question\thequestion}%
+	\tma@bookmark{Question \thequestion}%
+		{question\thequestion}%
 	\makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
 }{%
 	\par \vspace{3em}%
@@ -389,7 +450,8 @@
 \NewDocumentCommand{\qpart}{O{0}}{%
 	\ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
 	\tma@stepcounter{qpart}%
-	\tma@bookmark[1]{\thequestion.\theqpart}{qpart.\thequestion.\theqpart}%
+	\tma@bookmark[1]{\thequestion.\theqpart}%
+		{qpart.\thequestion.\theqpart}%
 	\par%
 	\makebox[0pt][r]{\large{(\theqpart)\hspace{1.5em} }}%
 }
@@ -397,7 +459,8 @@
 \NewDocumentCommand{\qsubpart}{O{0}}{%
 	\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
 	\tma@stepcounter{qsubpart}%
-	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}{qsubpart.\thequestion.\theqpart.\theqsubpart}%
+	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}%
+		{qsubpart.\thequestion.\theqpart.\theqsubpart}%
 	\ifthenelse{\value{qsubpart}>1}%
 	{\par}{}%
 	\hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
@@ -417,11 +480,13 @@
 \NewDocumentCommand{\Z}{}{\ensuremath{\mathbb{Z}}}
 \NewDocumentCommand{\Q}{}{\ensuremath{\mathbb{Q}}}
 \NewDocumentCommand{\R}{}{\ensuremath{\mathbb{R}}}
-\NewDocumentCommand{\Complex}{}{\ensuremath{\mathbb{C}}} % Changed from \C to \Complex
+\NewDocumentCommand{\Complex}{}{%
+	\ensuremath{\mathbb{C}}} % Changed from \C to \Complex
 \NewDocumentCommand{\Rr}{}{\ensuremath{\mathcal{R}}}
 
 %% Vector Notation
-\NewDocumentCommand{\vect}{m}{\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
+\NewDocumentCommand{\vect}{m}{%
+	\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
 \NewDocumentCommand{\ve}{m}{\ensuremath{\textbf{#1}}}
 
 %% Superscript Notations
@@ -450,9 +515,12 @@
 \DeclareMathOperator{\Fix}{Fix}
 
 %% Derivatives
-\NewDocumentCommand{\deriv}{mm}{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
-\NewDocumentCommand{\pderiv}{mm}{\frac{\partial #1}{\partial #2}}
-\NewDocumentCommand{\psderiv}{mmm}{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+\NewDocumentCommand{\deriv}{mm}{%
+	\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+\NewDocumentCommand{\pderiv}{mm}{%
+	\frac{\partial #1}{\partial #2}}
+\NewDocumentCommand{\psderiv}{mmm}{%
+	\frac{\partial^2 #1}{\partial #2 \partial #3}}
 
 % Legacy Definitions
 \iftma@legacy
@@ -470,7 +538,8 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 % Define \blacksmiley without loading wasysym
-\ProvideDocumentCommand{\blacksmiley}{}{\ensuremath{\unicode{263B}}} % Unicode for ☻
+\ProvideDocumentCommand{\blacksmiley}{}{%
+	\ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
