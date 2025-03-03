@@ -1,20 +1,23 @@
 % \iffalse
+%<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<package>\ProvidesFile{tma.dtx}
+%<package>  [2025-02-18 v1.19 TMA package]
 %<*driver>
-\ProvidesFile{tma.dtx}[2025/02/18 v1.19 TMA package]
 \documentclass{ltxdoc}
-\usepackage[T1]{fontenc}
-\usepackage{xspace}          
-\usepackage{lmodern}
-\usepackage{hyperref}
+%\usepackage[T1]{fontenc}
+%\usepackage{xspace}          
+%\usepackage{lmodern}
+%\usepackage{hyperref}
+\usepackage{tma}
 
-\OnlyDescription
+%\OnlyDescription
 
 \EnableCrossrefs
 %\DisableCrossrefs
 
 \CodelineIndex
 \RecordChanges
-\SetupDoc{reportchangedates}
+%\SetupDoc{reportchangedates}
 \setlength\hfuzz{15pt}  % don't show so many
 \hbadness=7000          % over- and underfull box warnings
 \begin{document}
@@ -28,7 +31,7 @@
 % ^^A comments, or in the printed version, hence temporary comment
 % ^^A category for `<'
 %\catcode`\<=14
-%<+package|shortvrb>\NeedsTeXFormat{LaTeX2e}[1994/12/01]
+% ^^A <+package|shortvrb>\NeedsTeXFormat{LaTeX2e}[1994/12/01]
 %<+package>
 %<+package>\providecommand\DeclareRelease[1]{}
 %<+package>\providecommand\DeclareCurrentRelease[1]{}
@@ -42,9 +45,10 @@
 %<+package>\ProvidesPackage{tma}
 %\catcode`\<=12
 % \GetFileInfo{tma.sty}
-% \title{The \textsf{tma} Package}
+% \title{The \textsf{tma} Package\thanks{This document
+%  corresponds to \textsf{tma}~\fileversion, dated~\filedate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
-% \date{\filedate\ (v\fileversion)}
+% \date{\filedate\ (\fileversion)}
 % \maketitle
 %
 % \begin{abstract}
@@ -55,7 +59,7 @@
 % \section{Introduction}
 %
 % The \textsf{tma} package simplifies the creation of TMAs by providing...
-% \StopEventually{}
+% \MaybeStop{}
 %
 % \section{Package Code}
 %
@@ -136,7 +140,10 @@
 \NeedsTeXFormat{LaTeX2e}
 
 \RequirePackage{expl3} % LaTeX3 "experimental"
-
+%    \end{macrocode}
+%
+% \subsection{Package Initialisation}
+%    \begin{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package Initialization
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -491,6 +498,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \endinput
-% \end{macrocode}
+%    \end{macrocode}
 % \PrintChanges
 % \PrintIndex
