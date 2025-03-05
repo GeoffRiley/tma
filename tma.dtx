@@ -28,20 +28,20 @@
 %<package>  [2025-02-18 v1.19 TMA package]
 %<*driver>
 \documentclass{ltxdoc}
-%\usepackage[T1]{fontenc}
-%\usepackage{xspace}          
-%\usepackage{lmodern}
-%\usepackage{hyperref}
+% \usepackage[T1]{fontenc}
+% \usepackage{xspace}
+% \usepackage{lmodern}
+% \usepackage{hyperref}
 \usepackage{tma}
 
-%\OnlyDescription
+% \OnlyDescription
 
 \EnableCrossrefs
-%\DisableCrossrefs
+% \DisableCrossrefs
 
 \CodelineIndex
 \RecordChanges
-%\SetupDoc{reportchangedates}
+% \SetupDoc{reportchangedates}
 \setlength\hfuzz{15pt}  % don't show so many
 \hbadness=7000          % over- and underfull box warnings
 \begin{document}
@@ -106,7 +106,7 @@
 %
 % \DescribeMacro{\theqsubpart}{}
 %
-
+%
 % \MaybeStop{}
 %
 % \section{Implementation}
@@ -143,17 +143,19 @@
 %
 %
 % Package Options
-%    \verb|[alph]|      (default) question numbering as 1(b)(iii)
-%    \verb|[roman]|     varies question numbering to sequence used by M381
-%                i.e. 1(ii)(c)
-%    \verb|[cleveref]|  question numbering creates automatic referencing for
-%                use with cleveref package
-%    \verb|[pdfbookmark]| add PDF bookmarks for each question using hyperref package
-%    \verb|[legacy]|    enables old definitions of \verb|\vec| and \verb|\C| for backward
-%                compatibility
+% \begin{itemize}
+%    \item{|[alph]|}      (default) question numbering as 1(b)(iii)
+%    \item{|[roman]|}     varies question numbering to sequence used by M381
+%                         i.e. 1(ii)(c)
+%    \item{|[cleveref]|}  question numbering creates automatic referencing for
+%                         use with cleveref package
+%    \item{|[pdfbookmark]|} add PDF bookmarks for each question using hyperref package
+%    \item{|[legacy]|}    enables old definitions of |\vec| and |\C| for backward
+%                         compatibility
+% \end{itemize}
 %
 % To use a package option, place the option(s) before the package name:
-%    \verb|\usepackage[roman,cleveref]{tma}|
+%    |\usepackage[roman,cleveref]{tma}|
 %
 %
 % \changes{v1.19}{2025-02-18}{
@@ -174,24 +176,24 @@
 %    Added File, Properties to pdf files using the hyperref setup system when
 %    in pdfbookmark mode.}
 % \changes{v1.15}{2024-11-21}{
-%    Define \verb|\setdate{}| and \verb|\thedate| to allow the header date to be used within
+%    Define |\setdate{}| and |\thedate| to allow the header date to be used within
 %    the document, eg header and footer.}
 % \changes{v1.14}{2024-11-17}{
-%    Allow replacement of Question marker tag using \verb|\setquestionstring{}|.
+%    Allow replacement of Question marker tag using |\setquestionstring{}|.
 %    References with cleveref not working.
-%    Replaced my attempts at keeping \verb|\qpart| and \verb|\qsubpart| on the same line with
+%    Replaced my attempts at keeping |\qpart| and |\qsubpart| on the same line with
 %    Steve Mayers contribution.}
 % \changes{v1.13}{2024-11-16}{
-%    Arranged for \verb|\qsubpart| to go on the same line as the \verb|\qpart| when
+%    Arranged for |\qsubpart| to go on the same line as the |\qpart| when
 %    there is no intervening text
-%    \verb|\qsubpart| indents further than \verb|\qpart|.}
+%    |\qsubpart| indents further than |\qpart|.}
 % \changes{v1.12}{2024-11-08}{
 %    Standardized package name to 'tma' to make it compatible with CTAN.
 %    Avoided redefining standard \LaTeX\ commands.
 %    Consolidated geometry settings.
 %    Adjusted loading order of packages.
 %    Improved code readability and comments.
-%    Added 'legacy' option to allow old definitions of \verb|\vec| and \verb|\C|.}
+%    Added 'legacy' option to allow old definitions of |\vec| and |\C|.}
 %    \begin{macrocode}
 \RequirePackage{expl3} % LaTeX3 "experimental"
 %    \end{macrocode}
