@@ -28,33 +28,20 @@
 %<package>  [2025-02-18 v1.19 TMA package]
 %<*driver>
 \documentclass{ltxdoc}
-% \usepackage[T1]{fontenc}
-% \usepackage{xspace}
-% \usepackage{lmodern}
-% \usepackage{hyperref}
-\usepackage{tma}
 % \OnlyDescription
-
 \listfiles
-
-\EnableCrossrefs
+%%\EnableCrossrefs
 % \DisableCrossrefs
-
-\CodelineIndex
-
+%%\CodelineIndex
 % \SetupDoc{reportchangedates}
-\setlength\hfuzz{15pt}  % don't show so many
-\hbadness=7000          % over- and underfull box warnings
+%%\setlength\hfuzz{15pt}  % don't show so many
+%%\hbadness=7000          % over- and underfull box warnings
 \begin{document}
 	\DocInput{tma.dtx}
 \end{document}
 %</driver>
 % \fi
-% \providecommand\prg{\textsf}
-\newenvironment{examplecode}
-  {\par\begingroup\verbatim}
-  {\endverbatim\endgroup\par}
-\newcommand{\stma}{\textsf{tma}\ }
+% \newcommand{\stma}{\textsf{tma}\ }
 % \GetFileInfo{tma.sty}
 % \title{The \stma Package\thanks{This document
 %  corresponds to \stma \fileversion, dated~\filedate.}}
@@ -82,75 +69,93 @@
 %
 % To use the \stma package, it should be included in the preamble of your \LaTeX{}
 % document:
-%\begin{examplecode}
-    \documentclass[a4paper,11pt]{article}
-    \usepackage{tma}
-\end{examplecode}
+% \begin{verbatim}
+%    \documentclass[a4paper,11pt]{article}
+%    \usepackage{tma}
+% \end{verbatim}
 %
+% \subsection{Options}
 %
-% \DescribeMacro{\myname}
+% A number of options are available to modify the results of using the \stma package. These should be included within the \cs{usepackage} declaration:
+% \begin{quote}
+%    |\usepackage|\oarg{option}{tma}
+% \end{quote}
+% The following options are available:
+% \begin{itemize}
+%    \item |[alph]|      (default) question numbering as 1(b)(iii)
+%    \item |[roman]|     varies question numbering to sequence used by M381
+%                         i.e. 1(ii)(c)
+%    \item |[cleveref]|  question numbering creates automatic referencing for
+%                         use with cleveref package
+%    \item |[pdfbookmark]| add PDF bookmarks for each question using hyperref package
+%    \item |[legacy]|     enables old definitions of |\vec| and |\C| for backward
+%                         compatibility
+% \end{itemize}
 %
-% The \cs{myname} macro is used to specify your name: this should be your
+% \subsection{Macros and environments}
+%
+% The \stma package provides a number of useful macros and environments, the majority are documented here.
+%
+% \subsubsection{Document level commands}
+%
+% The document level commands are those that are intended to be used within the preable of the document. They generally affect what appears on the title page and in the headers/footers.
+%
+% The \DescribeMacro{\myname}\cs{myname} macro is used to specify your name: this should be your
 % name as recorded with the University.
 %
-% Example:
-%\begin{examplecode}
-    \myname{Anthony Neil Other}
-\end{examplecode}
-%
-% \DescribeMacro{\mytma}
-%
-% Use the \cs{mytma} macro to declare the number of the Tutor Marked Assignment
-% that is being answered in this document.
-%
-% Example:
-%\begin{examplecode}
-    \mytma{02} % TMA02
-\end{examplecode}
-%
-% \DescribeMacro{\mycourse}
-%
-% Declare the course code of your module with the \cs{mycourse} macro.
-%
-% Example:
-%\begin{examplecode}
-    \mycourse{M101} % The original Maths introduction module
-\end{examplecode}
-%
-% \DescribeMacro{\mypin}
-%
-% Nothing to do with credit cards, this \cs{mypin} is your Open University
+% Nothing to do with credit cards, this \DescribeMacro{\mypin}\cs{mypin} is your Open University
 % Personal Identification Number. It is formed by a letter, followed by seven
 % digits or six digits and a letter \texttt{X}.
 %
-% Example:
-%\begin{examplecode}
-    \mypin{A1234567}
-\end{examplecode}
+% Declare the course code of your module with the \DescribeMacro{\mycourse}\cs{mycourse} macro.
 %
-% \DescribeMacro{\setdate}
+% Use the \DescribeMacro{\mytma}\cs{mytma} macro to declare the number of the Tutor Marked Assignment
+% that is being answered in this document.
 %
 % If you wish to set a specific date that will be displayed on the compiled
-% document title page, you may use \cs{setdate}
+% document title page, you may use \DescribeMacro{\setdate}\cs{setdate}.
 %
-%\begin{examplecode}
-    \setdate{March 2025}
-\end{examplecode}
+% Example:
+% \begin{verbatim}
+%    \myname{Anthony Neil Other}
+%    \mypin{A1234567}
+%    \mycourse{M101} % The original Maths introduction module
+%    \mytma{02} % TMA02
+%    \setdate{March 2025}
+% \end{verbatim}
 %
-% \DescribeEnv{question}
+% \subsubsection{Question environment commands}
 %
-% Within a TMA, each question should be answered in a \env{question} environment.
+% These commands are the ones that, though few in number, comprise the bulk of the body of the TMA answer content of a paper.
 %
-% \DescribeMacro{\qpart}{}
+% Within a TMA, each question should be answered in a \DescribeEnv{question}|question| environment. The question number is automatically incremented unless one is specified in the optional parameter.
 %
+% Example:
+% \begin{quote}
+%     |\begin{question}|\oarg{question number}\\
+%     \dots\\
+%     |\end{question}|
+% \end{quote}
 %
-% \DescribeMacro{\qsubpart}{}
+% \DescribeMacro{\qpart}
 %
+% \noindent \cs{qpart} indicates the start of a question part, it will set the part identifier within the left hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option |[roman]| has been given to the \stma package when the parts are numbered as |i|, |ii|, |iii|\dots
 %
+% This is am auto-incrementing value, unless an optional value is given.
+%
+% Example:
+% \begin{quote}
+%    |\qpart|\oarg{part number}
+% \end{quote}
+% Note that the value should be given as a numerical value even if the parts are lettered or roman numerals.
+%
+% \DescribeMacro{\qsubpart}
+%
+% \noindent The
 %
 % \MaybeStop{}
 %
-% %\section{Implementation}
+% \section{Implementation}
 %
 %    \begin{macrocode}
 %% tma.sty
