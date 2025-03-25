@@ -33,8 +33,9 @@
 % \usepackage{lmodern}
 % \usepackage{hyperref}
 \usepackage{tma}
-
 % \OnlyDescription
+
+\listfiles
 
 \EnableCrossrefs
 % \DisableCrossrefs
@@ -49,9 +50,14 @@
 \end{document}
 %</driver>
 % \fi
+% \providecommand\prg{\textsf}
+\newenvironment{examplecode}
+  {\par\begingroup\verbatim}
+  {\endverbatim\endgroup\par}
+\newcommand{\stma}{\textsf{tma}\ }
 % \GetFileInfo{tma.sty}
-% \title{The \textsf{tma} Package\thanks{This document
-%  corresponds to \textsf{tma}~\fileversion, dated~\filedate.}}
+% \title{The \stma Package\thanks{This document
+%  corresponds to \stma \fileversion, dated~\filedate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
 % \date{\filedate\ (\fileversion)}
 % \RecordChanges
@@ -59,7 +65,7 @@
 % \maketitle
 %
 % \begin{abstract}
-% The \textsf{tma} package provides macros and environments to assist in writing Tutor
+% The \stma package provides macros and environments to assist in writing Tutor
 % Marked Assessments (TMAs) for Open University courses.
 % \end{abstract}
 %
@@ -67,68 +73,73 @@
 %
 % \section{Introduction}
 %
-% The \textsf{tma} package simplifies the creation of TMAs by providing an environment
-% to encompass answers to questions, commands to enumerate parts and subparts of those
-% questions, and a set of macros fascilitating mathematical entry based upon the styles
+% The \stma package simplifies the creation of TMAs by providing an environment
+% to encompass answers to questions commands to enumerate parts and subparts of those
+% questions, and a set of macros facilitating mathematical entry based on the styles
 % used by the Open University.
 %
 % \section{Usage}
 %
-% To use the \textsf{tma} package it should be included in the preamble of your \LaTeX{}
+% To use the \stma package, it should be included in the preamble of your \LaTeX{}
 % document:
-%\begin{verbatim}
-%    \documentclass[a4paper,11pt]{article}
-%    \usepackage{tma}
-%\end{verbatim}
+%\begin{examplecode}
+    \documentclass[a4paper,11pt]{article}
+    \usepackage{tma}
+\end{examplecode}
 %
 %
 % \DescribeMacro{\myname}
 %
-% The \cs{myname} macro is used to specify your personal name: this should be your
+% The \cs{myname} macro is used to specify your name: this should be your
 % name as recorded with the University.
 %
 % Example:
-%\begin{verbatim}
-%    \myname{Anthony Neil Other}
-%\end{verbatim}
+%\begin{examplecode}
+    \myname{Anthony Neil Other}
+\end{examplecode}
 %
 % \DescribeMacro{\mytma}
 %
-% Use the \cs{mytma} macro to declare the number of the Tutor Marked Assignmenr
+% Use the \cs{mytma} macro to declare the number of the Tutor Marked Assignment
 % that is being answered in this document.
 %
 % Example:
-%\begin{verbatim}
-%    \mytma{02} % TMA02
-%\end{verbatim}
+%\begin{examplecode}
+    \mytma{02} % TMA02
+\end{examplecode}
 %
-% \DescribeMacro{\mycourse}{}
+% \DescribeMacro{\mycourse}
 %
 % Declare the course code of your module with the \cs{mycourse} macro.
 %
 % Example:
-%\begin{verbatim}
-%    \mycourse{M101} % The original Maths introduction module
-%\end{verbatim}
+%\begin{examplecode}
+    \mycourse{M101} % The original Maths introduction module
+\end{examplecode}
 %
-% \DescribeMacro{\mypin}{}
+% \DescribeMacro{\mypin}
 %
 % Nothing to do with credit cards, this \cs{mypin} is your Open University
 % Personal Identification Number. It is formed by a letter, followed by seven
 % digits or six digits and a letter \texttt{X}.
 %
-% Exanple:
-%\begin{verbatim}
-%    \mypin{A1234567}
-%\end{verbatim}
+% Example:
+%\begin{examplecode}
+    \mypin{A1234567}
+\end{examplecode}
 %
-% \DescribeMacro{\setdate}{}
+% \DescribeMacro{\setdate}
 %
 % If you wish to set a specific date that will be displayed on the compiled
 % document title page, you may use \cs{setdate}
 %
-% \DescribeEnv{question}{}
+%\begin{examplecode}
+    \setdate{March 2025}
+\end{examplecode}
 %
+% \DescribeEnv{question}
+%
+% Within a TMA, each question should be answered in a \env{question} environment.
 %
 % \DescribeMacro{\qpart}{}
 %
@@ -139,7 +150,7 @@
 %
 % \MaybeStop{}
 %
-% \section{Implementation}
+% %\section{Implementation}
 %
 %    \begin{macrocode}
 %% tma.sty
@@ -158,15 +169,15 @@
 % The Current Maintainer of this work is G. I. Riley.
 %
 %% This package may be freely used, especially by, but not limited to, students,
-%% lecturers, and staff of the Open University. It has been created by the
+%% lecturers and staff of the Open University. It has been created by the
 %% efforts of many who are now or have been connected with the Open University
 %% Students Association. No acknowledgement is _required_ for using this package
 %% within the production of a _Tutor Marked Assessment._
 %    \end{macrocode}
 %
 % Adapted by Peter McFarlane from various sources.
-% All errors of style or content are mine or subsequent contributor.
-% Acknowledgements to Bob Margolis, and also Rob Lynas (from whom some macros
+% All errors of style or content are mine or subsequent contributors.
+% Acknowledgements to Bob Margolis and also Rob Lynas (from whom some macros
 % are plagiarised).
 % Further contributions from Steve Mayer and Tim Dale.
 % Annotations, in part, and further modification by Geoff Riley.
@@ -189,10 +200,10 @@
 %
 %
 % \changes{v1.19}{2025-02-18}{
-%    PDF metadata (apparently) solved with help from Steve Mayers; all down to
-%    the use of commands being used as string containers. New (\LaTeX3) commands
+%    PDF metadata (apparently) was solved with help from Steve Mayers; all down
+%    to the use of commands as string containers. New (\LaTeX3) commands
 %    are robust and fail to expand within the context of the metadata and
-%    bookmarks, old (\LaTeX2e) commands are fragile and correctly expanded. I
+%    bookmarks; old (\LaTeX2e) commands are fragile and correctly expanded. I
 %    have a mix of old commands and new variables now.}
 % \changes{v1.18}{2025-02-16}{
 %    PDF metadata doesn't set correctly so I have removed it: the cause is an
@@ -201,9 +212,9 @@
 % \changes{v1.17}{2025-02-13}{
 %    Rewritten with \LaTeX3\ syntax from the `xparse' package to make commands
 %    less fragile.
-%    Finally got alignment of part and subpart numbering to line up correctly.}
+%    Finally, I got the alignment of part and subpart numbering to line up correctly.}
 % \changes{v1.16}{2024-11-22}{
-%    Added File, Properties to pdf files using the hyperref setup system when
+%    Added File Properties to pdf files using the hyperref setup system when
 %    in pdfbookmark mode.}
 % \changes{v1.15}{2024-11-21}{
 %    Define \cs{setdate} and \cs{thedate} to allow the header date to be used within
