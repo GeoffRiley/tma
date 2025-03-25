@@ -10,7 +10,7 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 %
-% This work has the LPPL maintenance status `maintained'.
+% This work has the LPPL maintenance status `maintained.'
 %
 % The Current Maintainer of this work is <+maintainer+>.
 %
@@ -23,32 +23,33 @@
 %<*driver>
 \ProvidesFile{tma.dtx}
 %</driver>
-%<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<package>\ProvidesPackage{tma}
-%<package>  [2025-02-18 v1.19 TMA package]
+%\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%\ProvidesPackage{tma}
+%  [2025-02-18 v1.19 TMA package]
 %<*driver>
 \documentclass{ltxdoc}
+\usepackage{dtxdescribe}
 % \OnlyDescription
 \listfiles
-%%\EnableCrossrefs
+\EnableCrossrefs
 % \DisableCrossrefs
-%%\CodelineIndex
+\CodelineIndex
 % \SetupDoc{reportchangedates}
-%%\setlength\hfuzz{15pt}  % don't show so many
-%%\hbadness=7000          % over- and underfull box warnings
+\setlength\hfuzz{15pt}  % don't show so many
+\hbadness=7000          % over- and underfull box warnings
 \begin{document}
 	\DocInput{tma.dtx}
 \end{document}
 %</driver>
 % \fi
-% \newcommand{\stma}{\textsf{tma}\ }
 % \GetFileInfo{tma.sty}
+% \newcommand{\stma}{\textsf{tma}\ }
 % \title{The \stma Package\thanks{This document
 %  corresponds to \stma \fileversion, dated~\filedate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
 % \date{\filedate\ (\fileversion)}
 % \RecordChanges
-% \setcounter{IndexColumns}{1}
+% \setcounter{IndexColumns}{2}
 % \maketitle
 %
 % \begin{abstract}
@@ -78,42 +79,28 @@
 %
 % A number of options are available to modify the results of using the \stma package. These should be included within the \cs{usepackage} declaration:
 % \begin{quote}
-%    |\usepackage|\oarg{option}{tma}
+%    |\usepackage|\oarg{option,\dots}{tma}
 % \end{quote}
 % The following options are available:
 % \begin{itemize}
-%    \item |[alph]|      (default) question numbering as 1(b)(iii)
-%    \item |[roman]|     varies question numbering to sequence used by M381
-%                         i.e. 1(ii)(c)
-%    \item |[cleveref]|  question numbering creates automatic referencing for
-%                         use with cleveref package
-%    \item |[pdfbookmark]| add PDF bookmarks for each question using hyperref package
-%    \item |[legacy]|     enables old definitions of |\vec| and |\C| for backward
-%                         compatibility
+%    \item \DescribeOption[package]{alph}|[alph]| (default) question numbering as 1(b)(iii);
+%    \item \DescribeOption[package]{roman}|[roman]| varies question numbering to sequence used by M381 i.e. 1(ii)(c);
+%    \item \DescribeOption[package]{cleveref}|[cleveref]| question numbering creates automatic referencing for use with cleveref package;
+%    \item \DescribeOption[package]{pdfbookmark}|[pdfbookmark]| add PDF bookmarks for each question using hyperref package; and
+%    \item \DescribeOption[package]{legacy}|[legacy]| enables old definitions of |\vec| and |\C| for backward compatibility.
 % \end{itemize}
 %
 % \subsection{Macros and environments}
 %
-% The \stma package provides a number of useful macros and environments, the majority are documented here.
+% The \stma package provides several valuable macros and environments, most documented here.
 %
 % \subsubsection{Document level commands}
 %
-% The document level commands are those that are intended to be used within the preable of the document. They generally affect what appears on the title page and in the headers/footers.
+% The document-level commands are intended for use within the document's preamble. They generally affect what appears on the title page and the headers/footers.
 %
-% The \DescribeMacro{\myname}\cs{myname} macro is used to specify your name: this should be your
-% name as recorded with the University.
-%
-% Nothing to do with credit cards, this \DescribeMacro{\mypin}\cs{mypin} is your Open University
-% Personal Identification Number. It is formed by a letter, followed by seven
-% digits or six digits and a letter \texttt{X}.
-%
-% Declare the course code of your module with the \DescribeMacro{\mycourse}\cs{mycourse} macro.
-%
-% Use the \DescribeMacro{\mytma}\cs{mytma} macro to declare the number of the Tutor Marked Assignment
-% that is being answered in this document.
-%
-% If you wish to set a specific date that will be displayed on the compiled
-% document title page, you may use \DescribeMacro{\setdate}\cs{setdate}.
+% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro[pre]{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the Open University allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro[pre]{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}.
+% Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro[pre]{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro[pre]{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
+% The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro[pre]{\setdate}\cs{setdate}. This will override the default of using the compile date.
 %
 % Example:
 % \begin{verbatim}
@@ -126,32 +113,32 @@
 %
 % \subsubsection{Question environment commands}
 %
-% These commands are the ones that, though few in number, comprise the bulk of the body of the TMA answer content of a paper.
+% These commands are the ones that, though few, comprise the bulk of the body of the TMA answer content of a paper.
 %
-% Within a TMA, each question should be answered in a \DescribeEnv{question}|question| environment. The question number is automatically incremented unless one is specified in the optional parameter.
+% Within a TMA, each question should be answered in a \DescribeEnv{question}|question| environment. The question number is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it is convenient to place each question in a separate file to be included in the main paper.
+%
+% Often questions are comprised of multiple parts, therefore, \DescribeMacro[question]{\qpart}|qpart| indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option |[roman]| has been given to the \stma package when the parts are numbered as |i|, |ii|, |iii|\dots
+% As with the actual questions, this is an auto-incrementing value unless an optional value is given.
+% Note that the value should be numerical even if the parts are lettered or in Roman numerals. Each new question restarts the numbering at $1$, which will be rendered as |a| or |i| as dictated by the options in effect.
+%
+% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro[question]{\qsubpart}|\qsubpart| macro. As with |\qpart|, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{pqart}, both marginal markers will be set on the same line.
+%
+% Note that |question| is an environment to be used with the \cs{begin}\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
 %
 % Example:
 % \begin{quote}
 %     |\begin{question}|\oarg{question number}\\
-%     \dots\\
+%     \vdots\\
+%     |\qpart|\oarg{part number}\\
+%     \vdots\\
+%     |\qsubpart|\oarg{sub-part number}\\
+%     \vdots\\
 %     |\end{question}|
 % \end{quote}
 %
-% \DescribeMacro{\qpart}
+% \subsubsection{Mathematical symbology}
 %
-% \noindent \cs{qpart} indicates the start of a question part, it will set the part identifier within the left hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option |[roman]| has been given to the \stma package when the parts are numbered as |i|, |ii|, |iii|\dots
-%
-% This is am auto-incrementing value, unless an optional value is given.
-%
-% Example:
-% \begin{quote}
-%    |\qpart|\oarg{part number}
-% \end{quote}
-% Note that the value should be given as a numerical value even if the parts are lettered or roman numerals.
-%
-% \DescribeMacro{\qsubpart}
-%
-% \noindent The
+% Various mathematical symbols and elements are defined for convenience, working from the normal suggested formats used within Open University courses.
 %
 % \MaybeStop{}
 %
@@ -169,12 +156,12 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005-12-01 or later.
 %
-% This work has the LPPL maintenance status `maintained'.
+% This work has the LPPL maintenance status `maintained.'
 %
 % The Current Maintainer of this work is G. I. Riley.
 %
 %% This package may be freely used, especially by, but not limited to, students,
-%% lecturers and staff of the Open University. It has been created by the
+%% lecturers and staff of the Open University. It was created by the
 %% efforts of many who are now or have been connected with the Open University
 %% Students Association. No acknowledgement is _required_ for using this package
 %% within the production of a _Tutor Marked Assessment._
@@ -182,7 +169,7 @@
 %
 % Adapted by Peter McFarlane from various sources.
 % All errors of style or content are mine or subsequent contributors.
-% Acknowledgements to Bob Margolis and also Rob Lynas (from whom some macros
+% Acknowledgements to Bob Margolis and Rob Lynas (from whom some macros
 % are plagiarised).
 % Further contributions from Steve Mayer and Tim Dale.
 % Annotations, in part, and further modification by Geoff Riley.
@@ -247,9 +234,9 @@
 %
 % \subsection{Package Initialisation}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Package Initialization
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% % Package Initialization
+% %%%%%%%%%%%%%%%%%%%%%%%%%
 \ExplSyntaxOn
 \tl_new:N \g_tma_constant_name
 \tl_new:N \g_tma_constant_tma
@@ -294,9 +281,9 @@
 %
 % \subsection{Package Loading}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Package Loading
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Package Loading
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
@@ -318,9 +305,9 @@
 %
 % \subsection{Geometry Settings}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Geometry Settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Geometry Settings
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \geometry{
 	headheight=10mm,
@@ -338,9 +325,9 @@
 %
 % \subsection{Margin Notes}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Margin Notes
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Margin Notes
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
 \NewDocumentCommand{\marginnotes}{}{
@@ -356,9 +343,9 @@
 %
 % \subsection{Question Numbering}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Question Numbering
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Question Numbering
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcounter{question}
 \newcounter{qpart}[question]
@@ -369,9 +356,9 @@
 %
 % \subsection{Option Handling}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Option Handling
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Option Handling
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Define boolean flags
 \newif\iftma@roman
 \newif\iftma@usecleveref
@@ -452,9 +439,9 @@
 %
 % \subsection{Package adjustments based on Options}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Set Up Package Based on Options
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Set Up Package Based on Options
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set question numbering
 \iftma@roman
@@ -507,9 +494,9 @@
 %
 % \subsection{Question Environment}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Question Environment
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Question Environment
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set up cref names if cleveref is used
 \iftma@usecleveref
@@ -551,9 +538,9 @@
 %
 % \subsection{Mathematical commands}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Mathematical Commands
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Mathematical Commands
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Differential Operators
 \NewDocumentCommand{\dd}{}{\ensuremath{\mathop{}\!\mathrm{d}}}
@@ -620,9 +607,9 @@
 %
 % \subsection{Theorem Environment}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Theorem Environment
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Theorem Environment
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
@@ -635,9 +622,9 @@
 %
 % \subsection{Miscellaneous Settings}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Miscellaneous Settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Miscellaneous Settings
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
 \numberwithin{equation}{question}
@@ -648,9 +635,9 @@
 %
 % \subsection{Header and Footer Settings}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Header and Footer Settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Header and Footer Settings
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \pagestyle{fancy}
 \fancyhf{} % Clear all headers and footers
@@ -659,9 +646,9 @@
 \fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
 \RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% End of Package
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % End of Package
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \endinput
 %    \end{macrocode}
