@@ -8,7 +8,7 @@
 %% 
 %% This is a generated file.
 %% 
-%% Copyright (C) 2025 by <+author+> <<+email+>>
+%% Copyright (C) 2025 by G. I. Riley <geoffr@adaso.com>
 %% --------------------------------------------------------------------------
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
@@ -22,16 +22,13 @@
 \ProvidesPackage{tma}
   [2025-02-18 v1.19 TMA package]
 %% tma.sty
-%% Copyright 2025 G. I. Riley
+%% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to, students,
-%% lecturers, and staff of the Open University. It has been created by the
+%% lecturers and staff of the Open University. It was created by the
 %% efforts of many who are now or have been connected with the Open University
 %% Students Association. No acknowledgement is _required_ for using this package
 %% within the production of a _Tutor Marked Assessment._
 \RequirePackage{expl3} % LaTeX3 "experimental"
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Package Initialization
-%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ExplSyntaxOn
 \tl_new:N \g_tma_constant_name
 \tl_new:N \g_tma_constant_tma
@@ -71,9 +68,6 @@
 \RenewDocumentCommand{\tma@questionstring}{}{#1}}
 \setdate{\today}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Package Loading
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
@@ -91,9 +85,6 @@
 \RequirePackage[UKenglish]{isodate} % use UK format for date
 \cleanlookdateon % remove th,st, rd from date
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Geometry Settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \geometry{
 headheight=10mm,
@@ -107,9 +98,6 @@ marginparsep=0mm,
 includemp
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Margin Notes
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
 \NewDocumentCommand{\marginnotes}{}{
@@ -121,18 +109,12 @@ right=15mm
 }
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Question Numbering
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcounter{question}
 \newcounter{qpart}[question]
 \newcounter{qsubpart}[qpart]
 \renewcommand{\thequestion}{\arabic{question}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Option Handling
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newif\iftma@roman
 \newif\iftma@usecleveref
 \newif\iftma@usepdfbookmark
@@ -199,9 +181,6 @@ right=15mm
 \fi
 \typeout{************* END OPTION RESULTS **********}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Set Up Package Based on Options
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \iftma@roman
 \renewcommand{\theqpart}{\roman{qpart}}
@@ -244,9 +223,6 @@ pdfsubject=\course%
 
 \setquestionstring{Q}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Question Environment
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \iftma@usecleveref
 \tma@crefname{question}{question}{questions}
@@ -283,9 +259,6 @@ pdfsubject=\course%
 \hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Mathematical Commands
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Differential Operators
 \NewDocumentCommand{\dd}{}{\ensuremath{\mathop{}\!\mathrm{d}}}
@@ -344,9 +317,6 @@ pdfsubject=\course%
 \RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Theorem Environment
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
@@ -354,18 +324,12 @@ pdfsubject=\course%
 \ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Miscellaneous Settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
 \numberwithin{equation}{question}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Header and Footer Settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \pagestyle{fancy}
 \fancyhf{} % Clear all headers and footers
@@ -374,9 +338,6 @@ pdfsubject=\course%
 \fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
 \RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% End of Package
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \endinput
 %%

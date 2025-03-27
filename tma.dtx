@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2025 by <+author+> <<+email+>>
+% Copyright (C) 2025 by G. I. Riley <geoffr@adaso.com>
 % ---------------------------------------------------------------------------
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -12,10 +12,10 @@
 %
 % This work has the LPPL maintenance status `maintained.'
 %
-% The Current Maintainer of this work is <+maintainer+>.
+% The Current Maintainer of this work is Geoff Riley.
 %
-% This work consists of the files OU_tma.dtx and OU_tma.ins
-% and the derived filebase OU_tma.sty.
+% This work consists of the files tma.dtx and tma.ins
+% and the derived filebase tma.sty.
 %
 % \fi
 %
@@ -23,11 +23,11 @@
 %<*driver>
 \ProvidesFile{tma.dtx}
 %</driver>
-%\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%\ProvidesPackage{tma}
-%  [2025-02-18 v1.19 TMA package]
+%<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<package>\ProvidesPackage{tma}
+%<package>  [2025-02-18 v1.19 TMA package]
 %<*driver>
-\documentclass{ltxdoc}
+\documentclass[a4paper,11pt]{ltxdoc}
 \usepackage{dtxdescribe}
 % \OnlyDescription
 \listfiles
@@ -43,56 +43,83 @@
 %</driver>
 % \fi
 % \GetFileInfo{tma.sty}
-% \newcommand{\stma}{\textsf{tma}\ }
-% \title{The \stma Package\thanks{This document
-%  corresponds to \stma \fileversion, dated~\filedate.}}
+% \newcommand{\stma}{\textsf{tma}}
+% \newcommand{\TMA}{\acro{TMA}}
+% \DoNotIndex{\g_tma,\tl_new,\tl_gset,\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname}
+% \title{The \stma\ Package\thanks{This document
+%  corresponds to \stma\ \fileversion, dated~\filedate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
 % \date{\filedate\ (\fileversion)}
 % \RecordChanges
+% \renewcommand\code[1]{\mbox{$\ell$-#1}}
+% \renewcommand\main[1]{\underline{\mbox{$\ell$-#1}}}
 % \setcounter{IndexColumns}{2}
+% \setcounter{GlossaryColumns}{2}
 % \maketitle
 %
 % \begin{abstract}
-% The \stma package provides macros and environments to assist in writing Tutor
-% Marked Assessments (TMAs) for Open University courses.
+% The \stma\ package provides macros and environments to assist in writing Tutor
+% Marked Assessments (\TMA s) for Open University courses.
 % \end{abstract}
 %
 % \tableofcontents
 %
 % \section{Introduction}
 %
-% The \stma package simplifies the creation of TMAs by providing an environment
+% The \stma\ package simplifies the creation of \TMA s by providing an environment
 % to encompass answers to questions commands to enumerate parts and subparts of those
 % questions, and a set of macros facilitating mathematical entry based on the styles
 % used by the Open University.
 %
+% \section{Compiling and installing \stma}
+%
+% To compile the \stma\ package:
+%
+% \userentry{pdflatex tma.ins}
+%
+% To compile the \stma\ documentation:
+%
+% \userentry{pdflatex tma.dtx}
+% \qquad(several times)
+% \userentry{makeindex -s gglo.ist -o tma.gls tma.glo}
+% \userentry{makeindex -s gind.ist tma}
+% \userentry{pdflatex tma.dtx}
+% \qquad(severl times)
+%
+% The file \filenm{tma.sty} should be placed in an appropriate location within the \TeX\
+% directory structure. For example in a directory such as \filenm{tex/latex/tma}.
+%
 % \section{Usage}
 %
-% To use the \stma package, it should be included in the preamble of your \LaTeX{}
-% document:
-% \begin{verbatim}
-%    \documentclass[a4paper,11pt]{article}
-%    \usepackage{tma}
-% \end{verbatim}
+% To use the \stma\ package, in its most basic form, it should be included in the preamble
+% of your \LaTeX\ document:
+% \begin{quote}
+%    \cs{documentclass}|[a4paper,11pt]{article}|\\
+%    \cs{usepackage}|{tma}|\\
+%    \vdots\\
+%    \cs{begin}|{document}|\\
+%    \vdots\\
+%    \cs{end}|{document}|
+% \end{quote}
 %
 % \subsection{Options}
 %
-% A number of options are available to modify the results of using the \stma package. These should be included within the \cs{usepackage} declaration:
+% A number of options are available to modify the results of using the \stma\ package. These should be included within the \cs{usepackage} declaration:
 % \begin{quote}
 %    |\usepackage|\oarg{option,\dots}{tma}
 % \end{quote}
 % The following options are available:
 % \begin{itemize}
-%    \item \DescribeOption[package]{alph}|[alph]| (default) question numbering as 1(b)(iii);
-%    \item \DescribeOption[package]{roman}|[roman]| varies question numbering to sequence used by M381 i.e. 1(ii)(c);
-%    \item \DescribeOption[package]{cleveref}|[cleveref]| question numbering creates automatic referencing for use with cleveref package;
-%    \item \DescribeOption[package]{pdfbookmark}|[pdfbookmark]| add PDF bookmarks for each question using hyperref package; and
-%    \item \DescribeOption[package]{legacy}|[legacy]| enables old definitions of |\vec| and |\C| for backward compatibility.
+%    \item[] \DescribeOption[cat=package]{alph}|[alph]| (default) question numbering as 1(b)(iii);
+%    \item[] \DescribeOption[cat=package]{roman}|[roman]| varies question numbering to sequence used by M381 i.e. 1(ii)(c);
+%    \item[] \DescribeOption[cat=package]{cleveref}|[cleveref]| question numbering creates automatic referencing for use with cleveref package;
+%    \item[] \DescribeOption[cat=package]{pdfbookmark}|[pdfbookmark]| add PDF bookmarks for each question using hyperref package; and
+%    \item[] \DescribeOption[cat=package]{legacy}|[legacy]| enables old definitions of |\vec| and |\C| for backward compatibility.
 % \end{itemize}
 %
 % \subsection{Macros and environments}
 %
-% The \stma package provides several valuable macros and environments, most documented here.
+% The \stma\ package provides several valuable macros and environments, most documented here.
 %
 % \subsubsection{Document level commands}
 %
@@ -113,17 +140,17 @@
 %
 % \subsubsection{Question environment commands}
 %
-% These commands are the ones that, though few, comprise the bulk of the body of the TMA answer content of a paper.
+% These commands are the ones that, though few, comprise the bulk of the body of the \TMA\ answer content of a paper.
 %
-% Within a TMA, each question should be answered in a \DescribeEnv{question}|question| environment. The question number is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it is convenient to place each question in a separate file to be included in the main paper.
+% Within a \TMA, each question should be answered in a \DescribeEnv{question}\env{question} environment. The question number is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it is convenient to place each question in a separate file to be included in the main paper.
 %
-% Often questions are comprised of multiple parts, therefore, \DescribeMacro[question]{\qpart}|qpart| indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option |[roman]| has been given to the \stma package when the parts are numbered as |i|, |ii|, |iii|\dots
+% Often questions are comprised of multiple parts, therefore, \DescribeMacro[question]{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
 % Note that the value should be numerical even if the parts are lettered or in Roman numerals. Each new question restarts the numbering at $1$, which will be rendered as |a| or |i| as dictated by the options in effect.
 %
-% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro[question]{\qsubpart}|\qsubpart| macro. As with |\qpart|, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{pqart}, both marginal markers will be set on the same line.
+% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro[question]{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{pqart}, both marginal markers will be set on the same line.
 %
-% Note that |question| is an environment to be used with the \cs{begin}\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
+% Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
 %
 % Example:
 % \begin{quote}
@@ -146,7 +173,7 @@
 %
 %    \begin{macrocode}
 %% tma.sty
-%% Copyright 2025 G. I. Riley
+%% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -158,7 +185,7 @@
 %
 % This work has the LPPL maintenance status `maintained.'
 %
-% The Current Maintainer of this work is G. I. Riley.
+% The Current Maintainer of this work is Geoff Riley.
 %
 %% This package may be freely used, especially by, but not limited to, students,
 %% lecturers and staff of the Open University. It was created by the
@@ -235,7 +262,7 @@
 % \subsection{Package Initialisation}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%
-% % Package Initialization
+%% Package Initialization
 % %%%%%%%%%%%%%%%%%%%%%%%%%
 \ExplSyntaxOn
 \tl_new:N \g_tma_constant_name
@@ -282,7 +309,7 @@
 % \subsection{Package Loading}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Package Loading
+%% Package Loading
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{amsmath}
@@ -306,7 +333,7 @@
 % \subsection{Geometry Settings}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Geometry Settings
+%% Geometry Settings
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \geometry{
@@ -326,7 +353,7 @@
 % \subsection{Margin Notes}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Margin Notes
+%% Margin Notes
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
@@ -344,7 +371,7 @@
 % \subsection{Question Numbering}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Question Numbering
+%% Question Numbering
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcounter{question}
@@ -357,7 +384,7 @@
 % \subsection{Option Handling}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Option Handling
+%% Option Handling
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Define boolean flags
 \newif\iftma@roman
@@ -440,7 +467,7 @@
 % \subsection{Package adjustments based on Options}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Set Up Package Based on Options
+%% Set Up Package Based on Options
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set question numbering
@@ -495,7 +522,7 @@
 % \subsection{Question Environment}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Question Environment
+%% Question Environment
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set up cref names if cleveref is used
@@ -539,7 +566,7 @@
 % \subsection{Mathematical commands}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Mathematical Commands
+%% Mathematical Commands
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Differential Operators
@@ -608,7 +635,7 @@
 % \subsection{Theorem Environment}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Theorem Environment
+%% Theorem Environment
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newtheorem{lemma}{Lemma}
@@ -623,7 +650,7 @@
 % \subsection{Miscellaneous Settings}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Miscellaneous Settings
+%% Miscellaneous Settings
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
@@ -636,7 +663,7 @@
 % \subsection{Header and Footer Settings}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Header and Footer Settings
+%% Header and Footer Settings
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \pagestyle{fancy}
@@ -647,7 +674,7 @@
 \RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % End of Package
+%% End of Package
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \endinput
