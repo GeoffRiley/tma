@@ -37,6 +37,8 @@
 % \SetupDoc{reportchangedates}
 \setlength\hfuzz{15pt}  % don't show so many
 \hbadness=7000          % over- and underfull box warnings
+\usepackage{tma}
+\marginnotes % make space for the margin flags
 \begin{document}
 	\DocInput{tma.dtx}
 \end{document}
@@ -45,6 +47,7 @@
 % \GetFileInfo{tma.sty}
 % \newcommand{\stma}{\textsf{tma}}
 % \newcommand{\TMA}{\acro{TMA}}
+% \newcommand{\OU}{\acro{OU}}
 % \DoNotIndex{\g_tma,\tl_new,\tl_gset,\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname}
 % \title{The \stma\ Package\thanks{This document
 %  corresponds to \stma\ \fileversion, dated~\filedate.}}
@@ -110,11 +113,11 @@
 % \end{quote}
 % The following options are available:
 % \begin{itemize}
-%    \item[] \DescribeOption[cat=package]{alph}|[alph]| (default) question numbering as 1(b)(iii);
-%    \item[] \DescribeOption[cat=package]{roman}|[roman]| varies question numbering to sequence used by M381 i.e. 1(ii)(c);
-%    \item[] \DescribeOption[cat=package]{cleveref}|[cleveref]| question numbering creates automatic referencing for use with cleveref package;
-%    \item[] \DescribeOption[cat=package]{pdfbookmark}|[pdfbookmark]| add PDF bookmarks for each question using hyperref package; and
-%    \item[] \DescribeOption[cat=package]{legacy}|[legacy]| enables old definitions of |\vec| and |\C| for backward compatibility.
+%    \item \DescribeOption{alph}|[alph]| (default) question numbering as 1(b)(iii);
+%    \item \DescribeOption{roman}|[roman]| varies question numbering to sequence used by M381 i.e. 1(ii)(c);
+%    \item \DescribeOption{cleveref}|[cleveref]| question numbering creates automatic referencing for use with cleveref package;
+%    \item \DescribeOption{pdfbookmark}|[pdfbookmark]| add PDF bookmarks for each question using hyperref package; and
+%    \item \DescribeOption{legacy}|[legacy]| enables old definitions of |\vec| and |\C| for backward compatibility.
 % \end{itemize}
 %
 % \subsection{Macros and environments}
@@ -125,9 +128,9 @@
 %
 % The document-level commands are intended for use within the document's preamble. They generally affect what appears on the title page and the headers/footers.
 %
-% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro[pre]{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the Open University allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro[pre]{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}.
-% Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro[pre]{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro[pre]{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
-% The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro[pre]{\setdate}\cs{setdate}. This will override the default of using the compile date.
+% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the Open University allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}.
+% Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
+% The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro{\setdate}\cs{setdate}. This will override the default of using the compile date.
 %
 % Example:
 % \begin{verbatim}
@@ -166,6 +169,26 @@
 % \subsubsection{Mathematical symbology}
 %
 % Various mathematical symbols and elements are defined for convenience, working from the normal suggested formats used within Open University courses.
+%
+% These commands are created in such a manner that they will work correctly in both text and maths modes.
+%
+% \begin{description}
+% \item[Differential operators] The general advise for most \OU\ modules is to use an upright letter `d' when specifying differential variables, thus \DescribeMacro{\dd}\cs{dd} is provided to allow simple accomodation of this. Similarly, Euler's number and the imaginary unit representation of $\sqrt{-1}$ are both usually given upright letters of `e', (\DescribeMacro{\e}\cs{e}), and `i', (\DescribeMacro{\ii}\cs{ii}), respectively.
+% \begin{dtxexample}{}
+% In display mode, compare \dd\ with $d$:
+% \[
+% \frac{\dd^2 y}{\dd x^2}} + x\frac{\dd y}{\dd x} + y = 2\sin(x)\\
+% \]
+% and in line mode $\e^{\ii x} = \cos(x) + \ii\sin(x)$
+% \end{dtxexample}
+% \item[Number sets]
+% \item[Vector notation]
+% \item[Superscript texts]
+% \item[Additional symbols]
+% \item[Combinatoral notations]
+% \item[Mathematical operators]
+% \item[Derivatives]
+% \end{description}
 %
 % \MaybeStop{}
 %
