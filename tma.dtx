@@ -174,15 +174,52 @@
 %
 % \begin{description}
 % \item[Differential operators] The general advise for most \OU\ modules is to use an upright letter `d' when specifying differential variables, thus \DescribeMacro{\dd}\cs{dd} is provided to allow simple accomodation of this. Similarly, Euler's number and the imaginary unit representation of $\sqrt{-1}$ are both usually given upright letters of `e', (\DescribeMacro{\e}\cs{e}), and `i', (\DescribeMacro{\ii}\cs{ii}), respectively.
-% \begin{dtxexample}{}
+% \begin{dtxexample}*{Differential}
 % In display mode, compare \dd\ with $d$:
 % \[
-% \frac{\dd^2 y}{\dd x^2}} + x\frac{\dd y}{\dd x} + y = 2\sin(x)\\
+% \frac{\dd^2 y}{\dd x^2} + x\frac{\dd y}{\dd x} + y = 2\sin(x)\\
 % \]
 % and in line mode $\e^{\ii x} = \cos(x) + \ii\sin(x)$
 % \end{dtxexample}
-% \item[Number sets]
-% \item[Vector notation]
+%
+% \item[Number sets] Standard `black-board' fonts are used to indicate a number of frequently designated groups of numbers.
+%
+% \begin{itemize}
+%    \item[\cs{N}] \DescribeMacro{\N} represents all natural numbers;
+%    \item[\cs{Z}] \DescribeMacro{\Z} represents all integers;
+%    \item[\cs{Q}] \DescribeMacro{\Q} represents all rational numbers;
+%    \item[\cs{R}] \DescribeMacro{\R} represents all real numbers; and
+%    \item[\cs{Complex}] \DescribeMacro{\Complex} represents all complex numbers.
+% \end{itemize}
+%
+% \begin{dtxexample}*{Number sets}
+%     The relationship between number sets:
+%     \begin{itemize}
+%     \item \N\ (Natural numbers) $\subseteq \Z$ (Integers);
+%           every natural number is also an integer.
+%     \item \Z\ (Integers) $\subseteq \Q$ (Rational numbers);
+%           every integer is also a rational number.
+%     \item \Q\ (Rational numbers) $\subseteq \R$ (Real
+%           numbers); every rational number is also a real
+%           number.
+%     \item \Complex\ (Complex numbers) $\supseteq \R$ (Real
+%           number); complex numbers include real numbers as
+%           a subset, since they can be represented by
+%           $a+\ii b$ where $a$ and $b$ are real numbers.
+%     \end{itemize}
+% \end{dtxexample}
+%
+% \item[Vector notation] Two different vector representations are typically used on \OU\ modules, there is the two, or more, letter with an over arrow version given with \DescribeMacro{\vect}\cs{vect}; and the emboldened upright letter version \DescribeMacro{\ve}\cs{ve}---the latter is commonly handwritten as an underlined letter.
+%
+% \begin{dtxexample}*{Vectors}
+%    Given a point $A$ at the co-ordinate $(6, 3)$ and a
+%    point $B$ at the co-ordinate $(-4, 8)$, the vector
+%    $\vect{AB}$ has a gradient of $\frac{8-3}{-4-6} =
+%    \frac{5}{-10} = -\frac{1}{2}$
+%    The standard unit vectors are \ve{i} and \ve{j}.
+%    They are usually at right angles to each other.
+%\end{dtxexample}
+%
 % \item[Superscript texts]
 % \item[Additional symbols]
 % \item[Combinatoral notations]
