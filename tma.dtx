@@ -28,6 +28,7 @@
 %<package>  [2025-02-18 v1.19 TMA package]
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
+\usepackage[T1]{fontenc}
 \usepackage{dtxdescribe}
 % \OnlyDescription
 \listfiles
@@ -48,7 +49,17 @@
 % \newcommand{\stma}{\textsf{tma}}
 % \newcommand{\TMA}{\acro{TMA}}
 % \newcommand{\OU}{\acro{OU}}
-% \DoNotIndex{\g_tma,\tl_new,\tl_gset,\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname}
+% \DoNotIndex{\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname,\else}
+% \DoNotIndex{\endinput,\ensuremath,\ExplSyntaxOff,\ExplSyntaxOn,\fancyhead}
+% \DoNotIndex{\fancyhf,\fi,\frac,\g,\geometry,\headrulewidth,\hspace,\ifthenelse}
+% \DoNotIndex{\large,\makebox,\mathbb,\mathcal,\mathop,\mathrm,\newcommand}
+% \DoNotIndex{\newcounter,\NewDocumentCommand,\NewDocumentEnvironment,\newif}
+% \DoNotIndex{\newtheorem,\numberwithin,\overrightarrow,\PackageWarning}
+% \DoNotIndex{\par,\parindent,\parskip,\ProcessOptions,\ProvideDocumentCommand}
+% \DoNotIndex{\refstepcounter,\relax,\renewcommand,\RenewDocumentCommand}
+% \DoNotIndex{\RequirePackage,\setcounter,\setlength,\space,\sqsubset,\sqsupset}
+% \DoNotIndex{\setcounter,\textbf,\textrm,\textsuperscript,\tl,\typeout}
+% \DoNotIndex{\unicode,\vspace}
 % \title{The \stma\ Package\thanks{This document
 %  corresponds to \stma\ \fileversion, dated~\filedate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
@@ -147,11 +158,11 @@
 %
 % Within a \TMA, each question should be answered in a \DescribeEnv{question}\env{question} environment. The question number is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it is convenient to place each question in a separate file to be included in the main paper.
 %
-% Often questions are comprised of multiple parts, therefore, \DescribeMacro[question]{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
+% Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
 % Note that the value should be numerical even if the parts are lettered or in Roman numerals. Each new question restarts the numbering at $1$, which will be rendered as |a| or |i| as dictated by the options in effect.
 %
-% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro[question]{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{pqart}, both marginal markers will be set on the same line.
+% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{pqart}, both marginal markers will be set on the same line.
 %
 % Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
 %
@@ -173,7 +184,7 @@
 % These commands are created in such a manner that they will work correctly in both text and maths modes.
 %
 % \begin{description}
-% \item[Differential operators] The general advise for most \OU\ modules is to use an upright letter `d' when specifying differential variables, thus \DescribeMacro{\dd}\cs{dd} is provided to allow simple accomodation of this. Similarly, Euler's number and the imaginary unit representation of $\sqrt{-1}$ are both usually given upright letters of `e', (\DescribeMacro{\e}\cs{e}), and `i', (\DescribeMacro{\ii}\cs{ii}), respectively.
+% \item[Differential operators] \DescribeMacro{\dd}\DescribeMacro{\e}\DescribeMacro{\ii}The general advise for most \OU\ modules is to use an upright letter `d' when specifying differential variables, thus \cs{dd} is provided to allow simple accomodation of this. Similarly, Euler's number and the imaginary unit representation of $\sqrt{-1}$ are both usually given upright letters of `e', (\cs{e}), and `i', (\cs{ii}), respectively.
 % \begin{dtxexample}*{Differential}
 % In display mode, compare \dd\ with $d$:
 % \[
@@ -209,7 +220,7 @@
 %     \end{itemize}
 % \end{dtxexample}
 %
-% \item[Vector notation] Two different vector representations are typically used on \OU\ modules, there is the two, or more, letter with an over arrow version given with \DescribeMacro{\vect}\cs{vect}; and the emboldened upright letter version \DescribeMacro{\ve}\cs{ve}---the latter is commonly handwritten as an underlined letter.
+% \item[Vector notation] \DescribeMacro{\vect}\DescribeMacro{\ve}Two different vector representations are typically used on \OU\ modules, there is the two, or more, letter with an over arrow version given with \cs{vect}; and the emboldened upright letter version \cs{ve}---the latter is commonly handwritten as an underlined letter.
 %
 % \begin{dtxexample}*{Vectors}
 %    Given a point $A$ at the co-ordinate $(6, 3)$ and a
@@ -220,11 +231,46 @@
 %    They are usually at right angles to each other.
 %\end{dtxexample}
 %
-% \item[Superscript texts]
-% \item[Additional symbols]
-% \item[Combinatoral notations]
-% \item[Mathematical operators]
-% \item[Derivatives]
+% \item[Ordinal indicators] \DescribeMacro{\st}\DescribeMacro{\nd}\DescribeMacro{\rd}\DescribeMacro{\nth}The use of ordinal indicators is not specific to \OU\ modules, but frequently is a useful element that is just inconvenient to produce.
+%
+% So the standard four English ordinals are provided \cs{st}, \cs{nd}, \cs{rd}, and \cs{nth}, e.g. 1\st, 2\nd, 3\rd, and 4\nth.
+%
+% Note that the last ordinal is \cs{nth} not \cs{th}, the latter produces a thorn character, \th, and that only works if you have other than the default 7-bit font encoding (OT1).
+%
+% \item[Additional symbols] \DescribeMacro{\rect}\cs{rect}, \rect, is defined particularly for the use of \acro{M208} people although others may find it useful.
+%
+% \item[Combinatoral notations] There are two combinatoral forms that are commonly used in \OU\ modules, the combination selecting $r$ out of a total of $n$ items where order does not matter, and the permutations of $r$ out of $n$ items were order matters.
+%
+% \DescribeMacro{\comb}\marg{n}\marg{r}. This is equivelent to \[
+% \comb{n}{r} = \frac{n!}{r!(n-r)!}
+% \]
+%
+% \DescribeMacro{\perm}\marg{n}\marg{r}. This is equivalent to \[
+% \perm{n}{r} = \frac{n!}{(n-r)!}
+% \]
+%
+% \item[Mathematical operators] Additional mathematical operators are defined, again for convenience of entry.
+% \begin{itemize}
+%	\item \DescribeMacro{\re}\cs{re} $\mapsto \re$
+%	\item \DescribeMacro{\im}\cs{im} $\mapsto \im$
+%	\item \DescribeMacro{\Log}\cs{Log} $\mapsto \Log$
+%	\item \DescribeMacro{\Arg}\cs{Arg} $\mapsto \Arg$
+%	\item \DescribeMacro{\Wnd}\cs{Wnd} $\mapsto \Wnd$
+%	\item \DescribeMacro{\Res}\cs{Res} $\mapsto \Res$
+%	\item \DescribeMacro{\Ker}\cs{Ker} $\mapsto \Ker$
+%	\item \DescribeMacro{\Orb}\cs{Orb} $\mapsto \Orb$
+%	\item \DescribeMacro{\Stab}\cs{Stab} $\mapsto \Stab$
+%	\item \DescribeMacro{\Fix}\cs{Fix} $\mapsto \Fix$
+% \end{itemize}
+%
+% \item[Derivatives] There are three derivative forms defined specifically for speeding calculas entry and accuracy. One used the $\dd x$ form and two use the partial, $\partial x$, form.
+%
+% \begin{itemize}
+% 	\item \DescribeMacro{\deriv}\cs{deriv}\marg{y}\marg{x} $\mapsto \deriv{y}{x}$
+% 	\item \DescribeMacro{\pderiv}\cs{pderiv}\marg{y}\marg{x} $\mapsto \pderiv{y}{x}$
+% 	\item \DescribeMacro{\psderiv}\cs{psderiv}\marg{y}\marg{x}\marg{z} $\mapsto \psderiv{y}{x}{z}$
+% \end{itemize}
+%
 % \end{description}
 %
 % \MaybeStop{}
@@ -648,13 +694,13 @@
 	\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
 \NewDocumentCommand{\ve}{m}{\ensuremath{\textbf{#1}}}
 
-%% Superscript Notations
+%% Ordinal Indicators
 \NewDocumentCommand{\st}{}{\textsuperscript{st}}
 \NewDocumentCommand{\nd}{}{\textsuperscript{nd}}
 \NewDocumentCommand{\rd}{}{\textsuperscript{rd}}
 \NewDocumentCommand{\nth}{}{\textsuperscript{th}}
 
-% Additional Symbols
+%% Additional Symbols
 \NewDocumentCommand{\rect}{}{\ensuremath{\sqsubset\!\!\sqsupset}}
 
 %% Combinatorial Notations
@@ -675,7 +721,7 @@
 
 %% Derivatives
 \NewDocumentCommand{\deriv}{mm}{%
-	\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+	\frac{\dd{}#1}{\dd{}#2}}
 \NewDocumentCommand{\pderiv}{mm}{%
 	\frac{\partial #1}{\partial #2}}
 \NewDocumentCommand{\psderiv}{mmm}{%

@@ -29,6 +29,7 @@
 %% Students Association. No acknowledgement is _required_ for using this package
 %% within the production of a _Tutor Marked Assessment._
 \RequirePackage{expl3} % LaTeX3 "experimental"
+%% Package Initialization
 \ExplSyntaxOn
 \tl_new:N \g_tma_constant_name
 \tl_new:N \g_tma_constant_tma
@@ -68,6 +69,7 @@
 \RenewDocumentCommand{\tma@questionstring}{}{#1}}
 \setdate{\today}
 
+%% Package Loading
 
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
@@ -85,6 +87,7 @@
 \RequirePackage[UKenglish]{isodate} % use UK format for date
 \cleanlookdateon % remove th,st, rd from date
 
+%% Geometry Settings
 
 \geometry{
 headheight=10mm,
@@ -98,6 +101,7 @@ marginparsep=0mm,
 includemp
 }
 
+%% Margin Notes
 
 \NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
 \NewDocumentCommand{\marginnotes}{}{
@@ -109,12 +113,14 @@ right=15mm
 }
 }
 
+%% Question Numbering
 
 \newcounter{question}
 \newcounter{qpart}[question]
 \newcounter{qsubpart}[qpart]
 \renewcommand{\thequestion}{\arabic{question}}
 
+%% Option Handling
 \newif\iftma@roman
 \newif\iftma@usecleveref
 \newif\iftma@usepdfbookmark
@@ -181,6 +187,7 @@ right=15mm
 \fi
 \typeout{************* END OPTION RESULTS **********}
 
+%% Set Up Package Based on Options
 
 \iftma@roman
 \renewcommand{\theqpart}{\roman{qpart}}
@@ -223,6 +230,7 @@ pdfsubject=\course%
 
 \setquestionstring{Q}
 
+%% Question Environment
 
 \iftma@usecleveref
 \tma@crefname{question}{question}{questions}
@@ -259,6 +267,7 @@ pdfsubject=\course%
 \hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
 }
 
+%% Mathematical Commands
 
 %% Differential Operators
 \NewDocumentCommand{\dd}{}{\ensuremath{\mathop{}\!\mathrm{d}}}
@@ -279,12 +288,13 @@ pdfsubject=\course%
 \ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
 \NewDocumentCommand{\ve}{m}{\ensuremath{\textbf{#1}}}
 
-%% Superscript Notations
+%% Ordinal Indicators
 \NewDocumentCommand{\st}{}{\textsuperscript{st}}
 \NewDocumentCommand{\nd}{}{\textsuperscript{nd}}
 \NewDocumentCommand{\rd}{}{\textsuperscript{rd}}
 \NewDocumentCommand{\nth}{}{\textsuperscript{th}}
 
+%% Additional Symbols
 \NewDocumentCommand{\rect}{}{\ensuremath{\sqsubset\!\!\sqsupset}}
 
 %% Combinatorial Notations
@@ -305,7 +315,7 @@ pdfsubject=\course%
 
 %% Derivatives
 \NewDocumentCommand{\deriv}{mm}{%
-\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+\frac{\dd{}#1}{\dd{}#2}}
 \NewDocumentCommand{\pderiv}{mm}{%
 \frac{\partial #1}{\partial #2}}
 \NewDocumentCommand{\psderiv}{mmm}{%
@@ -317,6 +327,7 @@ pdfsubject=\course%
 \RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
 
+%% Theorem Environment
 
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
@@ -324,12 +335,14 @@ pdfsubject=\course%
 \ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
 
+%% Miscellaneous Settings
 
 \RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
 \numberwithin{equation}{question}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
 
+%% Header and Footer Settings
 
 \pagestyle{fancy}
 \fancyhf{} % Clear all headers and footers
@@ -338,6 +351,7 @@ pdfsubject=\course%
 \fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
 \RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
+%% End of Package
 
 \endinput
 %%
