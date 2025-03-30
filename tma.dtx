@@ -39,7 +39,7 @@
 \setlength\hfuzz{15pt}  % don't show so many
 \hbadness=7000          % over- and underfull box warnings
 \usepackage{tma}
-\marginnotes % make space for the margin flags
+\geometry{left=5mm,marginparwidth=35mm,marginparsep=5mm}
 \begin{document}
 	\DocInput{tma.dtx}
 \end{document}
@@ -83,7 +83,7 @@
 % The \stma\ package simplifies the creation of \TMA s by providing an environment
 % to encompass answers to questions commands to enumerate parts and subparts of those
 % questions, and a set of macros facilitating mathematical entry based on the styles
-% used by the Open University.
+% used by the Open University (\OU).
 %
 % \section{Compiling and installing \stma}
 %
@@ -94,11 +94,11 @@
 % To compile the \stma\ documentation:
 %
 % \userentry{pdflatex tma.dtx}
-% \qquad(several times)
+% \fqquad(several times)
 % \userentry{makeindex -s gglo.ist -o tma.gls tma.glo}
 % \userentry{makeindex -s gind.ist tma}
 % \userentry{pdflatex tma.dtx}
-% \qquad(severl times)
+% \fqquad(several times)
 %
 % The file \filenm{tma.sty} should be placed in an appropriate location within the \TeX\
 % directory structure. For example in a directory such as \filenm{tex/latex/tma}.
@@ -133,13 +133,13 @@
 %
 % \subsection{Macros and environments}
 %
-% The \stma\ package provides several valuable macros and environments, most documented here.
+% The \stma\ package provides several valuable macros and environments, most are documented here.
 %
 % \subsubsection{Document level commands}
 %
 % The document-level commands are intended for use within the document's preamble. They generally affect what appears on the title page and the headers/footers.
 %
-% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the Open University allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}.
+% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the \OU\ allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}. This is distinct from the \acro{OUCU}, or \OU\ Computer User identifier that is used to log in to the \OU\ website.
 % Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
 % The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro{\setdate}\cs{setdate}. This will override the default of using the compile date.
 %
@@ -156,7 +156,7 @@
 %
 % These commands are the ones that, though few, comprise the bulk of the body of the \TMA\ answer content of a paper.
 %
-% Within a \TMA, each question should be answered in a \DescribeEnv{question}\env{question} environment. The question number is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it is convenient to place each question in a separate file to be included in the main paper.
+% Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstrimg}\marg{required question number introduction}. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
 %
 % Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
@@ -237,8 +237,6 @@
 %
 % Note that the last ordinal is \cs{nth} not \cs{th}, the latter produces a thorn character, \th, and that only works if you have other than the default 7-bit font encoding (OT1).
 %
-% \item[Additional symbols] \DescribeMacro{\rect}\cs{rect}, \rect, is defined particularly for the use of \acro{M208} people although others may find it useful.
-%
 % \item[Combinatoral notations] There are two combinatoral forms that are commonly used in \OU\ modules, the combination selecting $r$ out of a total of $n$ items where order does not matter, and the permutations of $r$ out of $n$ items were order matters.
 %
 % \DescribeMacro{\comb}\marg{n}\marg{r}. This is equivelent to \[
@@ -270,6 +268,8 @@
 % 	\item \DescribeMacro{\pderiv}\cs{pderiv}\marg{y}\marg{x} $\mapsto \pderiv{y}{x}$
 % 	\item \DescribeMacro{\psderiv}\cs{psderiv}\marg{y}\marg{x}\marg{z} $\mapsto \psderiv{y}{x}{z}$
 % \end{itemize}
+%
+% \item[Additional symbols] \DescribeMacro{\rect}\cs{rect}, \rect, is defined particularly for the use of \acro{M208} people although others may find it useful.
 %
 % \end{description}
 %
