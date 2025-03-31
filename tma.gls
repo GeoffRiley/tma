@@ -1,0 +1,31 @@
+
+ \begin{theglossary} 
+
+    \makeatletter\scan@allowedfalse
+
+  \item v1.12\efill 
+ \subitem General:\  Standardized package name to 'tma' to make it compatible with CTAN. Avoided redefining standard \LaTeX  \ commands. Consolidated geometry settings. Adjusted loading order of packages. Improved code readability and comments. Added 'legacy' option to allow old definitions of \cs  {vec} and \cs  {C}.\pfill 
+		\hdpindex{}{8}
+  \item v1.13\efill 
+ \subitem General:\  Arranged for \cs  {qsubpart} to go on the same line as the \cs  {qpart} when there is no intervening text \cs  {qsubpart} indents further than \cs  {qpart}.\pfill 
+		\hdpindex{}{8}
+  \item v1.14\efill 
+ \subitem General:\  Allow replacement of Question marker tag using \cs  {setquestionstring}. References with cleveref not working. Replaced my attempts at keeping \cs  {qpart} and \cs  {qsubpart} on the same line with Steve Mayers contribution.\pfill 
+		\hdpindex{}{8}
+  \item v1.15\efill 
+ \subitem General:\  Define \cs  {setdate} and \cs  {thedate} to allow the header date to be used within the document, eg header and footer.\pfill 
+		\hdpindex{}{8}
+  \item v1.16\efill 
+ \subitem General:\  Added File Properties to pdf files using the hyperref setup system when in pdfbookmark mode.\pfill 
+		\hdpindex{}{8}
+  \item v1.17\efill 
+ \subitem General:\  Rewritten with \LaTeX  3\ syntax from the `xparse' package to make commands less fragile. Finally, I got the alignment of part and subpart numbering to line up correctly.\pfill 
+		\hdpindex{}{8}
+  \item v1.18\efill 
+ \subitem General:\  PDF metadata doesn't set correctly so I have removed it: the cause is an incompatibility between \LaTeX  \ unicode and the PDF restricted character allowance.\pfill 
+		\hdpindex{}{8}
+  \item v1.19\efill 
+ \subitem General:\  PDF metadata (apparently) was solved with help from Steve Mayers; all down to the use of commands as string containers. New (\LaTeX  3) commands are robust and fail to expand within the context of the metadata and bookmarks; old (\LaTeX  2e) commands are fragile and correctly expanded. I have a mix of old commands and new variables now.\pfill 
+		\hdpindex{}{8}
+
+ \end{theglossary}

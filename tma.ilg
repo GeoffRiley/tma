@@ -1,0 +1,16 @@
+This is makeindex, version 2.17 [TeX Live 2024] (kpathsea + Thai support).
+Scanning style file /usr/local/texlive/2024/texmf-dist/makeindex/latex/gind.ist..........
+** Input style error (file = /usr/local/texlive/2024/texmf-dist/makeindex/latex/gind.ist, line = 75):
+   -- Unknown specifier lethead_prefix.
+** Input style error (file = /usr/local/texlive/2024/texmf-dist/makeindex/latex/gind.ist, line = 76):
+   -- Unknown specifier lethead_suffix.
+** Input style error (file = /usr/local/texlive/2024/texmf-dist/makeindex/latex/gind.ist, line = 77):
+   -- Unknown specifier lethead_flag.
+...done (13 attributes redefined, 3 ignored).
+Scanning input file tma.idx....done (214 entries accepted, 0 rejected).
+Scanning input file tma.idx....done (214 entries accepted, 0 rejected).
+Overall 2 files read (428 entries accepted, 0 rejected).
+Sorting entries......done (4421 comparisons).
+Generating output file tma.ind....done (262 lines written, 0 warnings).
+Output written in tma.ind.
+Transcript written in tma.ilg.

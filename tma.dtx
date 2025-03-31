@@ -45,7 +45,42 @@
 \end{document}
 %</driver>
 % \fi
+% \makeatactive
 % \GetFileInfo{tma.sty}
+%\IfPackageLoadedTF{doc}{% doc
+%%
+% \NewDocElement[
+% macrolike=false,
+% toplevel=true,
+% idxtype=variable,
+% idxgroup=Variable,
+% printtype=\textit{Var}
+% ]{Variable}{variable}
+%%
+%}{% not doc
+%%
+% \newcommand*{\DTXD@DescribeVariable}[2][]{%
+% \DTXD@filemaXD@filemarginparindex{#1}{#2}{Var}{variable}{usage}%
+% }
+%%
+% \newcommand*{\DescribeVariable}{%
+% \begingroup\catcode‘\_=12 \DTXD@DescribeVariable%
+% }
+%%
+%}% not doc
+%%
+%\newcommand{\DTXD@ItemDescribeVariable}[2][]{%
+% \item[\texttt{#2}:]%
+% \setlength{\parskip}{1.5ex}%
+% \DescribeVariable[#1]{#2}%
+% \endgroup%
+% }
+%%
+% \newcommand{\ItemDescribeVariable}{%
+% \begingroup\catcode`\_=12 \DTXD@ItemDescribeVariable%
+%}
+% \makeatother
+%%
 % \newcommand{\stma}{\textsf{tma}}
 % \newcommand{\TMA}{\acro{TMA}}
 % \newcommand{\OU}{\acro{OU}}
@@ -271,6 +306,12 @@
 %
 % \item[Additional symbols] \DescribeMacro{\rect}\cs{rect}, \rect, is defined particularly for the use of \acro{M208} people although others may find it useful.
 %
+% \item[Legacy elements] There are a couple of macros which become enabled when using the \optn{legacy} option. These are now deprecated and may be removed from a future version. There are name clashes with standard \LaTeX\ commands, so please be aware of this if used.
+% \begin{itemize}
+%   \item \DescribeMacro[deprecated]{\C}\cs{C} is the original version of \cs{Complex}
+%   \item \DescribeMacro[deprecated]{\vec}\cs{vec} is the original version of \cs{vect}
+% \end{itemize}
+%
 % \end{description}
 %
 % \MaybeStop{}
@@ -320,9 +361,8 @@
 %                         compatibility
 % \end{itemize}
 %
-% To use a package option, place the option(s) before the package name:
-%    |\usepackage[roman,cleveref]{tma}|
-%
+% To use a package option, place the option(s) before the package name:\\\nopagebreak
+% \fqquad\cs{usepackage}|[roman,cleveref]{tma}|
 %
 % \changes{v1.19}{2025-02-18}{
 %    PDF metadata (apparently) was solved with help from Steve Mayers; all down
@@ -361,11 +401,19 @@
 %    Improved code readability and comments.
 %    Added 'legacy' option to allow old definitions of \cs{vec} and \cs{C}.}
 %
+% Before getting into the main package, it is necessary to ensure that the \LaTeX3\ extensions are loaded. Most modern versions of the \LaTeX\ core have this rolled in as standard, but as a belt and braces approach, inclusion here does no harm.
 %    \begin{macrocode}
-\RequirePackage{expl3} % LaTeX3 "experimental"
+\RequirePackage{expl3} ^^A LaTeX3 "experimental"
 %    \end{macrocode}
 %
 % \subsection{Package Initialisation}
+%
+% We are starting off using the \cs{ExplSyntaxOn} command to enable the \LaTeX3\ extensions before declaring a set of variables that will be used by our package. Working with the established conventions the variables are named to reflect their ownership and function. These are all declared as `token lists' so that they may, effectively, hold string elements.
+% \begin{description}
+%   \ItemDescribeVariable{\g_tma_constant_name} holds the students personal name
+%   \ItemDescribeVariable{\g_tma_constant_tma) holds the number of the \TMA\ being answered
+% \end{description}
+%
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package Initialization

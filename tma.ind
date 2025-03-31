@@ -1,0 +1,262 @@
+
+ \begin{theindex} 
+ \makeatletter\scan@allowedfalse
+{\bfseries\hfil A\hfil}\nopagebreak
+
+  \item \verb*+\alph+\pfill \hdclindex{186}{code}{140}, 
+		\hdclindex{252}{code}{206}, \hdclindex{254}{code}{208}
+  \item \verb*+alph+ (option)\pfill \hdclindex{2}{usage}{3}
+  \item \verb*+\arabic+\pfill \hdclindex{168}{code}{122}
+  \item \verb*+\Arg+\pfill \hdclindex{376}{code}{330}
+
+  \indexspace
+{\bfseries\hfil B\hfil}\nopagebreak
+
+  \item \verb*+\blacksmiley+\pfill \hdclindex{407}{code}{361}, 
+		\hdclindex{408}{code}{362}, \hdclindex{410}{code}{364}
+
+  \indexspace
+{\bfseries\hfil C\hfil}\nopagebreak
+
+  \item \verb*+\C+\pfill \hdclindex{351}{code}{305}, 
+		\hdclindex{396}{code}{350}, \hdclindex{397}{code}{351}, 
+		\hdclindex{398}{code}{352}
+  \item \verb*+\cleanlookdateon+\pfill \hdclindex{129}{code}{83}
+  \item \verb*+cleveref+ (option)\pfill \hdclindex{6}{usage}{3}
+  \item \verb*+\comb+\pfill \hdclindex{369}{code}{323}
+  \item \verb*+\Complex+\pfill \hdclindex{42}{usage}{5}, 
+		\hdclindex{350}{code}{304}, \hdclindex{351}{code}{305}
+  \item \verb*+\course+\pfill \hdclindex{86}{code}{40}, 
+		\hdclindex{102}{code}{56}, \hdclindex{268}{code}{222}, 
+		\hdclindex{428}{code}{382}
+  \item \verb*+\CurrentOption+\pfill \hdclindex{215}{code}{169}
+
+  \indexspace
+{\bfseries\hfil D\hfil}\nopagebreak
+
+  \item \verb*+\date+\pfill \hdclindex{99}{code}{53}
+  \item \verb*+\dd+\pfill \hdclindex{28}{usage}{5}, 
+		\hdclindex{341}{code}{295}
+  \item \verb*+\DeclareMathOperator+\pfill \hdclindex{373}{code}{327}, 
+		\hdclindex{374}{code}{328}, \hdclindex{375}{code}{329}, 
+		\hdclindex{376}{code}{330}, \hdclindex{377}{code}{331}, 
+		\hdclindex{378}{code}{332}, \hdclindex{379}{code}{333}, 
+		\hdclindex{380}{code}{334}, \hdclindex{381}{code}{335}, 
+		\hdclindex{382}{code}{336}
+  \item \verb*+\DeclareOption+\pfill \hdclindex{194}{code}{148}, 
+		\hdclindex{198}{code}{152}, \hdclindex{202}{code}{156}, 
+		\hdclindex{206}{code}{160}, \hdclindex{210}{code}{164}, 
+		\hdclindex{214}{code}{168}
+  \item \verb*+\deriv+\pfill \hdclindex{385}{code}{339}
+
+  \indexspace
+{\bfseries\hfil E\hfil}\nopagebreak
+
+  \item \verb*+\e+\pfill \hdclindex{30}{usage}{5}, 
+		\hdclindex{342}{code}{296}
+  \item environments:\efill 
+ \subitem \verb*+question+\pfill \hdclindex{22}{usage}{4}
+
+  \indexspace
+{\bfseries\hfil F\hfil}\nopagebreak
+
+  \item \verb*+\Fix+\pfill \hdclindex{382}{code}{336}
+  \item \verb*+\fnsymbol+\pfill \hdclindex{416}{code}{370}
+
+  \indexspace
+{\bfseries\hfil H\hfil}\nopagebreak
+
+  \item \verb*+\hypersetup+\pfill \hdclindex{260}{code}{214}
+
+  \indexspace
+{\bfseries\hfil I\hfil}\nopagebreak
+
+  \item \verb*+\iftma@legacy+\pfill \hdclindex{177}{code}{131}, 
+		\hdclindex{237}{code}{191}, \hdclindex{393}{code}{347}
+  \item \verb*+\iftma@roman+\pfill \hdclindex{174}{code}{128}, 
+		\hdclindex{227}{code}{181}, \hdclindex{250}{code}{204}
+  \item \verb*+\iftma@usecleveref+\pfill \hdclindex{175}{code}{129}, 
+		\hdclindex{232}{code}{186}, \hdclindex{275}{code}{229}, 
+		\hdclindex{301}{code}{255}
+  \item \verb*+\iftma@usepdfbookmark+\pfill \hdclindex{176}{code}{130}, 
+		\hdclindex{222}{code}{176}, \hdclindex{258}{code}{212}, 
+		\hdclindex{287}{code}{241}
+  \item \verb*+\ii+\pfill \hdclindex{32}{usage}{5}, 
+		\hdclindex{343}{code}{297}
+  \item \verb*+\im+\pfill \hdclindex{374}{code}{328}
+
+  \indexspace
+{\bfseries\hfil K\hfil}\nopagebreak
+
+  \item \verb*+\Ker+\pfill \hdclindex{379}{code}{333}
+
+  \indexspace
+{\bfseries\hfil L\hfil}\nopagebreak
+
+  \item \verb*+legacy+ (option)\pfill \hdclindex{10}{usage}{3}
+  \item \verb*+\Log+\pfill \hdclindex{375}{code}{329}
+
+  \indexspace
+{\bfseries\hfil M\hfil}\nopagebreak
+
+  \item \verb*+\marginnote+\pfill \hdclindex{151}{code}{105}
+  \item \verb*+\marginnotes+\pfill \hdclindex{152}{code}{106}
+  \item \verb*+\marginpar+\pfill \hdclindex{151}{code}{105}
+  \item \verb*+\mycourse+\pfill \hdclindex{16}{usage}{4}, 
+		\hdclindex{94}{code}{48}
+  \item \verb*+\myname+\pfill \hdclindex{12}{usage}{3}, 
+		\hdclindex{90}{code}{44}
+  \item \verb*+\mypin+\pfill \hdclindex{14}{usage}{4}, 
+		\hdclindex{96}{code}{50}
+  \item \verb*+\mytma+\pfill \hdclindex{18}{usage}{4}, 
+		\hdclindex{92}{code}{46}
+
+  \indexspace
+{\bfseries\hfil N\hfil}\nopagebreak
+
+  \item \verb*+\N+\pfill \hdclindex{34}{usage}{5}, 
+		\hdclindex{346}{code}{300}
+  \item \verb*+\name+\pfill \hdclindex{84}{code}{38}, 
+		\hdclindex{103}{code}{57}, \hdclindex{266}{code}{220}, 
+		\hdclindex{427}{code}{381}
+  \item \verb*+\nd+\pfill \hdclindex{361}{code}{315}
+  \item \verb*+\nth+\pfill \hdclindex{363}{code}{317}
+
+  \indexspace
+{\bfseries\hfil O\hfil}\nopagebreak
+
+  \item Options:\efill 
+ \subitem \verb*+alph+\pfill \hdclindex{2}{usage}{3}
+    \subitem \verb*+cleveref+\pfill \hdclindex{6}{usage}{3}
+    \subitem \verb*+legacy+\pfill \hdclindex{10}{usage}{3}
+    \subitem \verb*+pdfbookmark+\pfill \hdclindex{8}{usage}{3}
+    \subitem \verb*+roman+\pfill \hdclindex{4}{usage}{3}
+  \item \verb*+\Orb+\pfill \hdclindex{380}{code}{334}
+
+  \indexspace
+{\bfseries\hfil P\hfil}\nopagebreak
+
+  \item \verb*+\pageref+\pfill \hdclindex{191}{code}{145}, 
+		\hdclindex{288}{code}{242}
+  \item \verb*+\pagestyle+\pfill \hdclindex{425}{code}{379}
+  \item \verb*+\partial+\pfill \hdclindex{388}{code}{342}, 
+		\hdclindex{390}{code}{344}
+  \item \verb*+\pderiv+\pfill \hdclindex{387}{code}{341}
+  \item \verb*+\pdfbookmark+\pfill \hdclindex{290}{code}{244}
+  \item \verb*+pdfbookmark+ (option)\pfill \hdclindex{8}{usage}{3}
+  \item \verb*+\perm+\pfill \hdclindex{370}{code}{324}
+  \item \verb*+\pin+\pfill \hdclindex{87}{code}{41}, 
+		\hdclindex{103}{code}{57}, \hdclindex{266}{code}{220}, 
+		\hdclindex{267}{code}{221}, \hdclindex{427}{code}{381}
+  \item \verb*+\psderiv+\pfill \hdclindex{389}{code}{343}
+
+  \indexspace
+{\bfseries\hfil Q\hfil}\nopagebreak
+
+  \item \verb*+\Q+\pfill \hdclindex{38}{usage}{5}, 
+		\hdclindex{348}{code}{302}
+  \item \verb*+\qedsymbol+\pfill \hdclindex{410}{code}{364}
+  \item \verb*+\qpart+\pfill \hdclindex{24}{usage}{4}, 
+		\hdclindex{317}{code}{271}
+  \item \verb*+\qsubpart+\pfill \hdclindex{26}{usage}{4}, 
+		\hdclindex{326}{code}{280}
+  \item \verb*+question+ (env.)\pfill \hdclindex{22}{usage}{4}
+
+  \indexspace
+{\bfseries\hfil R\hfil}\nopagebreak
+
+  \item \verb*+\R+\pfill \hdclindex{40}{usage}{5}, 
+		\hdclindex{349}{code}{303}
+  \item \verb*+\rd+\pfill \hdclindex{362}{code}{316}
+  \item \verb*+\re+\pfill \hdclindex{373}{code}{327}
+  \item \verb*+\rect+\pfill \hdclindex{366}{code}{320}
+  \item \verb*+\Res+\pfill \hdclindex{378}{code}{332}
+  \item \verb*+\roman+\pfill \hdclindex{187}{code}{141}, 
+		\hdclindex{251}{code}{205}, \hdclindex{255}{code}{209}
+  \item \verb*+roman+ (option)\pfill \hdclindex{4}{usage}{3}
+  \item \verb*+\Rr+\pfill \hdclindex{352}{code}{306}
+
+  \indexspace
+{\bfseries\hfil S\hfil}\nopagebreak
+
+  \item \verb*+\setdate+\pfill \hdclindex{20}{usage}{4}, 
+		\hdclindex{98}{code}{52}, \hdclindex{109}{code}{63}
+  \item \verb*+\setquestionstring+\pfill \hdclindex{107}{code}{61}, 
+		\hdclindex{294}{code}{248}
+  \item \verb*+\st+\pfill \hdclindex{360}{code}{314}
+  \item \verb*+\Stab+\pfill \hdclindex{381}{code}{335}
+  \item \verb*+\stepcounter+\pfill \hdclindex{189}{code}{143}
+
+  \indexspace
+{\bfseries\hfil T\hfil}\nopagebreak
+
+  \item \verb*+\thedate+\pfill \hdclindex{88}{code}{42}
+  \item \verb*+\thefootnote+\pfill \hdclindex{416}{code}{370}
+  \item \verb*+\thepage+\pfill \hdclindex{429}{code}{383}
+  \item \verb*+\theqpart+\pfill \hdclindex{186}{code}{140}, 
+		\hdclindex{251}{code}{205}, \hdclindex{254}{code}{208}, 
+		\hdclindex{320}{code}{274}, \hdclindex{321}{code}{275}, 
+		\hdclindex{323}{code}{277}, \hdclindex{329}{code}{283}, 
+		\hdclindex{330}{code}{284}
+  \item \verb*+\theqsubpart+\pfill \hdclindex{187}{code}{141}, 
+		\hdclindex{252}{code}{206}, \hdclindex{255}{code}{209}, 
+		\hdclindex{329}{code}{283}, \hdclindex{330}{code}{284}, 
+		\hdclindex{333}{code}{287}
+  \item \verb*+\thequestion+\pfill \hdclindex{168}{code}{122}, 
+		\hdclindex{310}{code}{264}, \hdclindex{311}{code}{265}, 
+		\hdclindex{312}{code}{266}, \hdclindex{320}{code}{274}, 
+		\hdclindex{321}{code}{275}, \hdclindex{329}{code}{283}, 
+		\hdclindex{330}{code}{284}
+  \item \verb*+\title+\pfill \hdclindex{102}{code}{56}
+  \item \verb*+\tma+\pfill \hdclindex{85}{code}{39}, 
+		\hdclindex{102}{code}{56}, \hdclindex{265}{code}{219}, 
+		\hdclindex{267}{code}{221}, \hdclindex{428}{code}{382}
+  \item \verb*+\tma@bookmark+\pfill \hdclindex{190}{code}{144}, 
+		\hdclindex{289}{code}{243}, \hdclindex{310}{code}{264}, 
+		\hdclindex{320}{code}{274}, \hdclindex{329}{code}{283}
+  \item \verb*+\tma@crefname+\pfill \hdclindex{188}{code}{142}, 
+		\hdclindex{282}{code}{236}, \hdclindex{302}{code}{256}, 
+		\hdclindex{303}{code}{257}, \hdclindex{304}{code}{258}
+  \item \verb*+\tma@legacyfalse+\pfill \hdclindex{183}{code}{137}
+  \item \verb*+\tma@legacytrue+\pfill \hdclindex{211}{code}{165}
+  \item \verb*+\tma@pageref+\pfill \hdclindex{191}{code}{145}, 
+		\hdclindex{288}{code}{242}, \hdclindex{429}{code}{383}
+  \item \verb*+\tma@questionstring+\pfill \hdclindex{106}{code}{60}, 
+		\hdclindex{108}{code}{62}, \hdclindex{312}{code}{266}
+  \item \verb*+\tma@romanfalse+\pfill \hdclindex{180}{code}{134}, 
+		\hdclindex{199}{code}{153}
+  \item \verb*+\tma@romantrue+\pfill \hdclindex{195}{code}{149}
+  \item \verb*+\tma@stepcounter+\pfill \hdclindex{189}{code}{143}, 
+		\hdclindex{283}{code}{237}, \hdclindex{309}{code}{263}, 
+		\hdclindex{319}{code}{273}, \hdclindex{328}{code}{282}
+  \item \verb*+\tma@useclevereffalse+\pfill \hdclindex{181}{code}{135}
+  \item \verb*+\tma@useclevereftrue+\pfill \hdclindex{203}{code}{157}
+  \item \verb*+\tma@usepdfbookmarkfalse+\pfill 
+		\hdclindex{182}{code}{136}
+  \item \verb*+\tma@usepdfbookmarktrue+\pfill 
+		\hdclindex{207}{code}{161}
+  \item \verb*+\today+\pfill \hdclindex{109}{code}{63}
+
+  \indexspace
+{\bfseries\hfil V\hfil}\nopagebreak
+
+  \item \verb*+\value+\pfill \hdclindex{331}{code}{285}
+  \item \verb*+\ve+\pfill \hdclindex{46}{usage}{6}, 
+		\hdclindex{357}{code}{311}
+  \item \verb*+\vec+\pfill \hdclindex{356}{code}{310}, 
+		\hdclindex{394}{code}{348}, \hdclindex{395}{code}{349}
+  \item \verb*+\vect+\pfill \hdclindex{44}{usage}{6}, 
+		\hdclindex{355}{code}{309}, \hdclindex{356}{code}{310}
+
+  \indexspace
+{\bfseries\hfil W\hfil}\nopagebreak
+
+  \item \verb*+\Wnd+\pfill \hdclindex{377}{code}{331}
+
+  \indexspace
+{\bfseries\hfil Z\hfil}\nopagebreak
+
+  \item \verb*+\Z+\pfill \hdclindex{36}{usage}{5}, 
+		\hdclindex{347}{code}{301}
+
+ \end{theindex}
