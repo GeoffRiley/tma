@@ -39,46 +39,38 @@
 \setlength\hfuzz{15pt}  % don't show so many
 \hbadness=7000          % over- and underfull box warnings
 \usepackage{tma}
-\geometry{left=5mm,marginparwidth=35mm,marginparsep=5mm}
+\geometry{left=1mm,marginparwidth=40mm,marginparsep=1mm}
 \begin{document}
 	\DocInput{tma.dtx}
 \end{document}
 %</driver>
 % \fi
-% \makeatactive
+% \makeatletter
 % \GetFileInfo{tma.sty}
-%\IfPackageLoadedTF{doc}{% doc
+% \IfPackageLoadedTF{doc}{ ^^A doc
 %%
 % \NewDocElement[
-% macrolike=false,
-% toplevel=true,
-% idxtype=variable,
-% idxgroup=Variable,
-% printtype=\textit{Var}
+%   macrolike=false,
+%   toplevel=true,
+%   idxtype=variable,
+%   idxgroup=Variable,
+%   printtype=\textit{Var}
 % ]{Variable}{variable}
 %%
-%}{% not doc
+% }{^^A not doc
 %%
-% \newcommand*{\DTXD@DescribeVariable}[2][]{%
+% \newcommand*{\DescribeVariable}[2][]{%
 % \DTXD@filemaXD@filemarginparindex{#1}{#2}{Var}{variable}{usage}%
 % }
 %%
-% \newcommand*{\DescribeVariable}{%
-% \begingroup\catcode‘\_=12 \DTXD@DescribeVariable%
+% }^^A not doc
+%%
+% \newcommand{\ItemDescribeVariable}[2][]{%
+%   \item[\texttt{#2}:]%
+%   \setlength{\parskip}{1.5ex}%
+%   \DescribeVariable[#1]{#2}%
 % }
 %%
-%}% not doc
-%%
-%\newcommand{\DTXD@ItemDescribeVariable}[2][]{%
-% \item[\texttt{#2}:]%
-% \setlength{\parskip}{1.5ex}%
-% \DescribeVariable[#1]{#2}%
-% \endgroup%
-% }
-%%
-% \newcommand{\ItemDescribeVariable}{%
-% \begingroup\catcode`\_=12 \DTXD@ItemDescribeVariable%
-%}
 % \makeatother
 %%
 % \newcommand{\stma}{\textsf{tma}}
@@ -408,12 +400,17 @@
 %
 % \subsection{Package Initialisation}
 %
-% We are starting off using the \cs{ExplSyntaxOn} command to enable the \LaTeX3\ extensions before declaring a set of variables that will be used by our package. Working with the established conventions the variables are named to reflect their ownership and function. These are all declared as `token lists' so that they may, effectively, hold string elements.
+% We are starting off using the \cs{ExplSyntaxOn} command to enable the \LaTeX3\ extensions before declaring a set of `constants' that will be used by our package. Working with the established conventions the constants are declared as variables are named to reflect their ownership and function. These are all declared as `token lists' so that they may, effectively, hold string elements.
+% \begingroup
+% \catcode`_=11 ^^A Make the underscore character a letter!
 % \begin{description}
-%   \ItemDescribeVariable{\g_tma_constant_name} holds the students personal name
-%   \ItemDescribeVariable{\g_tma_constant_tma) holds the number of the \TMA\ being answered
+%   \ItemDescribeVariable{g_tma_constant_name} holds the students personal name
+%   \ItemDescribeVariable{g_tma_constant_tma} holds the number of the \TMA\ being answered
+%   \ItemDescribeVariable{g_tma_constant_course} holds the \OU\ course code for the module being studied
+%   \ItemDescribeVariable{g_tma_constant_pin} holds the students personal identification number
+%   \ItemDescribeVariable{g_tma_constant_thedate} holds the date to be printed on the front page of the \TMA
 % \end{description}
-%
+% \endgroup
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package Initialization
@@ -424,19 +421,39 @@
 \tl_new:N \g_tma_constant_course
 \tl_new:N \g_tma_constant_pin
 \tl_new:N \g_tma_constant_thedate
-
+%    \end{macrocode}
+% These `constants' are given initial generic values.
+%    \begin{macrocode}
 \tl_gset:Nn \g_tma_constant_name {name}
 \tl_gset:Nn \g_tma_constant_tma {tma}
 \tl_gset:Nn \g_tma_constant_course {course}
 \tl_gset:Nn \g_tma_constant_pin {pin}
 \tl_gset:Nn \g_tma_constant_thedate {the~date}
-
+%    \end{macrocode}
+% Then commands are provided to retrieve the values when required.
+% \begin{description}
+%   \ItemDescribeMacro{\name} returns the students name
+%   \ItemDescribeMacro{\tma} returns the working \TMA\ number
+%   \ItemDescribeMacro{\course} returns the \OU\ course reference
+%   \ItemDescribeMacro{\pin} returns the students personal identification number
+%   \ItemDescribeMacro{\thedate} returns the date to be printed on the title page of the \TMA
+% \end{description}
+%    \begin{macrocode}
 \newcommand{\name}{\g_tma_constant_name}
 \newcommand{\tma}{\g_tma_constant_tma}
 \newcommand{\course}{\g_tma_constant_course}
 \newcommand{\pin}{\g_tma_constant_pin}
 \newcommand{\thedate}{\g_tma_constant_thedate}
-
+%    \end{macrocode}
+% Finally, macros are provided to set the values of the `constants': these should only be used within the preamble. Use within the body of the text is unpredicable.
+% \begin{description}
+%   \ItemDescribeCommand{\myname}\marg{name} Set the students name
+%   \ItemDescribeCommand{\mytma}\marg{\TMA\ number} Set the \TMA\ number
+%   \ItemDescribeCommand{\mycourse}\marg{course code} Set the \OU\ course code for the module
+%   \ItemDescribeCommand{\mypin}\marg{pin} Set the students personal identification number
+%   \ItemDescribeCommand{\setdate}\marg{the date} Set the required date to display on the title page, default is the date of report generation
+% \end{description}
+%    \begin{macrocode}
 \NewDocumentCommand{\myname}{m}{%
 	\tl_gset:Nn \g_tma_constant_name{#1}}
 \NewDocumentCommand{\mytma}{m}{%
@@ -447,20 +464,34 @@
 	\tl_gset:Nn \g_tma_constant_pin{#1}}
 \NewDocumentCommand{\setdate}{m}{%
 	\date{#1}\tl_gset:Nn \g_tma_constant_thedate{#1}}
+%    \end{macrocode}
+% That's the end of the \LaTeX3\ extensions requiring the extension switch, so it can be turned off.
+%    \begin{macrocode}
 \ExplSyntaxOff
-
+%    \end{macrocode}
+% Set the \cs{title} and \cs{author} ready for use by the \cs{maketitle} macro at the start of the main document. They use the constants defined above so that changes are automatically reflected. They may be redefined by the user if required.
+%    \begin{macrocode}
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
-
-
+%    \end{macrocode}
+% In order to allow the question introduction string to be modified, a general \LaTeX\ string is created along with a macro to set it.
+% \begin{description}
+%   \ItemDescribeMacro{\tma@questionstring} Hold the string to be printed before the question number, the default is `Q'.
+%   \ItemDescribeMacro{\setquestionstring}\marg{string} Set the string to precede the question number
+% \end{description}
+%    \begin{macrocode}
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
 \NewDocumentCommand{\setquestionstring}{m}{%
 	\RenewDocumentCommand{\tma@questionstring}{}{#1}}
+%    \end{macrocode}
+% Set the default date to `today'.
+%    \begin{macrocode}
 \setdate{\today}
-
 %    \end{macrocode}
 %
 % \subsection{Package Loading}
+%
+% Here we load the useful packages that have proven their worth for \OU\ students over the years. Many have properties that are utilised by the rest of the \stma\ package.
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Package Loading
@@ -485,26 +516,29 @@
 %    \end{macrocode}
 %
 % \subsection{Geometry Settings}
+%
+% An important part of \TMA\ answering is providing a consistent output, to this end the following page geometry has been brought together as a compromise suitable for most modules.
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Geometry Settings
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \geometry{
-	headheight=10mm,
-	headsep=5mm,
-	bottom=25mm,
-	footskip=15mm,
-	left=30mm,
-	right=30mm,
-	marginparwidth=0mm,
-	marginparsep=0mm,
-	includemp
+  headheight=10mm,
+  headsep=5mm,
+  bottom=25mm,
+  footskip=15mm,
+  left=30mm,
+  right=30mm,
+  marginparwidth=0mm,
+  marginparsep=0mm,
+  includemp
 }
-
 %    \end{macrocode}
 %
 % \subsection{Margin Notes}
+%
+% By default, no margin notes are assumed to be required, however, if one is wanted, the \DescribeCommand{\marginnotes}\cs{marginnotes} command will set up the side margin ready to accept notes using the \DescribeCommand{\marginnote}\cs{marginnote}\marg{note} command.
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Margin Notes
@@ -512,17 +546,23 @@
 
 \NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
 \NewDocumentCommand{\marginnotes}{}{
-	\geometry{
-		marginparwidth=40mm,
-		marginparsep=5mm,
-		left=20mm,
-		right=15mm
-	}
+  \geometry{
+    marginparwidth=40mm,
+    marginparsep=5mm,
+    left=20mm,
+    right=15mm
+  }
 }
-
 %    \end{macrocode}
 %
 % \subsection{Question Numbering}
+%
+% We set up three counters to keep track of the question number along with associated parts and subparts.
+% \begin{description}
+%  \ItemDescribeCounter{question} Holds the current question number, when a new question is started this value is used unless one is provided, in either case the used value is incremented as saved back here. When used, the \cs{qpart} is automatically reset so that the first part will be part 1.
+%  \ItemDescribeCounter{qpart} Holds the current part number as a numeric value, as with the question number this may be overridden and is incremented after being used. When used, the \cs{qsubpart} is automatically reset so that the first subpart will be sub-part 1.
+%  \ItemDescribeCounter{qsubpart} Holds the current sub-part number as a numeric value, again, the value may be overridden and is incremented after being used.
+% \end{description}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Question Numbering
@@ -531,8 +571,10 @@
 \newcounter{question}
 \newcounter{qpart}[question]
 \newcounter{qsubpart}[qpart]
+%    \end{macrocode}
+% The question number is set to print as arabic digits,
+%    \begin{macrocode}
 \renewcommand{\thequestion}{\arabic{question}}
-
 %    \end{macrocode}
 %
 % \subsection{Option Handling}
