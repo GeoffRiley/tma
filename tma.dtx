@@ -86,7 +86,7 @@
 % \DoNotIndex{\refstepcounter,\relax,\renewcommand,\RenewDocumentCommand}
 % \DoNotIndex{\RequirePackage,\setcounter,\setlength,\space,\sqsubset,\sqsupset}
 % \DoNotIndex{\setcounter,\textbf,\textrm,\textsuperscript,\tl,\typeout}
-% \DoNotIndex{\unicode,\vspace}
+% \DoNotIndex{\unicode,\vspace,\DeclareMathOperator,\DeclareOption}
 % \title{The \stma\ Package\thanks{This document
 %  corresponds to \stma\ \fileversion, dated~\filedate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
@@ -150,13 +150,13 @@
 %    |\usepackage|\oarg{option,\dots}{tma}
 % \end{quote}
 % The following options are available:
-% \begin{itemize}
-%    \item \DescribeOption{alph}|[alph]| (default) question numbering as 1(b)(iii);
-%    \item \DescribeOption{roman}|[roman]| varies question numbering to sequence used by M381 i.e. 1(ii)(c);
-%    \item \DescribeOption{cleveref}|[cleveref]| question numbering creates automatic referencing for use with cleveref package;
-%    \item \DescribeOption{pdfbookmark}|[pdfbookmark]| add PDF bookmarks for each question using hyperref package; and
-%    \item \DescribeOption{legacy}|[legacy]| enables old definitions of |\vec| and |\C| for backward compatibility.
-% \end{itemize}
+% \begin{description}
+%    \ItemDescribeOption{alph} (default) question numbering as 1(b)(iii);
+%    \ItemDescribeOption{roman} varies question numbering to sequence used by M381 i.e. 1(ii)(c);
+%    \ItemDescribeOption{cleveref} question numbering creates automatic referencing for use with cleveref package;
+%    \ItemDescribeOption{pdfbookmark} add PDF bookmarks for each question using hyperref package; and
+%    \ItemDescribeOption{legacy} enables old definitions of |\vec| and |\C| for backward compatibility.
+% \end{description}
 %
 % \subsection{Macros and environments}
 %
@@ -222,13 +222,13 @@
 %
 % \item[Number sets] Standard `black-board' fonts are used to indicate a number of frequently designated groups of numbers.
 %
-% \begin{itemize}
-%    \item[\cs{N}] \DescribeMacro{\N} represents all natural numbers;
-%    \item[\cs{Z}] \DescribeMacro{\Z} represents all integers;
-%    \item[\cs{Q}] \DescribeMacro{\Q} represents all rational numbers;
-%    \item[\cs{R}] \DescribeMacro{\R} represents all real numbers; and
-%    \item[\cs{Complex}] \DescribeMacro{\Complex} represents all complex numbers.
-% \end{itemize}
+% \begin{description}
+%    \ItemDescribeMacro{\N} \N\ represents all natural numbers;
+%    \ItemDescribeMacro{\Z} \Z\ represents all integers;
+%    \ItemDescribeMacro{\Q} \Q\ represents all rational numbers;
+%    \ItemDescribeMacro{\R} \R\ represents all real numbers; and
+%    \ItemDescribeMacro{\Complex} \Complex\ represents all complex numbers.
+% \end{description}
 %
 % \begin{dtxexample}*{Number sets}
 %     The relationship between number sets:
@@ -262,47 +262,47 @@
 %
 % So the standard four English ordinals are provided \cs{st}, \cs{nd}, \cs{rd}, and \cs{nth}, e.g. 1\st, 2\nd, 3\rd, and 4\nth.
 %
-% Note that the last ordinal is \cs{nth} not \cs{th}, the latter produces a thorn character, \th, and that only works if you have other than the default 7-bit font encoding (OT1).
+% Note that the last ordinal is \cs{nth} not \cs{th}, the latter produces a thorn character, \th, and that only works if you have other than the default 7-bit font encoding (\acro{OT1}).
 %
 % \item[Combinatoral notations] There are two combinatoral forms that are commonly used in \OU\ modules, the combination selecting $r$ out of a total of $n$ items where order does not matter, and the permutations of $r$ out of $n$ items were order matters.
-%
-% \DescribeMacro{\comb}\marg{n}\marg{r}. This is equivelent to \[
-% \comb{n}{r} = \frac{n!}{r!(n-r)!}
+% \begin{description}
+% \ItemDescribeMacro{\comb}\marg{n}\marg{r}. This is equivelent to \[
+%   \comb{n}{r} = \frac{n!}{r!(n-r)!}
 % \]
-%
-% \DescribeMacro{\perm}\marg{n}\marg{r}. This is equivalent to \[
-% \perm{n}{r} = \frac{n!}{(n-r)!}
+% \ItemDescribeMacro{\perm}\marg{n}\marg{r}. This is equivalent to \[
+%   \perm{n}{r} = \frac{n!}{(n-r)!}
 % \]
+% \end{description}
 %
 % \item[Mathematical operators] Additional mathematical operators are defined, again for convenience of entry.
-% \begin{itemize}
-%	\item \DescribeMacro{\re}\cs{re} $\mapsto \re$
-%	\item \DescribeMacro{\im}\cs{im} $\mapsto \im$
-%	\item \DescribeMacro{\Log}\cs{Log} $\mapsto \Log$
-%	\item \DescribeMacro{\Arg}\cs{Arg} $\mapsto \Arg$
-%	\item \DescribeMacro{\Wnd}\cs{Wnd} $\mapsto \Wnd$
-%	\item \DescribeMacro{\Res}\cs{Res} $\mapsto \Res$
-%	\item \DescribeMacro{\Ker}\cs{Ker} $\mapsto \Ker$
-%	\item \DescribeMacro{\Orb}\cs{Orb} $\mapsto \Orb$
-%	\item \DescribeMacro{\Stab}\cs{Stab} $\mapsto \Stab$
-%	\item \DescribeMacro{\Fix}\cs{Fix} $\mapsto \Fix$
-% \end{itemize}
+% \begin{description}
+%	\ItemDescribeMacro{\re} $\mapsto \re$
+%	\ItemDescribeMacro{\im} $\mapsto \im$
+%	\ItemDescribeMacro{\Log} $\mapsto \Log$
+%	\ItemDescribeMacro{\Arg} $\mapsto \Arg$
+%	\ItemDescribeMacro{\Wnd} $\mapsto \Wnd$
+%	\ItemDescribeMacro{\Res} $\mapsto \Res$
+%	\ItemDescribeMacro{\Ker} $\mapsto \Ker$
+%	\ItemDescribeMacro{\Orb} $\mapsto \Orb$
+%	\ItemDescribeMacro{\Stab} $\mapsto \Stab$
+%	\ItemDescribeMacro{\Fix} $\mapsto \Fix$
+% \end{description}
 %
 % \item[Derivatives] There are three derivative forms defined specifically for speeding calculas entry and accuracy. One used the $\dd x$ form and two use the partial, $\partial x$, form.
 %
-% \begin{itemize}
-% 	\item \DescribeMacro{\deriv}\cs{deriv}\marg{y}\marg{x} $\mapsto \deriv{y}{x}$
-% 	\item \DescribeMacro{\pderiv}\cs{pderiv}\marg{y}\marg{x} $\mapsto \pderiv{y}{x}$
-% 	\item \DescribeMacro{\psderiv}\cs{psderiv}\marg{y}\marg{x}\marg{z} $\mapsto \psderiv{y}{x}{z}$
-% \end{itemize}
+% \begin{description}
+% 	\ItemDescribeMacro{\deriv}\marg{y}\marg{x} $\mapsto \deriv{y}{x}$
+% 	\ItemDescribeMacro{\pderiv}\marg{y}\marg{x} $\mapsto \pderiv{y}{x}$
+% 	\ItemDescribeMacro{\psderiv}\marg{y}\marg{x}\marg{z} $\mapsto \psderiv{y}{x}{z}$
+% \end{description}
 %
 % \item[Additional symbols] \DescribeMacro{\rect}\cs{rect}, \rect, is defined particularly for the use of \acro{M208} people although others may find it useful.
 %
 % \item[Legacy elements] There are a couple of macros which become enabled when using the \optn{legacy} option. These are now deprecated and may be removed from a future version. There are name clashes with standard \LaTeX\ commands, so please be aware of this if used.
-% \begin{itemize}
-%   \item \DescribeMacro[deprecated]{\C}\cs{C} is the original version of \cs{Complex}
-%   \item \DescribeMacro[deprecated]{\vec}\cs{vec} is the original version of \cs{vect}
-% \end{itemize}
+% \begin{description}
+%   \ItemDescribeMacro{\C} is the original version of \cs{Complex}
+%   \ItemDescribeMacro{\vec} is the original version of \cs{vect}
+% \end{description}
 %
 % \end{description}
 %
@@ -343,14 +343,14 @@
 %
 % Package Options
 % \begin{itemize}
-%    \item |[alph]|      (default) question numbering as 1(b)(iii)
-%    \item |[roman]|     varies question numbering to sequence used by M381
-%                         i.e. 1(ii)(c)
-%    \item |[cleveref]|  question numbering creates automatic referencing for
-%                         use with cleveref package
-%    \item |[pdfbookmark]| add PDF bookmarks for each question using hyperref package
-%    \item |[legacy]|     enables old definitions of |\vec| and |\C| for backward
-%                         compatibility
+%    \item[\cs{[alph]}]        (default) question numbering as 1(b)(iii)
+%    \item[\cs{[roman]}]       varies question numbering to sequence used by M381
+%                           i.e. 1(ii)(c)
+%    \item[\cs{[cleveref]}]    question numbering creates automatic referencing for
+%                           use with cleveref package
+%    \item[\cs{[pdfbookmark]}] add PDF bookmarks for each question using hyperref package
+%    \item[\cs{[legacy]}]      enables old definitions of |\vec| and |\C| for backward
+%                           compatibility
 % \end{itemize}
 %
 % To use a package option, place the option(s) before the package name:\\\nopagebreak
@@ -447,11 +447,11 @@
 %    \end{macrocode}
 % Finally, macros are provided to set the values of the `constants': these should only be used within the preamble. Use within the body of the text is unpredicable.
 % \begin{description}
-%   \ItemDescribeCommand{\myname}\marg{name} Set the students name
-%   \ItemDescribeCommand{\mytma}\marg{\TMA\ number} Set the \TMA\ number
-%   \ItemDescribeCommand{\mycourse}\marg{course code} Set the \OU\ course code for the module
-%   \ItemDescribeCommand{\mypin}\marg{pin} Set the students personal identification number
-%   \ItemDescribeCommand{\setdate}\marg{the date} Set the required date to display on the title page, default is the date of report generation
+%   \ItemDescribeMacro{\myname}\marg{name} Set the students name
+%   \ItemDescribeMacro{\mytma}\marg{\TMA\ number} Set the \TMA\ number
+%   \ItemDescribeMacro{\mycourse}\marg{course code} Set the \OU\ course code for the module
+%   \ItemDescribeMacro{\mypin}\marg{pin} Set the students personal identification number
+%   \ItemDescribeMacro{\setdate}\marg{the date} Set the required date to display on the title page, default is the date of report generation
 % \end{description}
 %    \begin{macrocode}
 \NewDocumentCommand{\myname}{m}{%
@@ -538,7 +538,8 @@
 %
 % \subsection{Margin Notes}
 %
-% By default, no margin notes are assumed to be required, however, if one is wanted, the \DescribeCommand{\marginnotes}\cs{marginnotes} command will set up the side margin ready to accept notes using the \DescribeCommand{\marginnote}\cs{marginnote}\marg{note} command.
+% By default, no margin notes are assumed to be required, however, if one is wanted, the \DescribeMacro{\marginnotes}\cs{marginnotes} command will set up the side margin ready to accept notes using the \DescribeMacro{\marginnote}\cs{marginnote}\marg{note} command.
+%
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Margin Notes
@@ -578,6 +579,15 @@
 %    \end{macrocode}
 %
 % \subsection{Option Handling}
+%
+% In order to handle the incoming options for the \stma\ package, we create a set of four new boolean tokens.
+% \begin{description}
+%     \ItemDescribeBoolean{tma@roman} False indicates `alph' numbering, true indicates `roman' numbering of parts and subpart.
+%     \ItemDescribeBoolean{tma@usecleveref} True indicates that the \pkg{cleveref} package is requested.
+%     \ItemDescribeBoolean{tma@usepdfbookmark} True indicated that the \pkg{pdfbookmark} package is requested.
+%     \ItemDescribeBoolean{tma@legacy} True indicted that the commands \cs{Complex} and \cs{vect} will be redefined to the legacy commands \cs{C} and \cs{vec}.
+% \end{description}
+%
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Option Handling
@@ -589,11 +599,23 @@
 \newif\iftma@legacy
 
 % Set default options
-\tma@romanfalse          % Default numbering is 'alph'
-\tma@useclevereffalse    % Default is not to use cleveref
-\tma@usepdfbookmarkfalse % Default is not to use pdfbookmark
-\tma@legacyfalse         % Default is not to use legacy definitions
-
+\tma@romanfalse          ^^A Default numbering is `alph'
+\tma@useclevereffalse    ^^A Default is not to use cleveref
+\tma@usepdfbookmarkfalse ^^A Default is not to use pdfbookmark
+\tma@legacyfalse         ^^A Default is not to use legacy definitions
+%    \end{macrocode}
+%
+% We now set up the default states and commands for the \stma\ package operation.
+% \begin{description}
+%    \ItemDescribeMacro{\theqpart} returns the current question part number as either an alpha or roman index.
+%    \ItemDescribeMacro{\theqsubpart} returns the current question subpart number as either a roman or an alpha index.
+%    \ItemDescribeMacro{\tma@crefname}\marg{label type}\marg{singular name}\marg{plural name} Declares a label with singular and plural spellings for the \pkg{cleveref} package.
+%    \ItemDescribeMacro{\tma@stepcounter}\marg{counter name} Increments the named counter by one.
+%    \ItemDescribeMacro{\tma@bookmark}\oarg{level}\marg{text}\marg{name} The level is optional, numerical, the default is zero, the top level. The text is what will appear in the bookmark panel, and the name is what may be used as a reference to the location from other parts of the document.
+%    \ItemDescribeMacro{\tma@pageref}\marg{name} returns the page number, if known, that contains the bookmark with the label name.
+% \end{description}
+%
+%    \begin{macrocode}
 % Define commands with default values
 \renewcommand{\theqpart}{\alph{qpart}}
 \renewcommand{\theqsubpart}{\roman{qsubpart}}
@@ -601,38 +623,41 @@
 \NewDocumentCommand{\tma@stepcounter}{m}{\stepcounter{#1}}
 \NewDocumentCommand{\tma@bookmark}{O{0}mm}{\relax}
 \NewDocumentCommand{\tma@pageref}{m}{\pageref{#1}}
-
+%    \end{macrocode}
+%
+% Declare each of the valid options for the option processing system. In each case, the action is to set the appropriate boolean to true or false.
+%
+%    \begin{macrocode}
 % Declare options
 \DeclareOption{roman}{%
 	\tma@romantrue%
 }
-
 \DeclareOption{alph}{%
 	\tma@romanfalse%
 }
-
 \DeclareOption{cleveref}{%
 	\tma@useclevereftrue%
 }
-
 \DeclareOption{pdfbookmark}{%
 	\tma@usepdfbookmarktrue%
 }
-
 \DeclareOption{legacy}{%
 	\tma@legacytrue%
 }
-
 \DeclareOption*{%
 	\PackageWarning{tma}{Unknown option `\CurrentOption'}%
 }
-
+%    \end{macrocode}
+% Go ahead, process those options!
+%    \begin{macrocode}
 % Process options
 \ProcessOptions\relax
-
 %    \end{macrocode}
 %
 % \subsection{Debugging Options}
+%
+% A short section of code outputting to the log the state of the four main options that may be passed to the \stma\ package.
+%
 %    \begin{macrocode}
 \typeout{**************** OPTION RESULTS **********}
 \iftma@usepdfbookmark
@@ -656,8 +681,6 @@
 \typeout{legacy is FALSE}
 \fi
 \typeout{************* END OPTION RESULTS **********}
-
-
 %    \end{macrocode}
 %
 % \subsection{Package adjustments based on Options}
