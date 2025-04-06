@@ -2,7 +2,7 @@
 
 ## Version
 
-v1.18 (2025/02/16)
+v1.19 (2025/02/18)
 
 ## Author
 
@@ -20,9 +20,17 @@ The `tma` package provides macros and environments to assist in writing and answ
 
 https://github.com/GeoffRiley/tma/
 
-## Installation
+## Compiling and Installation
 
-Place `tma.sty` in your LaTeX directory or project folder.
+If the `tma.sty` file is not provided, and you have, instead, `tma.dtx` and `tma.ins`, then follow this procedure:
+- Compile the `tma` package with `pdflatex tma.ins`. This will create the `tma.sty` file.
+- Compile the `tma` documentation with:
+-  - `pdflatex tma.dtx` (repeated several times)
+-  - `makeindex -s gglo.ist -o tma.gls tma.glo`
+-  - `makeindex -s gind.ist tma`
+-  - `pdflatex tma.dtx` (several times again)
+
+The file `tma.sty` file should be placed in an appropriate location within the TeX directory structure. For example in a directory such as tex/latex/tma.
 
 ## Usage
 
