@@ -1,4 +1,8 @@
-\documentclass[a4paper,11pt,twoside]{article}
+\documentclass{ltxdoc}
+\PassOptionsToClass{a4paper,11pt,twoside}{article}
+\AtBeginDocument{\OnlyDescription}
+\AtBeginDocument{\CodelineIndex\EnableCrossrefs}
+\AtEndDocument{\PrintIndex}
 
 \makeatletter
 \newenvironment{desc}
@@ -10,6 +14,36 @@
     }
   {%\enddecl
   }
+
+%\def\cmd@font{\normalfont\ttfamily\selectfont}
+%\newcommand{\cmd}[2][]{%
+%    \ifblank{#1}{%
+%    \cmd@font{\textbackslash#2}%
+%    }{}%
+%    \normalfont\selectfont%
+%    \def\@cmd{#2}%
+%    \index{#2@\texttt{\textbackslash\@cmd}}%
+%    \index{command!#2@\texttt{\textbackslash\@cmd}}%
+%}%
+
+\def\opt@font{\normalfont\ttfamily\selectfont}
+\newcommand{\opt}[1]{%
+    \opt@font{#1}%
+    \normalfont\selectfont%
+    \index{#1@{\texttt{#1~(option)}}}%
+    \index{option!#1@\texttt{#1}}%
+}%
+
+\def\env@font{\normalfont\ttfamily\selectfont}
+\newcommand{\env}[2][]{%
+    \ifblank{#1}{%
+        \env@font{#2}%
+    }{}%
+    \normalfont\selectfont%
+    \def\@env{\texttt{#2}}%
+    \index{#2@\@env}%
+    \index{envionment!#2@\@env}%
+}%
 \makeatother
 
 \usepackage{tma}
@@ -23,6 +57,7 @@
 	arrows.meta,
 	decorations.markings}
 \usepackage{siunitx}
+\usepackage{imakeidx}
 
 \pgfplotsset{compat=1.6}
 
@@ -37,6 +72,8 @@
 \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com.com}{geoffr@adaso.com}}
 \date{Version 1.15, 2024/11/21}
 
+\makeindex[columns=3,intoc,columnseprule,options=-s index_fmt.ist]
+
 \begin{document}
 
 	\maketitle
@@ -45,32 +82,32 @@
 
 	\section{Introduction}
 
-	The \texttt{tma} package provides a set of macros and environments to assist in writing question papers or solutions to Tutor Marked Assessments (TMAs) for Open University courses. It simplifies the formatting of questions, parts, subparts, and includes useful mathematical commands.
+	The \texttt{tma}\index{tma} package provides a set of macros and environments to assist in writing question papers or solutions to Tutor Marked Assessments (TMAs)\index{Tutor Marked Assessment|see{tma}} for Open University courses. It simplifies the formatting of questions, parts, subparts, and includes useful mathematical commands.
 
 	\section{Installation}
 
-	To install the package, place the `tma.sty` file in your LaTeX directory or project folder. If using a TeX distribution, you may place it in the local texmf tree.
+	To install the package, place the `tma.sty`\index{tma.sty@{\texttt{tma.sty}}} file in your LaTeX directory or project folder. If using a TeX distribution, you may place it in the local texmf tree.
 
 	\section{Package Options}
 
 	\begin{description}
-		\item[\texttt{alph}] (default) Question numbering as 1(b)(iii).
-		\item[\texttt{roman}] Question numbering as 1(ii)(c).
-		\item[\texttt{cleveref}] Enables automatic referencing with the \texttt{cleveref} package.
-		\item[\texttt{pdfbookmark}] Adds PDF bookmarks for each question using the \texttt{hyperref} package.
-		\item[\texttt{legacy}] Enables old definitions of \verb|\vec| and \verb|\C| for backward compatibility with earlier versions of the package. \emph{Deprecated}.
+		\item[\opt{alph}] (default) Question numbering as 1(b)(iii).
+		\item[\opt{roman}] Question numbering as 1(ii)(c).
+		\item[\opt{cleveref}] Enables automatic referencing with the \texttt{cleveref} package.
+		\item[\opt{pdfbookmark}] Adds PDF bookmarks for each question using the \texttt{hyperref} package.
+		\item[\opt{legacy}] Enables old definitions of \cs{vec} and \cs{C} for backward compatibility with earlier versions of the package. \emph{Deprecated}.
 	\end{description}
 
 	\section{Usage}
 
-	Include the package in your LaTeX document:
+	Include\index{inclusion} the package in your LaTeX document:
 
 	\begin{verbatim}
 		\documentclass[a4paper,11pt]{article}
 		\usepackage[alph,cleveref]{tma}
 	\end{verbatim}
 
-	Set your personal information:
+	Set your personal information\index{personal information} using the macros \cs{myname}, \cs{mycourse}, \cs{mytma} and \cs{mypin}:
 
 	\begin{verbatim}
 		\myname{Your Name}
@@ -79,19 +116,19 @@
 		\mypin{Your PIN}
 	\end{verbatim}
 
-	If you wish to set a specific date for your report:
+	If you wish to set a specific date for your report, use \cs{setdate}:
 
 	\begin{verbatim}
 		\setdate{21 November 2024}
 	\end{verbatim}
 
-	You can retrieve the report date within the report using the \verb|\thedate| command.
+	This is a free format field, any rendition of `date' may be given. You can retrieve the report date later using the \cs{thedate} command.
 
 	\section{Commands and Environments}
 
 	\subsection{Question Environment}
 
-	Begin answering a question with the \texttt{question} environment:
+	\PrintEnvName{question} Begin answering a question with the \env{question} environment:
 
 	\begin{verbatim}
 	\begin{question}
@@ -241,35 +278,38 @@ Note that the default part numbering is in the form (a), (b), (c)\dots If the op
 \subsection{Using Mathematical Commands}
 
 \begin{verbatim}
-        Relationship between number sets:
-        \begin{itemize}
-          \item \N{} (Natural numbers) $\subseteq \Z$ (Integers);
-          every natural number is also an integer.
-          \item \Z{} (Integers) $\subseteq \Q$ (Rational numbers);
-          every integer is also a rational number.
-          \item \Q{} (Rational numbers) $\subseteq \R$ (Real numbers);
-          every rational number is also a real number.
-          \item \Complex{} (Complex numbers) $\supseteq \R$ (Real number);
-          complex numbers include real numbers as a subset, since they
-          can be represented by $a+\ii b$ where $a$ and $b$ are real numbers.
-        \end{itemize}
-        Hence, $\N\subseteq\Z\subseteq\Q\subseteq\R\subseteq\Complex$.\\[0.5cm]
+Relationship between number sets:
+\begin{itemize}
+  \item \N{} (Natural numbers) $\subseteq \Z$ (Integers);
+  every natural number is also an integer.
+  \item \Z{} (Integers) $\subseteq \Q$ (Rational numbers);
+  every integer is also a rational number.
+  \item \Q{} (Rational numbers) $\subseteq \R$ (Real numbers);
+  every rational number is also a real number.
+  \item \Complex{} (Complex numbers) $\supseteq \R$ (Real number);
+  complex numbers include real numbers as a subset, since they
+  can be represented by $a+\ii b$ where $a$ and $b$ are real numbers.
+\end{itemize}
+Hence, $\N\subseteq\Z\subseteq\Q\subseteq\R\subseteq\Complex$.\\[0.5cm]
 
-        Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$
+Euler's formula states that $\e^{\ii\theta} = \cos\theta + \ii\sin\theta$
 
-        A combination is a selection of objects without regard to order.
-        \begin{align}
-        	C(n,r) &= \comb{n}{r}\\
-        	&= \frac{n!}{r!(n-r)!}
-        \end{align}
-        Where $n$ is the total number of objects, $r$ is the number of objects to be selected and $!$ denotes the factorial (e.g., $5! = 5\times4\times3\times2\times1$).
+A combination is a selection of objects without regard to order.
+\begin{align}
+      	C(n,r) &= \comb{n}{r}\\
+      	&= \frac{n!}{r!(n-r)!}
+\end{align}
+Where $n$ is the total number of objects, $r$ is the number of objects to
+be selected and $!$ denotes the factorial
+(e.g., $5! = 5\times4\times3\times2\times1$).
 
-        A permutation is an arrangement of objects in a specific order.
-        \begin{align}
-        	P(n.r) &= \perm{n}{r}\\
-        	&= \frac{n!}{(n-r)!}
-        \end{align}
-        Where $n$ is the total number of objects, $r$ is the number of objects to be selected and $!$ denotes the factorial.
+A permutation is an arrangement of objects in a specific order.
+\begin{align}
+      	P(n.r) &= \perm{n}{r}\\
+      	&= \frac{n!}{(n-r)!}
+\end{align}
+Where $n$ is the total number of objects, $r$ is the number of objects to
+be selected and $!$ denotes the factorial.
 \end{verbatim}
 
 \begin{center}
@@ -303,26 +343,26 @@ Note that the default part numbering is in the form (a), (b), (c)\dots If the op
 
 \section{Vectors}
 \begin{verbatim}
-	\begin{question}[6]
-	Figure~\ref{fig:q6_vectors} shows the vectors involved in this problem.
-	\qpart % (a)
-	The given angles are bearings, from the compass North with a clockwise
-	positive reading.
-	\begin{align*}
-		|\ve{b}| &= 120\qquad|\ve{w}| = 30\\
-		\intertext{The vector \ve{b} in component form is made using the
-			acute angle in the lower quadrant, i.e. $\ang{180}-\ang{120}=\ang{60}$,
-			this implies that the \ve{j}-component is negative:}
-		\ve{b} &= 170 \sin(\ang{60})\ve{i} - 170 \cos(\ang{60})\ve{j}\\
-		&=\frac{170\sqrt{3}}{2}\ve{i} - \frac{170}{2}\ve{j}\\
-		\vdots
-	\end{align*}
-	Therefore, the two vectors in component form are:\[
-	\ve{b}=(147.22\,\ve{i} - 85.00\,\ve{j})\,\unit{\km\per\hour}
-	\] and \[
-	\ve{w}=(21.21\,\ve{i} + 21.21\,\ve{j})\,\unit{\km\per\hour}
-	\] (all to 2 d.p.)
-	\end{question}
+\begin{question}[6]
+Figure~\ref{fig:q6_vectors} shows the vectors involved in this problem.
+\qpart % (a)
+The given angles are bearings, from the compass North with a clockwise
+positive reading.
+\begin{align*}
+	|\ve{b}| &= 120\qquad|\ve{w}| = 30\\
+	\intertext{The vector \ve{b} in component form is made using the
+		acute angle in the lower quadrant, i.e. $\ang{180}-\ang{120}=\ang{60}$,
+		this implies that the \ve{j}-component is negative:}
+	\ve{b} &= 170 \sin(\ang{60})\ve{i} - 170 \cos(\ang{60})\ve{j}\\
+	&=\frac{170\sqrt{3}}{2}\ve{i} - \frac{170}{2}\ve{j}\\
+	\vdots
+\end{align*}
+Therefore, the two vectors in component form are:\[
+\ve{b}=(147.22\,\ve{i} - 85.00\,\ve{j})\,\unit{\km\per\hour}
+\] and \[
+\ve{w}=(21.21\,\ve{i} + 21.21\,\ve{j})\,\unit{\km\per\hour}
+\] (all to 2 d.p.)
+\end{question}
 \end{verbatim}
 \begin{figure}
 	\centering
@@ -403,6 +443,7 @@ Commands to set ordinal indicators after numbers. For example, 1\st, 2\nd, 3\rd 
 \section{Change Log}
 
 \begin{itemize}
+\item \textbf{v1.19 (2025/02/18)}: PDF metadata (apparently) solved with help from Steve Mayers; all down to the use of commands being used as string containers. New (\LaTeX3) commands are robust and fail to expand within the context of the metadata and bookmarks, old (\LaTeX2e) commands are fragile and correctly expanded. I have a mix of old commands and new variables now.
 \item \textbf{v1.18 (2025/02/16)}: PDF metadata doesn't set correctly so I have removed it: the cause is an incompatibility between \LaTeX\ unicode and the PDF restricted character allowance.
 \item \textbf{v1.17 (2025/02/13)}: Rewritten with \LaTeX-3 syntax from the `xparse' package to make commands less fragile. Finally got alignment of part and subpart numbering to line up correctly.
 \item \textbf{v1.16 (2024/11/22)}: Added File, Properties to pdf files using the hyperref setup system when in pdfbookmark mode.

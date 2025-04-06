@@ -1,39 +1,903 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2025 by G. I. Riley <geoffr@adaso.com>
+% ---------------------------------------------------------------------------
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained.'
+%
+% The Current Maintainer of this work is Geoff Riley.
+%
+% This work consists of the files tma.dtx and tma.ins
+% and the derived filebase tma.sty.
+%
+% \fi
+%
 % \iffalse
 %<*driver>
-\ProvidesFile{tma.dtx}[2024/11/08 v1.12 TMA package]
-\documentclass{ltxdoc}
-\usepackage{lmodern}
-\usepackage{hyperref}
+\ProvidesFile{tma.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<package>\ProvidesPackage{tma}
+%<package>  [2025-02-18 v1.19 TMA package]
+%<*driver>
+\documentclass[a4paper,11pt]{ltxdoc}
+\usepackage[T1]{fontenc}
+\usepackage{dtxdescribe}
+% \OnlyDescription
+\listfiles
 \EnableCrossrefs
+% \DisableCrossrefs
 \CodelineIndex
-\RecordChanges
+% \SetupDoc{reportchangedates}
+\setlength\hfuzz{15pt}  % don't show so many
+\hbadness=7000          % over- and underfull box warnings
+\usepackage{tma}
+\geometry{left=1mm,marginparwidth=40mm,marginparsep=1mm}
 \begin{document}
 	\DocInput{tma.dtx}
 \end{document}
 %</driver>
 % \fi
+% \makeatletter
 % \GetFileInfo{tma.sty}
-% \title{The \textsf{tma} Package}
+% \IfPackageLoadedTF{doc}{ ^^A doc
+%%
+% \NewDocElement[
+%   macrolike=false,
+%   toplevel=true,
+%   idxtype=variable,
+%   idxgroup=Variable,
+%   printtype=\textit{Var}
+% ]{Variable}{variable}
+%%
+% }{^^A not doc
+%%
+% \newcommand*{\DescribeVariable}[2][]{%
+% \DTXD@filemaXD@filemarginparindex{#1}{#2}{Var}{variable}{usage}%
+% }
+%%
+% }^^A not doc
+%%
+% \newcommand{\ItemDescribeVariable}[2][]{%
+%   \item[\texttt{#2}:]%
+%   \setlength{\parskip}{1.5ex}%
+%   \DescribeVariable[#1]{#2}%
+% }
+%%
+% \makeatother
+%%
+% \newcommand{\stma}{\textsf{tma}}
+% \newcommand{\TMA}{\acro{TMA}}
+% \newcommand{\OU}{\acro{OU}}
+% \DoNotIndex{\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname,\else}
+% \DoNotIndex{\endinput,\ensuremath,\ExplSyntaxOff,\ExplSyntaxOn,\fancyhead}
+% \DoNotIndex{\fancyhf,\fi,\frac,\g,\geometry,\headrulewidth,\hspace,\ifthenelse}
+% \DoNotIndex{\large,\makebox,\mathbb,\mathcal,\mathop,\mathrm,\newcommand}
+% \DoNotIndex{\newcounter,\NewDocumentCommand,\NewDocumentEnvironment,\newif}
+% \DoNotIndex{\newtheorem,\numberwithin,\overrightarrow,\PackageWarning}
+% \DoNotIndex{\par,\parindent,\parskip,\ProcessOptions,\ProvideDocumentCommand}
+% \DoNotIndex{\refstepcounter,\relax,\renewcommand,\RenewDocumentCommand}
+% \DoNotIndex{\RequirePackage,\setcounter,\setlength,\space,\sqsubset,\sqsupset}
+% \DoNotIndex{\setcounter,\textbf,\textrm,\textsuperscript,\tl,\typeout}
+% \DoNotIndex{\unicode,\vspace,\DeclareMathOperator,\DeclareOption}
+% \title{The \stma\ Package\thanks{This document
+%  corresponds to \stma\ \fileversion, dated~\filedate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
-% \date{\filedate\ (v\fileversion)}
+% \date{\filedate\ (\fileversion)}
+% \RecordChanges
+% \renewcommand\code[1]{\mbox{$\ell$-#1}}
+% \renewcommand\main[1]{\underline{\mbox{$\ell$-#1}}}
+% \setcounter{IndexColumns}{2}
+% \setcounter{GlossaryColumns}{2}
 % \maketitle
 %
 % \begin{abstract}
-% The \textsf{tma} package provides macros and environments to assist in writing Tutor Marked Assessments (TMAs) for Open University courses.
+% The \stma\ package provides macros and environments to assist in writing Tutor
+% Marked Assessments (\TMA s) for Open University courses.
 % \end{abstract}
 %
 % \tableofcontents
+%
 % \section{Introduction}
 %
-% The \textsf{tma} package simplifies the creation of TMAs by providing...
-% \StopEventually{}
+% The \stma\ package simplifies the creation of \TMA s by providing an environment
+% to encompass answers to questions commands to enumerate parts and subparts of those
+% questions, and a set of macros facilitating mathematical entry based on the styles
+% used by the Open University (\OU).
 %
-% \section{Package Code}
+% \section{Compiling and installing \stma}
 %
-% \begin{macrocode}
-\NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tma}[2024/11/08 v1.12 TMA document style]
-% ... (rest of your package code)
-% \end{macrocode}
+% To compile the \stma\ package:
+%
+% \userentry{pdflatex tma.ins}
+%
+% To compile the \stma\ documentation:
+%
+% \userentry{pdflatex tma.dtx}
+% \fqquad(several times)
+% \userentry{makeindex -s gglo.ist -o tma.gls tma.glo}
+% \userentry{makeindex -s gind.ist tma}
+% \userentry{pdflatex tma.dtx}
+% \fqquad(several times)
+%
+% The file \filenm{tma.sty} should be placed in an appropriate location within the \TeX\
+% directory structure. For example in a directory such as \filenm{tex/latex/tma}.
+%
+% \section{Usage}
+%
+% To use the \stma\ package, in its most basic form, it should be included in the preamble
+% of your \LaTeX\ document:
+% \begin{quote}
+%    \cs{documentclass}|[a4paper,11pt]{article}|\\
+%    \cs{usepackage}|{tma}|\\
+%    \vdots\\
+%    \cs{begin}|{document}|\\
+%    \vdots\\
+%    \cs{end}|{document}|
+% \end{quote}
+%
+% \subsection{Options}
+%
+% A number of options are available to modify the results of using the \stma\ package. These should be included within the \cs{usepackage} declaration:
+% \begin{quote}
+%    |\usepackage|\oarg{option,\dots}{tma}
+% \end{quote}
+% The following options are available:
+% \begin{description}
+%    \ItemDescribeOption{alph} (default) question numbering as 1(b)(iii);
+%    \ItemDescribeOption{roman} varies question numbering to sequence used by M381 i.e. 1(ii)(c);
+%    \ItemDescribeOption{cleveref} question numbering creates automatic referencing for use with cleveref package;
+%    \ItemDescribeOption{pdfbookmark} add PDF bookmarks for each question using hyperref package; and
+%    \ItemDescribeOption{legacy} enables old definitions of |\vec| and |\C| for backward compatibility.
+% \end{description}
+%
+% \subsection{Macros and environments}
+%
+% The \stma\ package provides several valuable macros and environments, most are documented here.
+%
+% \subsubsection{Document level commands}
+%
+% The document-level commands are intended for use within the document's preamble. They generally affect what appears on the title page and the headers/footers.
+%
+% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the \OU\ allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}. This is distinct from the \acro{OUCU}, or \OU\ Computer User identifier that is used to log in to the \OU\ website.
+% Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
+% The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro{\setdate}\cs{setdate}. This will override the default of using the compile date.
+%
+% Example:
+% \begin{verbatim}
+%    \myname{Anthony Neil Other}
+%    \mypin{A1234567}
+%    \mycourse{M101} % The original Maths introduction module
+%    \mytma{02} % TMA02
+%    \setdate{March 2025}
+% \end{verbatim}
+%
+% \subsubsection{Question environment commands}
+%
+% These commands are the ones that, though few, comprise the bulk of the body of the \TMA\ answer content of a paper.
+%
+% Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstrimg}\marg{required question number introduction}. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
+%
+% Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
+% As with the actual questions, this is an auto-incrementing value unless an optional value is given.
+% Note that the value should be numerical even if the parts are lettered or in Roman numerals. Each new question restarts the numbering at $1$, which will be rendered as |a| or |i| as dictated by the options in effect.
+%
+% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{pqart}, both marginal markers will be set on the same line.
+%
+% Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
+%
+% Example:
+% \begin{quote}
+%     |\begin{question}|\oarg{question number}\\
+%     \vdots\\
+%     |\qpart|\oarg{part number}\\
+%     \vdots\\
+%     |\qsubpart|\oarg{sub-part number}\\
+%     \vdots\\
+%     |\end{question}|
+% \end{quote}
+%
+% \subsubsection{Mathematical symbology}
+%
+% Various mathematical symbols and elements are defined for convenience, working from the normal suggested formats used within Open University courses.
+%
+% These commands are created in such a manner that they will work correctly in both text and maths modes.
+%
+% \begin{description}
+% \item[Differential operators] \DescribeMacro{\dd}\DescribeMacro{\e}\DescribeMacro{\ii}The general advise for most \OU\ modules is to use an upright letter `d' when specifying differential variables, thus \cs{dd} is provided to allow simple accomodation of this. Similarly, Euler's number and the imaginary unit representation of $\sqrt{-1}$ are both usually given upright letters of `e', (\cs{e}), and `i', (\cs{ii}), respectively.
+% \begin{dtxexample}*{Differential}
+% In display mode, compare \dd\ with $d$:
+% \[
+% \frac{\dd^2 y}{\dd x^2} + x\frac{\dd y}{\dd x} + y = 2\sin(x)\\
+% \]
+% and in line mode $\e^{\ii x} = \cos(x) + \ii\sin(x)$
+% \end{dtxexample}
+%
+% \item[Number sets] Standard `black-board' fonts are used to indicate a number of frequently designated groups of numbers.
+%
+% \begin{description}
+%    \ItemDescribeMacro{\N} \N\ represents all natural numbers;
+%    \ItemDescribeMacro{\Z} \Z\ represents all integers;
+%    \ItemDescribeMacro{\Q} \Q\ represents all rational numbers;
+%    \ItemDescribeMacro{\R} \R\ represents all real numbers; and
+%    \ItemDescribeMacro{\Complex} \Complex\ represents all complex numbers.
+% \end{description}
+%
+% \begin{dtxexample}*{Number sets}
+%     The relationship between number sets:
+%     \begin{itemize}
+%     \item \N\ (Natural numbers) $\subseteq \Z$ (Integers);
+%           every natural number is also an integer.
+%     \item \Z\ (Integers) $\subseteq \Q$ (Rational numbers);
+%           every integer is also a rational number.
+%     \item \Q\ (Rational numbers) $\subseteq \R$ (Real
+%           numbers); every rational number is also a real
+%           number.
+%     \item \Complex\ (Complex numbers) $\supseteq \R$ (Real
+%           number); complex numbers include real numbers as
+%           a subset, since they can be represented by
+%           $a+\ii b$ where $a$ and $b$ are real numbers.
+%     \end{itemize}
+% \end{dtxexample}
+%
+% \item[Vector notation] \DescribeMacro{\vect}\DescribeMacro{\ve}Two different vector representations are typically used on \OU\ modules, there is the two, or more, letter with an over arrow version given with \cs{vect}; and the emboldened upright letter version \cs{ve}---the latter is commonly handwritten as an underlined letter.
+%
+% \begin{dtxexample}*{Vectors}
+%    Given a point $A$ at the co-ordinate $(6, 3)$ and a
+%    point $B$ at the co-ordinate $(-4, 8)$, the vector
+%    $\vect{AB}$ has a gradient of $\frac{8-3}{-4-6} =
+%    \frac{5}{-10} = -\frac{1}{2}$
+%    The standard unit vectors are \ve{i} and \ve{j}.
+%    They are usually at right angles to each other.
+%\end{dtxexample}
+%
+% \item[Ordinal indicators] \DescribeMacro{\st}\DescribeMacro{\nd}\DescribeMacro{\rd}\DescribeMacro{\nth}The use of ordinal indicators is not specific to \OU\ modules, but frequently is a useful element that is just inconvenient to produce.
+%
+% So the standard four English ordinals are provided \cs{st}, \cs{nd}, \cs{rd}, and \cs{nth}, e.g. 1\st, 2\nd, 3\rd, and 4\nth.
+%
+% Note that the last ordinal is \cs{nth} not \cs{th}, the latter produces a thorn character, \th, and that only works if you have other than the default 7-bit font encoding (\acro{OT1}).
+%
+% \item[Combinatoral notations] There are two combinatoral forms that are commonly used in \OU\ modules, the combination selecting $r$ out of a total of $n$ items where order does not matter, and the permutations of $r$ out of $n$ items were order matters.
+% \begin{description}
+% \ItemDescribeMacro{\comb}\marg{n}\marg{r}. This is equivelent to \[
+%   \comb{n}{r} = \frac{n!}{r!(n-r)!}
+% \]
+% \ItemDescribeMacro{\perm}\marg{n}\marg{r}. This is equivalent to \[
+%   \perm{n}{r} = \frac{n!}{(n-r)!}
+% \]
+% \end{description}
+%
+% \item[Mathematical operators] Additional mathematical operators are defined, again for convenience of entry.
+% \begin{description}
+%	\ItemDescribeMacro{\re} $\mapsto \re$
+%	\ItemDescribeMacro{\im} $\mapsto \im$
+%	\ItemDescribeMacro{\Log} $\mapsto \Log$
+%	\ItemDescribeMacro{\Arg} $\mapsto \Arg$
+%	\ItemDescribeMacro{\Wnd} $\mapsto \Wnd$
+%	\ItemDescribeMacro{\Res} $\mapsto \Res$
+%	\ItemDescribeMacro{\Ker} $\mapsto \Ker$
+%	\ItemDescribeMacro{\Orb} $\mapsto \Orb$
+%	\ItemDescribeMacro{\Stab} $\mapsto \Stab$
+%	\ItemDescribeMacro{\Fix} $\mapsto \Fix$
+% \end{description}
+%
+% \item[Derivatives] There are three derivative forms defined specifically for speeding calculas entry and accuracy. One used the $\dd x$ form and two use the partial, $\partial x$, form.
+%
+% \begin{description}
+% 	\ItemDescribeMacro{\deriv}\marg{y}\marg{x} $\mapsto \deriv{y}{x}$
+% 	\ItemDescribeMacro{\pderiv}\marg{y}\marg{x} $\mapsto \pderiv{y}{x}$
+% 	\ItemDescribeMacro{\psderiv}\marg{y}\marg{x}\marg{z} $\mapsto \psderiv{y}{x}{z}$
+% \end{description}
+%
+% \item[Additional symbols] \DescribeMacro{\rect}\cs{rect}, \rect, is defined particularly for the use of \acro{M208} people although others may find it useful.
+%
+% \item[Legacy elements] There are a couple of macros which become enabled when using the \optn{legacy} option. These are now deprecated and may be removed from a future version. There are name clashes with standard \LaTeX\ commands, so please be aware of this if used.
+% \begin{description}
+%   \ItemDescribeMacro{\C} is the original version of \cs{Complex}
+%   \ItemDescribeMacro{\vec} is the original version of \cs{vect}
+% \end{description}
+%
+% \end{description}
+%
+% \MaybeStop{}
+%
+% \section{Implementation}
+%
+%    \begin{macrocode}
+%% tma.sty
+%% Copyright 2025 G. I. Riley <geoffr@adaso.com>
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005-12-01 or later.
+%
+% This work has the LPPL maintenance status `maintained.'
+%
+% The Current Maintainer of this work is Geoff Riley.
+%
+%% This package may be freely used, especially by, but not limited to, students,
+%% lecturers and staff of the Open University. It was created by the
+%% efforts of many who are now or have been connected with the Open University
+%% Students Association. No acknowledgement is _required_ for using this package
+%% within the production of a _Tutor Marked Assessment._
+%    \end{macrocode}
+%
+% Adapted by Peter McFarlane from various sources.
+% All errors of style or content are mine or subsequent contributors.
+% Acknowledgements to Bob Margolis and Rob Lynas (from whom some macros
+% are plagiarised).
+% Further contributions from Steve Mayer and Tim Dale.
+% Annotations, in part, and further modification by Geoff Riley.
+%
+%
+% Package Options
+% \begin{itemize}
+%    \item[\cs{[alph]}]        (default) question numbering as 1(b)(iii)
+%    \item[\cs{[roman]}]       varies question numbering to sequence used by M381
+%                           i.e. 1(ii)(c)
+%    \item[\cs{[cleveref]}]    question numbering creates automatic referencing for
+%                           use with cleveref package
+%    \item[\cs{[pdfbookmark]}] add PDF bookmarks for each question using hyperref package
+%    \item[\cs{[legacy]}]      enables old definitions of |\vec| and |\C| for backward
+%                           compatibility
+% \end{itemize}
+%
+% To use a package option, place the option(s) before the package name:\\\nopagebreak
+% \fqquad\cs{usepackage}|[roman,cleveref]{tma}|
+%
+% \changes{v1.19}{2025-02-18}{
+%    PDF metadata (apparently) was solved with help from Steve Mayers; all down
+%    to the use of commands as string containers. New (\LaTeX3) commands
+%    are robust and fail to expand within the context of the metadata and
+%    bookmarks; old (\LaTeX2e) commands are fragile and correctly expanded. I
+%    have a mix of old commands and new variables now.}
+% \changes{v1.18}{2025-02-16}{
+%    PDF metadata doesn't set correctly so I have removed it: the cause is an
+%    incompatibility between \LaTeX\ unicode and the PDF restricted character
+%    allowance.}
+% \changes{v1.17}{2025-02-13}{
+%    Rewritten with \LaTeX3\ syntax from the `xparse' package to make commands
+%    less fragile.
+%    Finally, I got the alignment of part and subpart numbering to line up correctly.}
+% \changes{v1.16}{2024-11-22}{
+%    Added File Properties to pdf files using the hyperref setup system when
+%    in pdfbookmark mode.}
+% \changes{v1.15}{2024-11-21}{
+%    Define \cs{setdate} and \cs{thedate} to allow the header date to be used within
+%    the document, eg header and footer.}
+% \changes{v1.14}{2024-11-17}{
+%    Allow replacement of Question marker tag using \cs{setquestionstring}.
+%    References with cleveref not working.
+%    Replaced my attempts at keeping \cs{qpart} and \cs{qsubpart} on the same line with
+%    Steve Mayers contribution.}
+% \changes{v1.13}{2024-11-16}{
+%    Arranged for \cs{qsubpart} to go on the same line as the \cs{qpart} when
+%    there is no intervening text
+%    \cs{qsubpart} indents further than \cs{qpart}.}
+% \changes{v1.12}{2024-11-08}{
+%    Standardized package name to 'tma' to make it compatible with CTAN.
+%    Avoided redefining standard \LaTeX\ commands.
+%    Consolidated geometry settings.
+%    Adjusted loading order of packages.
+%    Improved code readability and comments.
+%    Added 'legacy' option to allow old definitions of \cs{vec} and \cs{C}.}
+%
+% Before getting into the main package, it is necessary to ensure that the \LaTeX3\ extensions are loaded. Most modern versions of the \LaTeX\ core have this rolled in as standard, but as a belt and braces approach, inclusion here does no harm.
+%    \begin{macrocode}
+\RequirePackage{expl3} ^^A LaTeX3 "experimental"
+%    \end{macrocode}
+%
+% \subsection{Package Initialisation}
+%
+% We are starting off using the \cs{ExplSyntaxOn} command to enable the \LaTeX3\ extensions before declaring a set of `constants' that will be used by our package. Working with the established conventions the constants are declared as variables are named to reflect their ownership and function. These are all declared as `token lists' so that they may, effectively, hold string elements.
+% \begingroup
+% \catcode`_=11 ^^A Make the underscore character a letter!
+% \begin{description}
+%   \ItemDescribeVariable{g_tma_constant_name} holds the students personal name
+%   \ItemDescribeVariable{g_tma_constant_tma} holds the number of the \TMA\ being answered
+%   \ItemDescribeVariable{g_tma_constant_course} holds the \OU\ course code for the module being studied
+%   \ItemDescribeVariable{g_tma_constant_pin} holds the students personal identification number
+%   \ItemDescribeVariable{g_tma_constant_thedate} holds the date to be printed on the front page of the \TMA
+% \end{description}
+% \endgroup
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package Initialization
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+\ExplSyntaxOn
+\tl_new:N \g_tma_constant_name
+\tl_new:N \g_tma_constant_tma
+\tl_new:N \g_tma_constant_course
+\tl_new:N \g_tma_constant_pin
+\tl_new:N \g_tma_constant_thedate
+%    \end{macrocode}
+% These `constants' are given initial generic values.
+%    \begin{macrocode}
+\tl_gset:Nn \g_tma_constant_name {name}
+\tl_gset:Nn \g_tma_constant_tma {tma}
+\tl_gset:Nn \g_tma_constant_course {course}
+\tl_gset:Nn \g_tma_constant_pin {pin}
+\tl_gset:Nn \g_tma_constant_thedate {the~date}
+%    \end{macrocode}
+% Then commands are provided to retrieve the values when required.
+% \begin{description}
+%   \ItemDescribeMacro{\name} returns the students name
+%   \ItemDescribeMacro{\tma} returns the working \TMA\ number
+%   \ItemDescribeMacro{\course} returns the \OU\ course reference
+%   \ItemDescribeMacro{\pin} returns the students personal identification number
+%   \ItemDescribeMacro{\thedate} returns the date to be printed on the title page of the \TMA
+% \end{description}
+%    \begin{macrocode}
+\newcommand{\name}{\g_tma_constant_name}
+\newcommand{\tma}{\g_tma_constant_tma}
+\newcommand{\course}{\g_tma_constant_course}
+\newcommand{\pin}{\g_tma_constant_pin}
+\newcommand{\thedate}{\g_tma_constant_thedate}
+%    \end{macrocode}
+% Finally, macros are provided to set the values of the `constants': these should only be used within the preamble. Use within the body of the text is unpredicable.
+% \begin{description}
+%   \ItemDescribeMacro{\myname}\marg{name} Set the students name
+%   \ItemDescribeMacro{\mytma}\marg{\TMA\ number} Set the \TMA\ number
+%   \ItemDescribeMacro{\mycourse}\marg{course code} Set the \OU\ course code for the module
+%   \ItemDescribeMacro{\mypin}\marg{pin} Set the students personal identification number
+%   \ItemDescribeMacro{\setdate}\marg{the date} Set the required date to display on the title page, default is the date of report generation
+% \end{description}
+%    \begin{macrocode}
+\NewDocumentCommand{\myname}{m}{%
+	\tl_gset:Nn \g_tma_constant_name{#1}}
+\NewDocumentCommand{\mytma}{m}{%
+	\tl_gset:Nn \g_tma_constant_tma{#1}}
+\NewDocumentCommand{\mycourse}{m}{%
+	\tl_gset:Nn \g_tma_constant_course{#1}}
+\NewDocumentCommand{\mypin}{m}{%
+	\tl_gset:Nn \g_tma_constant_pin{#1}}
+\NewDocumentCommand{\setdate}{m}{%
+	\date{#1}\tl_gset:Nn \g_tma_constant_thedate{#1}}
+%    \end{macrocode}
+% That's the end of the \LaTeX3\ extensions requiring the extension switch, so it can be turned off.
+%    \begin{macrocode}
+\ExplSyntaxOff
+%    \end{macrocode}
+% Set the \cs{title} and \cs{author} ready for use by the \cs{maketitle} macro at the start of the main document. They use the constants defined above so that changes are automatically reflected. They may be redefined by the user if required.
+%    \begin{macrocode}
+\title{\textbf{TMA: \course-\tma}}
+\author{\textbf{\name\space\pin}}
+%    \end{macrocode}
+% In order to allow the question introduction string to be modified, a general \LaTeX\ string is created along with a macro to set it.
+% \begin{description}
+%   \ItemDescribeMacro{\tma@questionstring} Hold the string to be printed before the question number, the default is `Q'.
+%   \ItemDescribeMacro{\setquestionstring}\marg{string} Set the string to precede the question number
+% \end{description}
+%    \begin{macrocode}
+\NewDocumentCommand{\tma@questionstring}{}{\relax}
+\NewDocumentCommand{\setquestionstring}{m}{%
+	\RenewDocumentCommand{\tma@questionstring}{}{#1}}
+%    \end{macrocode}
+% Set the default date to `today'.
+%    \begin{macrocode}
+\setdate{\today}
+%    \end{macrocode}
+%
+% \subsection{Package Loading}
+%
+% Here we load the useful packages that have proven their worth for \OU\ students over the years. Many have properties that are utilised by the rest of the \stma\ package.
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package Loading
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{wasysym}
+\RequirePackage{bm}
+\RequirePackage{upgreek}
+\RequirePackage{graphicx}
+\RequirePackage{lastpage}
+\RequirePackage{xifthen}
+\RequirePackage{verbatim}
+\RequirePackage{fancyhdr}
+\RequirePackage{geometry}
+\RequirePackage{calc}
+\RequirePackage[UKenglish]{isodate} % use UK format for date
+\cleanlookdateon % remove th,st, rd from date
+
+%    \end{macrocode}
+%
+% \subsection{Geometry Settings}
+%
+% An important part of \TMA\ answering is providing a consistent output, to this end the following page geometry has been brought together as a compromise suitable for most modules.
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Geometry Settings
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\geometry{
+  headheight=10mm,
+  headsep=5mm,
+  bottom=25mm,
+  footskip=15mm,
+  left=30mm,
+  right=30mm,
+  marginparwidth=0mm,
+  marginparsep=0mm,
+  includemp
+}
+%    \end{macrocode}
+%
+% \subsection{Margin Notes}
+%
+% By default, no margin notes are assumed to be required, however, if one is wanted, the \DescribeMacro{\marginnotes}\cs{marginnotes} command will set up the side margin ready to accept notes using the \DescribeMacro{\marginnote}\cs{marginnote}\marg{note} command.
+%
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Margin Notes
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
+\NewDocumentCommand{\marginnotes}{}{
+  \geometry{
+    marginparwidth=40mm,
+    marginparsep=5mm,
+    left=20mm,
+    right=15mm
+  }
+}
+%    \end{macrocode}
+%
+% \subsection{Question Numbering}
+%
+% We set up three counters to keep track of the question number along with associated parts and subparts.
+% \begin{description}
+%  \ItemDescribeCounter{question} Holds the current question number, when a new question is started this value is used unless one is provided, in either case the used value is incremented as saved back here. When used, the \cs{qpart} is automatically reset so that the first part will be part 1.
+%  \ItemDescribeCounter{qpart} Holds the current part number as a numeric value, as with the question number this may be overridden and is incremented after being used. When used, the \cs{qsubpart} is automatically reset so that the first subpart will be sub-part 1.
+%  \ItemDescribeCounter{qsubpart} Holds the current sub-part number as a numeric value, again, the value may be overridden and is incremented after being used.
+% \end{description}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Question Numbering
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcounter{question}
+\newcounter{qpart}[question]
+\newcounter{qsubpart}[qpart]
+%    \end{macrocode}
+% The question number is set to print as arabic digits,
+%    \begin{macrocode}
+\renewcommand{\thequestion}{\arabic{question}}
+%    \end{macrocode}
+%
+% \subsection{Option Handling}
+%
+% In order to handle the incoming options for the \stma\ package, we create a set of four new boolean tokens.
+% \begin{description}
+%     \ItemDescribeBoolean{tma@roman} False indicates `alph' numbering, true indicates `roman' numbering of parts and subpart.
+%     \ItemDescribeBoolean{tma@usecleveref} True indicates that the \pkg{cleveref} package is requested.
+%     \ItemDescribeBoolean{tma@usepdfbookmark} True indicated that the \pkg{pdfbookmark} package is requested.
+%     \ItemDescribeBoolean{tma@legacy} True indicted that the commands \cs{Complex} and \cs{vect} will be redefined to the legacy commands \cs{C} and \cs{vec}.
+% \end{description}
+%
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Option Handling
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define boolean flags
+\newif\iftma@roman
+\newif\iftma@usecleveref
+\newif\iftma@usepdfbookmark
+\newif\iftma@legacy
+
+% Set default options
+\tma@romanfalse          ^^A Default numbering is `alph'
+\tma@useclevereffalse    ^^A Default is not to use cleveref
+\tma@usepdfbookmarkfalse ^^A Default is not to use pdfbookmark
+\tma@legacyfalse         ^^A Default is not to use legacy definitions
+%    \end{macrocode}
+%
+% We now set up the default states and commands for the \stma\ package operation.
+% \begin{description}
+%    \ItemDescribeMacro{\theqpart} returns the current question part number as either an alpha or roman index.
+%    \ItemDescribeMacro{\theqsubpart} returns the current question subpart number as either a roman or an alpha index.
+%    \ItemDescribeMacro{\tma@crefname}\marg{label type}\marg{singular name}\marg{plural name} Declares a label with singular and plural spellings for the \pkg{cleveref} package.
+%    \ItemDescribeMacro{\tma@stepcounter}\marg{counter name} Increments the named counter by one.
+%    \ItemDescribeMacro{\tma@bookmark}\oarg{level}\marg{text}\marg{name} The level is optional, numerical, the default is zero, the top level. The text is what will appear in the bookmark panel, and the name is what may be used as a reference to the location from other parts of the document.
+%    \ItemDescribeMacro{\tma@pageref}\marg{name} returns the page number, if known, that contains the bookmark with the label name.
+% \end{description}
+%
+%    \begin{macrocode}
+% Define commands with default values
+\renewcommand{\theqpart}{\alph{qpart}}
+\renewcommand{\theqsubpart}{\roman{qsubpart}}
+\NewDocumentCommand{\tma@crefname}{mmm}{\relax}
+\NewDocumentCommand{\tma@stepcounter}{m}{\stepcounter{#1}}
+\NewDocumentCommand{\tma@bookmark}{O{0}mm}{\relax}
+\NewDocumentCommand{\tma@pageref}{m}{\pageref{#1}}
+%    \end{macrocode}
+%
+% Declare each of the valid options for the option processing system. In each case, the action is to set the appropriate boolean to true or false.
+%
+%    \begin{macrocode}
+% Declare options
+\DeclareOption{roman}{%
+	\tma@romantrue%
+}
+\DeclareOption{alph}{%
+	\tma@romanfalse%
+}
+\DeclareOption{cleveref}{%
+	\tma@useclevereftrue%
+}
+\DeclareOption{pdfbookmark}{%
+	\tma@usepdfbookmarktrue%
+}
+\DeclareOption{legacy}{%
+	\tma@legacytrue%
+}
+\DeclareOption*{%
+	\PackageWarning{tma}{Unknown option `\CurrentOption'}%
+}
+%    \end{macrocode}
+% Go ahead, process those options!
+%    \begin{macrocode}
+% Process options
+\ProcessOptions\relax
+%    \end{macrocode}
+%
+% \subsection{Debugging Options}
+%
+% A short section of code outputting to the log the state of the four main options that may be passed to the \stma\ package.
+%
+%    \begin{macrocode}
+\typeout{**************** OPTION RESULTS **********}
+\iftma@usepdfbookmark
+\typeout{pdfbookmark is TRUE}
+\else
+\typeout{pdfbookmark is FALSE}
+\fi
+\iftma@roman
+\typeout{roman is TRUE}
+\else
+\typeout{roman is FALSE}
+\fi
+\iftma@usecleveref
+\typeout{cleveref is TRUE}
+\else
+\typeout{cleveref is FALSE}
+\fi
+\iftma@legacy
+\typeout{legacy is TRUE}
+\else
+\typeout{legacy is FALSE}
+\fi
+\typeout{************* END OPTION RESULTS **********}
+%    \end{macrocode}
+%
+% \subsection{Package adjustments based on Options}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Set Up Package Based on Options
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Set question numbering
+\iftma@roman
+\renewcommand{\theqpart}{\roman{qpart}}
+\renewcommand{\theqsubpart}{\alph{qsubpart}}
+\else
+\renewcommand{\theqpart}{\alph{qpart}}
+\renewcommand{\theqsubpart}{\roman{qsubpart}}
+\fi
+% Load hyperref if necessary
+\iftma@usepdfbookmark
+\AtBeginDocument{%
+	\hypersetup{%
+		colorlinks=true,%
+		linkcolor=blue,%
+		urlcolor=blue,%
+		pdfstartview=FitH,%
+		pdftitle={TMA~\tma}, %
+		pdfauthor={\name~—~\pin}, %
+		pdfkeywords={OUCU:~\pin, TMA~\tma}, %
+		pdfsubject=\course%
+	}%
+}
+\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}
+\fi
+
+% Load cleveref if necessary
+\iftma@usecleveref
+% Ensure hyperref is loaded before cleveref
+\@ifpackageloaded{hyperref}%
+{}%
+{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
+\RequirePackage{cleveref}
+% Redefine commands for cleveref
+\RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
+\RenewDocumentCommand{\tma@stepcounter}{m}{\refstepcounter{#1}}
+\fi
+
+% Redefine commands for pdfbookmark
+\iftma@usepdfbookmark
+\RenewDocumentCommand{\tma@pageref}{m}{\pageref*{#1}}
+\RenewDocumentCommand{\tma@bookmark}{O{0} +m +m}{%
+	\pdfbookmark[#1]{#2}{#3}%
+}
+\fi
+
+\setquestionstring{Q}
+
+%    \end{macrocode}
+%
+% \subsection{Question Environment}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Question Environment
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Set up cref names if cleveref is used
+\iftma@usecleveref
+\tma@crefname{question}{question}{questions}
+\tma@crefname{qpart}{part}{parts}
+\tma@crefname{qsubpart}{section}{sections}
+\fi
+
+\NewDocumentEnvironment{question}{O{0}}{%
+	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
+	\tma@stepcounter{question}%
+	\tma@bookmark{Question \thequestion}%
+		{question\thequestion}%
+	\makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
+}{%
+	\par \vspace{3em}%
+}
+
+\NewDocumentCommand{\qpart}{O{0}}{%
+	\ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
+	\tma@stepcounter{qpart}%
+	\tma@bookmark[1]{\thequestion.\theqpart}%
+		{qpart.\thequestion.\theqpart}%
+	\par%
+	\makebox[0pt][r]{\large{(\theqpart)\hspace{1.5em} }}%
+}
+
+\NewDocumentCommand{\qsubpart}{O{0}}{%
+	\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
+	\tma@stepcounter{qsubpart}%
+	\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}%
+		{qsubpart.\thequestion.\theqpart.\theqsubpart}%
+	\ifthenelse{\value{qsubpart}>1}%
+	{\par}{}%
+	\hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
+}
+
+%    \end{macrocode}
+%
+% \subsection{Mathematical commands}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Mathematical Commands
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Differential Operators
+\NewDocumentCommand{\dd}{}{\ensuremath{\mathop{}\!\mathrm{d}}}
+\NewDocumentCommand{\e}{}{\ensuremath{\mathrm{e}}}
+\NewDocumentCommand{\ii}{}{\ensuremath{\mathrm{i}}}
+
+%% Number Sets
+\NewDocumentCommand{\N}{}{\ensuremath{\mathbb{N}}}
+\NewDocumentCommand{\Z}{}{\ensuremath{\mathbb{Z}}}
+\NewDocumentCommand{\Q}{}{\ensuremath{\mathbb{Q}}}
+\NewDocumentCommand{\R}{}{\ensuremath{\mathbb{R}}}
+\NewDocumentCommand{\Complex}{}{%
+	\ensuremath{\mathbb{C}}} % Changed from \C to \Complex
+\NewDocumentCommand{\Rr}{}{\ensuremath{\mathcal{R}}}
+
+%% Vector Notation
+\NewDocumentCommand{\vect}{m}{%
+	\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
+\NewDocumentCommand{\ve}{m}{\ensuremath{\textbf{#1}}}
+
+%% Ordinal Indicators
+\NewDocumentCommand{\st}{}{\textsuperscript{st}}
+\NewDocumentCommand{\nd}{}{\textsuperscript{nd}}
+\NewDocumentCommand{\rd}{}{\textsuperscript{rd}}
+\NewDocumentCommand{\nth}{}{\textsuperscript{th}}
+
+%% Additional Symbols
+\NewDocumentCommand{\rect}{}{\ensuremath{\sqsubset\!\!\sqsupset}}
+
+%% Combinatorial Notations
+\NewDocumentCommand{\comb}{mm}{\ensuremath{{}^{#1}C_{#2}}}
+\NewDocumentCommand{\perm}{mm}{\ensuremath{{}^{#1}P_{#2}}}
+
+%% Mathematical Operators
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\Wnd}{Wnd}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Orb}{Orb}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\Fix}{Fix}
+
+%% Derivatives
+\NewDocumentCommand{\deriv}{mm}{%
+	\frac{\dd{}#1}{\dd{}#2}}
+\NewDocumentCommand{\pderiv}{mm}{%
+	\frac{\partial #1}{\partial #2}}
+\NewDocumentCommand{\psderiv}{mmm}{%
+	\frac{\partial^2 #1}{\partial #2 \partial #3}}
+
+% Legacy Definitions
+\iftma@legacy
+% Redefine \vec to old definition
+\RenewDocumentCommand{\vec}{m}{\ensuremath{\overrightarrow{#1}}}
+% Redefine \C to old definition
+\ProvideDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
+\RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
+\fi
+
+%    \end{macrocode}
+%
+% \subsection{Theorem Environment}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Theorem Environment
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+% Define \blacksmiley without loading wasysym
+\ProvideDocumentCommand{\blacksmiley}{}{%
+	\ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
+\RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
+
+%    \end{macrocode}
+%
+% \subsection{Miscellaneous Settings}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Miscellaneous Settings
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
+\numberwithin{equation}{question}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
+
+%    \end{macrocode}
+%
+% \subsection{Header and Footer Settings}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Header and Footer Settings
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\fancyhf{} % Clear all headers and footers
+\fancyhead[L]{\textrm{\name\ \pin}}
+\fancyhead[C]{\textrm{\course\ TMA-\tma}}
+\fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
+\RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% End of Package
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\endinput
+%    \end{macrocode}
+% \Finale
 % \PrintChanges
 % \PrintIndex
