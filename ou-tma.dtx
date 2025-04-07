@@ -14,18 +14,18 @@
 %
 % The Current Maintainer of this work is Geoff Riley.
 %
-% This work consists of the files tma.dtx and tma.ins
-% and the derived filebase tma.sty.
+% This work consists of the files ou-tma.dtx and ou-tma.ins
+% and the derived filebase ou-tma.sty.
 %
 % \fi
 %
 % \iffalse
 %<*driver>
-\ProvidesFile{tma.dtx}
+\ProvidesFile{ou-tma.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<package>\ProvidesPackage{tma}
-%<package>  [2025-02-18 v1.19 TMA package]
+%<package>\ProvidesPackage{ou-tma}
+%<package>  [2025-04-07 v1.20 OU-TMA package]
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
@@ -38,17 +38,16 @@
 % \SetupDoc{reportchangedates}
 \setlength\hfuzz{15pt}  % don't show so many
 \hbadness=7000          % over- and underfull box warnings
-\usepackage{tma}
+\usepackage{ou-tma}
 \geometry{left=1mm,marginparwidth=40mm,marginparsep=1mm}
 \begin{document}
-	\DocInput{tma.dtx}
+	\DocInput{ou-tma.dtx}
 \end{document}
 %</driver>
 % \fi
 % \makeatletter
-% \GetFileInfo{tma.sty}
+% \GetFileInfo{ou-tma.sty}
 % \IfPackageLoadedTF{doc}{ ^^A doc
-%%
 % \NewDocElement[
 %   macrolike=false,
 %   toplevel=true,
@@ -56,24 +55,20 @@
 %   idxgroup=Variable,
 %   printtype=\textit{Var}
 % ]{Variable}{variable}
-%%
 % }{^^A not doc
-%%
 % \newcommand*{\DescribeVariable}[2][]{%
 % \DTXD@filemaXD@filemarginparindex{#1}{#2}{Var}{variable}{usage}%
 % }
-%%
 % }^^A not doc
-%%
 % \newcommand{\ItemDescribeVariable}[2][]{%
 %   \item[\texttt{#2}:]%
 %   \setlength{\parskip}{1.5ex}%
 %   \DescribeVariable[#1]{#2}%
 % }
-%%
+%
 % \makeatother
-%%
-% \newcommand{\stma}{\textsf{tma}}
+%
+% \newcommand{\stma}{\textsf{ou-tma}}
 % \newcommand{\TMA}{\acro{TMA}}
 % \newcommand{\OU}{\acro{OU}}
 % \DoNotIndex{\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname,\else}
@@ -120,14 +115,14 @@
 %
 % To compile the \stma\ documentation:
 %
-% \userentry{pdflatex tma.dtx}
+% \userentry{pdflatex ou-tma.dtx}
 % \fqquad(several times)
-% \userentry{makeindex -s gglo.ist -o tma.gls tma.glo}
-% \userentry{makeindex -s gind.ist tma}
-% \userentry{pdflatex tma.dtx}
+% \userentry{makeindex -s gglo.ist -o ou-tma.gls ou-tma.glo}
+% \userentry{makeindex -s gind.ist ou-tma}
+% \userentry{pdflatex ou-tma.dtx}
 % \fqquad(several times)
 %
-% The file \filenm{tma.sty} should be placed in an appropriate location within the \TeX\
+% The file \filenm{ou-tma.sty} should be placed in an appropriate location within the \TeX\
 % directory structure. For example in a directory such as \filenm{tex/latex/tma}.
 %
 % \section{Usage}
@@ -189,7 +184,7 @@
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
 % Note that the value should be numerical even if the parts are lettered or in Roman numerals. Each new question restarts the numbering at $1$, which will be rendered as |a| or |i| as dictated by the options in effect.
 %
-% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{pqart}, both marginal markers will be set on the same line.
+% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{qpart}, both marginal markers will be set on the same line.
 %
 % Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
 %
@@ -311,7 +306,7 @@
 % \section{Implementation}
 %
 %    \begin{macrocode}
-%% tma.sty
+%% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %
 % This work may be distributed and/or modified under the
@@ -356,6 +351,10 @@
 % To use a package option, place the option(s) before the package name:\\\nopagebreak
 % \fqquad\cs{usepackage}|[roman,cleveref]{tma}|
 %
+% \changes{v1.20}{2025-04-07}{
+%    Package name changed from `tma' to `ou-tma' to become a
+%    little more descriptive and to abide by the minimum package
+%    name length suggested by CTAN.}
 % \changes{v1.19}{2025-02-18}{
 %    PDF metadata (apparently) was solved with help from Steve Mayers; all down
 %    to the use of commands as string containers. New (\LaTeX3) commands
@@ -395,14 +394,14 @@
 %
 % Before getting into the main package, it is necessary to ensure that the \LaTeX3\ extensions are loaded. Most modern versions of the \LaTeX\ core have this rolled in as standard, but as a belt and braces approach, inclusion here does no harm.
 %    \begin{macrocode}
-\RequirePackage{expl3} ^^A LaTeX3 "experimental"
+\RequirePackage{expl3} % LaTeX3 "experimental"
 %    \end{macrocode}
 %
 % \subsection{Package Initialisation}
 %
 % We are starting off using the \cs{ExplSyntaxOn} command to enable the \LaTeX3\ extensions before declaring a set of `constants' that will be used by our package. Working with the established conventions the constants are declared as variables are named to reflect their ownership and function. These are all declared as `token lists' so that they may, effectively, hold string elements.
 % \begingroup
-% \catcode`_=11 ^^A Make the underscore character a letter!
+% \catcode`_=11 % Make the underscore character a letter!
 % \begin{description}
 %   \ItemDescribeVariable{g_tma_constant_name} holds the students personal name
 %   \ItemDescribeVariable{g_tma_constant_tma} holds the number of the \TMA\ being answered
@@ -599,10 +598,10 @@
 \newif\iftma@legacy
 
 % Set default options
-\tma@romanfalse          ^^A Default numbering is `alph'
-\tma@useclevereffalse    ^^A Default is not to use cleveref
-\tma@usepdfbookmarkfalse ^^A Default is not to use pdfbookmark
-\tma@legacyfalse         ^^A Default is not to use legacy definitions
+\tma@romanfalse          % Default numbering is `alph'
+\tma@useclevereffalse    % Default is not to use cleveref
+\tma@usepdfbookmarkfalse % Default is not to use pdfbookmark
+\tma@legacyfalse         % Default is not to use legacy definitions
 %    \end{macrocode}
 %
 % We now set up the default states and commands for the \stma\ package operation.
@@ -645,7 +644,7 @@
 	\tma@legacytrue%
 }
 \DeclareOption*{%
-	\PackageWarning{tma}{Unknown option `\CurrentOption'}%
+	\PackageWarning{ou-tma}{Unknown option `\CurrentOption'}%
 }
 %    \end{macrocode}
 % Go ahead, process those options!

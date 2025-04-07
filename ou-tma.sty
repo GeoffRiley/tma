@@ -1,10 +1,10 @@
 %%
-%% This is file `tma.sty',
+%% This is file `ou-tma.sty',
 %% generated with the docstrip utility.
 %%
 %% The original source files were:
 %%
-%% tma.dtx  (with options: `package')
+%% ou-tma.dtx  (with options: `package')
 %% 
 %% This is a generated file.
 %% 
@@ -19,9 +19,9 @@
 %% version 2005/12/01 or later.
 %% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
-\ProvidesPackage{tma}
-  [2025-02-18 v1.19 TMA package]
-%% tma.sty
+\ProvidesPackage{ou-tma}
+  [2025-04-07 v1.20 OU-TMA package]
+%% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to, students,
 %% lecturers and staff of the Open University. It was created by the
@@ -36,19 +36,16 @@
 \tl_new:N \g_tma_constant_course
 \tl_new:N \g_tma_constant_pin
 \tl_new:N \g_tma_constant_thedate
-
 \tl_gset:Nn \g_tma_constant_name {name}
 \tl_gset:Nn \g_tma_constant_tma {tma}
 \tl_gset:Nn \g_tma_constant_course {course}
 \tl_gset:Nn \g_tma_constant_pin {pin}
 \tl_gset:Nn \g_tma_constant_thedate {the~date}
-
 \newcommand{\name}{\g_tma_constant_name}
 \newcommand{\tma}{\g_tma_constant_tma}
 \newcommand{\course}{\g_tma_constant_course}
 \newcommand{\pin}{\g_tma_constant_pin}
 \newcommand{\thedate}{\g_tma_constant_thedate}
-
 \NewDocumentCommand{\myname}{m}{%
 \tl_gset:Nn \g_tma_constant_name{#1}}
 \NewDocumentCommand{\mytma}{m}{%
@@ -60,15 +57,12 @@
 \NewDocumentCommand{\setdate}{m}{%
 \date{#1}\tl_gset:Nn \g_tma_constant_thedate{#1}}
 \ExplSyntaxOff
-
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
-
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
 \NewDocumentCommand{\setquestionstring}{m}{%
 \RenewDocumentCommand{\tma@questionstring}{}{#1}}
 \setdate{\today}
-
 %% Package Loading
 
 \RequirePackage{amsmath}
@@ -90,6 +84,259 @@
 %% Geometry Settings
 
 \geometry{
+  headheight=10mm,
+  headsep=5mm,
+  bottom=25mm,
+  footskip=15mm,
+  left=30mm,
+  right=30mm,
+  marginparwidth=0mm,
+  marginparsep=0mm,
+  includemp
+}
+%% Margin Notes
+
+\NewDocumentCommand{\marginnote}{m}{\marginpar{#1}}
+\NewDocumentCommand{\marginnotes}{}{
+  \geometry{
+    marginparwidth=40mm,
+    marginparsep=5mm,
+    left=20mm,
+    right=15mm
+  }
+}
+%% Question Numbering
+
+\newcounter{question}
+\newcounter{qpart}[question]
+\newcounter{qsubpart}[qpart]
+\renewcommand{\thequestion}{\arabic{question}}
+%% Option Handling
+\newif\iftma@roman
+\newif\iftma@usecleveref
+\newif\iftma@usepdfbookmark
+\newif\iftma@legacy
+
+\tma@romanfalse          % Default numbering is `alph'
+\tma@useclevereffalse    % Default is not to use cleveref
+\tma@usepdfbookmarkfalse % Default is not to use pdfbookmark
+\tma@legacyfalse         % Default is not to use legacy definitions
+\renewcommand{\theqpart}{\alph{qpart}}
+\renewcommand{\theqsubpart}{\roman{qsubpart}}
+\NewDocumentCommand{\tma@crefname}{mmm}{\relax}
+\NewDocumentCommand{\tma@stepcounter}{m}{\stepcounter{#1}}
+\NewDocumentCommand{\tma@bookmark}{O{0}mm}{\relax}
+\NewDocumentCommand{\tma@pageref}{m}{\pageref{#1}}
+\DeclareOption{roman}{%
+\tma@romantrue%
+}
+\DeclareOption{alph}{%
+\tma@romanfalse%
+}
+\DeclareOption{cleveref}{%
+\tma@useclevereftrue%
+}
+\DeclareOption{pdfbookmark}{%
+\tma@usepdfbookmarktrue%
+}
+\DeclareOption{legacy}{%
+\tma@legacytrue%
+}
+\DeclareOption*{%
+\PackageWarning{ou-tma}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptions\relax
+\typeout{**************** OPTION RESULTS **********}
+\iftma@usepdfbookmark
+\typeout{pdfbookmark is TRUE}
+\else
+\typeout{pdfbookmark is FALSE}
+\fi
+\iftma@roman
+\typeout{roman is TRUE}
+\else
+\typeout{roman is FALSE}
+\fi
+\iftma@usecleveref
+\typeout{cleveref is TRUE}
+\else
+\typeout{cleveref is FALSE}
+\fi
+\iftma@legacy
+\typeout{legacy is TRUE}
+\else
+\typeout{legacy is FALSE}
+\fi
+\typeout{************* END OPTION RESULTS **********}
+%% Set Up Package Based on Options
+
+\iftma@roman
+\renewcommand{\theqpart}{\roman{qpart}}
+\renewcommand{\theqsubpart}{\alph{qsubpart}}
+\else
+\renewcommand{\theqpart}{\alph{qpart}}
+\renewcommand{\theqsubpart}{\roman{qsubpart}}
+\fi
+\iftma@usepdfbookmark
+\AtBeginDocument{%
+\hypersetup{%
+colorlinks=true,%
+linkcolor=blue,%
+urlcolor=blue,%
+pdfstartview=FitH,%
+pdftitle={TMA~\tma}, %
+pdfauthor={\name~â€”~\pin}, %
+pdfkeywords={OUCU:~\pin, TMA~\tma}, %
+pdfsubject=\course%
+}%
+}
+\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}
+\fi
+
+\iftma@usecleveref
+\@ifpackageloaded{hyperref}%
+{}%
+{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
+\RequirePackage{cleveref}
+\RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
+\RenewDocumentCommand{\tma@stepcounter}{m}{\refstepcounter{#1}}
+\fi
+
+\iftma@usepdfbookmark
+\RenewDocumentCommand{\tma@pageref}{m}{\pageref*{#1}}
+\RenewDocumentCommand{\tma@bookmark}{O{0} +m +m}{%
+\pdfbookmark[#1]{#2}{#3}%
+}
+\fi
+
+\setquestionstring{Q}
+
+%% Question Environment
+
+\iftma@usecleveref
+\tma@crefname{question}{question}{questions}
+\tma@crefname{qpart}{part}{parts}
+\tma@crefname{qsubpart}{section}{sections}
+\fi
+
+\NewDocumentEnvironment{question}{O{0}}{%
+\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
+\tma@stepcounter{question}%
+\tma@bookmark{Question \thequestion}%
+{question\thequestion}%
+\makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
+}{%
+\par \vspace{3em}%
+}
+
+\NewDocumentCommand{\qpart}{O{0}}{%
+\ifthenelse{#1>0}{\setcounter{qpart}{#1-1}}{\relax}%
+\tma@stepcounter{qpart}%
+\tma@bookmark[1]{\thequestion.\theqpart}%
+{qpart.\thequestion.\theqpart}%
+\par%
+\makebox[0pt][r]{\large{(\theqpart)\hspace{1.5em} }}%
+}
+
+\NewDocumentCommand{\qsubpart}{O{0}}{%
+\ifthenelse{#1>0}{\setcounter{qsubpart}{#1-1}}{\relax}%
+\tma@stepcounter{qsubpart}%
+\tma@bookmark[2]{\thequestion.\theqpart.\theqsubpart}%
+{qsubpart.\thequestion.\theqpart.\theqsubpart}%
+\ifthenelse{\value{qsubpart}>1}%
+{\par}{}%
+\hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
+}
+
+%% Mathematical Commands
+
+%% Differential Operators
+\NewDocumentCommand{\dd}{}{\ensuremath{\mathop{}\!\mathrm{d}}}
+\NewDocumentCommand{\e}{}{\ensuremath{\mathrm{e}}}
+\NewDocumentCommand{\ii}{}{\ensuremath{\mathrm{i}}}
+
+%% Number Sets
+\NewDocumentCommand{\N}{}{\ensuremath{\mathbb{N}}}
+\NewDocumentCommand{\Z}{}{\ensuremath{\mathbb{Z}}}
+\NewDocumentCommand{\Q}{}{\ensuremath{\mathbb{Q}}}
+\NewDocumentCommand{\R}{}{\ensuremath{\mathbb{R}}}
+\NewDocumentCommand{\Complex}{}{%
+\ensuremath{\mathbb{C}}} % Changed from \C to \Complex
+\NewDocumentCommand{\Rr}{}{\ensuremath{\mathcal{R}}}
+
+%% Vector Notation
+\NewDocumentCommand{\vect}{m}{%
+\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
+\NewDocumentCommand{\ve}{m}{\ensuremath{\textbf{#1}}}
+
+%% Ordinal Indicators
+\NewDocumentCommand{\st}{}{\textsuperscript{st}}
+\NewDocumentCommand{\nd}{}{\textsuperscript{nd}}
+\NewDocumentCommand{\rd}{}{\textsuperscript{rd}}
+\NewDocumentCommand{\nth}{}{\textsuperscript{th}}
+
+%% Additional Symbols
+\NewDocumentCommand{\rect}{}{\ensuremath{\sqsubset\!\!\sqsupset}}
+
+%% Combinatorial Notations
+\NewDocumentCommand{\comb}{mm}{\ensuremath{{}^{#1}C_{#2}}}
+\NewDocumentCommand{\perm}{mm}{\ensuremath{{}^{#1}P_{#2}}}
+
+%% Mathematical Operators
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\Wnd}{Wnd}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Orb}{Orb}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\Fix}{Fix}
+
+%% Derivatives
+\NewDocumentCommand{\deriv}{mm}{%
+\frac{\dd{}#1}{\dd{}#2}}
+\NewDocumentCommand{\pderiv}{mm}{%
+\frac{\partial #1}{\partial #2}}
+\NewDocumentCommand{\psderiv}{mmm}{%
+\frac{\partial^2 #1}{\partial #2 \partial #3}}
+
+\iftma@legacy
+\RenewDocumentCommand{\vec}{m}{\ensuremath{\overrightarrow{#1}}}
+\ProvideDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
+\RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
+\fi
+
+%% Theorem Environment
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\ProvideDocumentCommand{\blacksmiley}{}{%
+\ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
+\RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
+
+%% Miscellaneous Settings
+
+\RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
+\numberwithin{equation}{question}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
+
+%% Header and Footer Settings
+
+\pagestyle{fancy}
+\fancyhf{} % Clear all headers and footers
+\fancyhead[L]{\textrm{\name\ \pin}}
+\fancyhead[C]{\textrm{\course\ TMA-\tma}}
+\fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
+\RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
+
+%% End of Package
+
+\endinput
+%%
+%% End of file `ou-tma.sty'.\geometry{
 headheight=10mm,
 headsep=5mm,
 bottom=25mm,
