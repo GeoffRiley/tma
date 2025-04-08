@@ -23,11 +23,12 @@
   [2025-04-07 v1.20 OU-TMA package]
 %% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
-%% This package may be freely used, especially by, but not limited to, students,
-%% lecturers and staff of the Open University. It was created by the
-%% efforts of many who are now or have been connected with the Open University
-%% Students Association. No acknowledgement is _required_ for using this package
-%% within the production of a _Tutor Marked Assessment._
+%% This package may be freely used, especially by, but not limited to,
+%% students, lecturers and staff of the Open University. It was created
+%% by the efforts of many who are now or have been connected with the
+%% Open University Students Association. No acknowledgement is
+%% _required_ for using this package within the production of a _Tutor
+%% Marked Assessment._
 \RequirePackage{expl3} % LaTeX3 "experimental"
 %% Package Initialization
 \ExplSyntaxOn
@@ -224,7 +225,8 @@ pdfsubject=\course%
 \tma@stepcounter{question}%
 \tma@bookmark{Question \thequestion}%
 {question\thequestion}%
-\makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
+\makebox[0em][r]{\large{\tma@questionstring~\thequestion%
+        \hspace{0.3em}}}\par%
 }{%
 \par \vspace{3em}%
 }

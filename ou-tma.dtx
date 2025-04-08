@@ -40,6 +40,10 @@
 \hbadness=7000          % over- and underfull box warnings
 \usepackage{ou-tma}
 \geometry{left=1mm,marginparwidth=40mm,marginparsep=1mm}
+\fancyhf{} % Clear all headers and footers
+\fancyhead[L]{\textsf{ou-tma}}
+\fancyhead[R]{\textrm{\thepage}}
+\RenewDocumentCommand{\headrulewidth}{}{1pt} % Remove header rule
 \begin{document}
 	\DocInput{ou-tma.dtx}
 \end{document}
@@ -323,11 +327,12 @@
 %
 % The Current Maintainer of this work is Geoff Riley.
 %
-%% This package may be freely used, especially by, but not limited to, students,
-%% lecturers and staff of the Open University. It was created by the
-%% efforts of many who are now or have been connected with the Open University
-%% Students Association. No acknowledgement is _required_ for using this package
-%% within the production of a _Tutor Marked Assessment._
+%% This package may be freely used, especially by, but not limited to,
+%% students, lecturers and staff of the Open University. It was created
+%% by the efforts of many who are now or have been connected with the
+%% Open University Students Association. No acknowledgement is
+%% _required_ for using this package within the production of a _Tutor
+%% Marked Assessment._
 %    \end{macrocode}
 %
 % Adapted by Peter McFarlane from various sources.
@@ -757,7 +762,8 @@
 	\tma@stepcounter{question}%
 	\tma@bookmark{Question \thequestion}%
 		{question\thequestion}%
-	\makebox[0em][r]{\large{\tma@questionstring~\thequestion\hspace{0.3em}}}\par%
+	\makebox[0em][r]{\large{\tma@questionstring~\thequestion%
+        \hspace{0.3em}}}\par%
 }{%
 	\par \vspace{3em}%
 }
