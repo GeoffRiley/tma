@@ -1,47 +1,49 @@
 \documentclass[a4paper,12pt]{article}
 
-\usepackage[cleveref,pdfbookmark]{tma}
+\usepackage[cleveref,pdfbookmark]{ou-tma}
 \usepackage{lipsum}
 
 \myname{Geoff I. Riley}
-\mypin{ABCDEFGH}
+\mypin{A1234567}
 \mycourse{\LaTeX}
 \mytma{test}
-
-%\marginnotes
 
 \begin{document}
 	\maketitle
 	
-	Using the default \verb|[alph]| option swaps the numbering systems for \verb|qpart| and \verb|qsubpart|. This is the opposite of the \verb|[roman]| option mode.
-	
-	Expected tags at end of each line.
-	
+	Using the \verb|[cleveref]| option in combination with the \verb|[pdfbookmark]| option causes the \verb|question|  environment, along with the \verb|qpart| and \verb|qsubpart| commands to create index marks within the pdf index.
+
+	The \verb|[cleveref]| option allows references to specify:
+	\begin{itemize}
+	    \item single references like \verb|\cref{para:1.2}| $\mapsto$ \cref{para:1.2}; or
+	    \item ranges like \verb|\crefrange{para:1.1.1}{para:1.2.2}| $\mapsto$ \crefrange{para:1.1.1}{para:1.2.2}
+	\end{itemize}
+
+In the following, the \verb|\setquestionstring| command has been used to change the default `Q' to `Question', and in each section of each question the given label command has been quoted before the lipsum text.
+
 	\setquestionstring{Question}
 	
 	\begin{question}
 	\qpart\qsubpart
-	\lipsum[1-2] \emph{(a)(i)}\label{para:1.1.1}
+	\verb|\label{para:1.1.1}| \label{para:1.1.1} \lipsum[1-2]
 	
 	\qsubpart
-	\lipsum[3-4] \emph{(a)(ii)}\label{para:1.1.2}
-	
-	\qsubpart
-	\lipsum[5-6] \emph{(a)(iii)}\label{para:1.1.3}
-	
-	\qpart
-	\lipsum[7-8] \emph{(b)}\label{para:1.2}
-	
-	\qsubpart
-	\lipsum[9-10] \emph{(b)(i)}\label{para:1.2.1}
-	
-	\qsubpart
-	\lipsum[11-12] \emph{(b)(ii)}\label{para:1.2.2}
-	
-	\qpart
-	\lipsum[13-14] \emph{(c)}\label{para:3}
-\end{question}
+	\verb|\label{para:1.1.2}| \label{para:1.1.2} \lipsum[3-4]
 
-Cleveref allows references to specify single references like \cref{para:1.2} or ranges like \crefrange{para:1.1.1}{para:1.2.2}
+	\qsubpart
+	\verb|\label{para:1.1.3}| \label{para:1.1.3} \lipsum[5-6]
+	
+	\qpart
+	\verb|\label{para:1.2}| \label{para:1.2} \lipsum[7-8]
+	
+	\qsubpart
+	\verb|\label{para:1.2.1}|\label{para:1.2.1} \lipsum[9-10]
+	
+	\qsubpart
+	\verb|\label{para:1.2.2}| \label{para:1.2.2} \lipsum[11-12]
+	
+	\qpart
+	\verb|\label{para:3}|\label{para:3} \lipsum[13-14]
+\end{question}
 
 \end{document}

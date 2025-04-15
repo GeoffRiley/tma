@@ -1,66 +1,68 @@
 \documentclass[a4paper,12pt]{article}
 
-\usepackage[pdfbookmark,roman,cleveref]{tma}
-
+\usepackage[pdfbookmark,roman,cleveref]{ou-tma}
+\usepackage{tcolorbox}
+\usepackage{cancel}
+\usepackage{xcolor}
+\renewcommand{\CancelColor}{\color{red}}
 \myname{Peter McFarlane}
 \mypin{A1234567}
 \mycourse{\LaTeX 101}
 \mytma{sample}
 
-%\marginnotes
-
 \begin{document}
 \maketitle
 
-\hfill\fbox{Update for 2024/11/08 v1.12}
+\hfill\fbox{Update for 2025/04/07 v1.20}
 
 %% Notes for the latest update
 \begin{center}
-\begin{minipage}{0.9\linewidth}
-\rule[0.4pt-1em]{0.4pt}{1em}\hrulefill\rule[0.4pt-1em]{0.4pt}{1em}\vskip 10pt
+\begin{tcolorbox}[colback=cyan!10,
+                  colframe=cyan!30,
+                  width=0.9\linewidth,
+                  arc=3mm, auto outer arc,
+                  boxrule=3pt,
+                 ]
+%\begin{minipage}{0.9\linewidth}
+%\rule[0.4pt-1em]{0.4pt}{1em}\hrulefill\rule[0.4pt-1em]{0.4pt}{1em}\vskip 10pt
 
-This document is provided as an example of how to use the \textbf{tma} package.
+This document is provided as an example of how to use the \textsf{ou-tma} package.
 
-With the 8\nth\,November 2024 version of the package there has been a rewrite of
-the majority of the package along with the renaming of a couple of the commands.
-\verb|\C|, representing the set of complex numbers, has been renamed to \verb|\Complex|,
-and \verb|\vec{}|, for setting traditional vectors, has been renamed to \verb|\vect{}|.
-In both instances, the renaming has been done to avoid naming clashes from other packages.
+With the 7\nth\,April 2025 version of the package there has been an update to the name of the package. Gone is \cancel{\textsf{tma}} and in comes \textsf{ou-tma}. The reason for the change is twofold. Firstly there are many internal changes to make the package more in line with the conventions of the \LaTeX3\ project, and secondly the introduction of the package into the CTAN archive.
+
+In presenting to the CTAN archive, the regular stylesheet has been wrapped up in a \LaTeX\ document file---a \verb|.dtx| file. The beauty of the \verb|.dtx| file is that the \verb|.sty| and source for it's documentation ship together in a single file. A second simple \verb|.ins| file is also needed to extract the \verb|.sty|, but that is unlikely to change and can be created simply on the fly if needed.
 
 To use the options start your document with:
 \begin{verbatim}
 \documentclass[a4paper,12pt]{article}
 \usepackage[OPTION]{tma}
 
-\myname{...
+\myname{...}
+\mypin{...}
+\mycourse{...}
+\mytma{...}
+\date{...}
+\begin{document}
+\maketitle
+...
 \end{verbatim}
 
-Where \textbf{OPTION} is one of the following
-\begin{description}
-  \item[{[}roman{]}] Questions numbered as 1, 1(i), 1(i)(a)\dots
-  \item[{[}alph{]}] \emph{Default} Questions numbered as 1, 1(a), 1(a)(i)\dots
-\end{description}
-
-The 26\nth\,October 2016 version of the package added two further options which allow extended referencing and the adding of
-bookmarks for questions into pdf output.
-
-\begin{description}
-  \item[{[}cleveref{]}] Prepares the questions, qparts and subqparts to be referenced using the \verb|cleveref| package.
-  \item[{[}pdfbookmark{]}] Automatically adds pdf bookmarks for each question, qpart and subqpart. This uses the \verb|hyperref| package.
-\end{description}
-
-The 8\nth\,November 2024 version added one further option.
-
-\begin{description}
-	\item[{[}legacy{]}] reactivate the old conflicting commands of \verb|\C| and \verb|\vec|. This is intended for use \textbf{only} when using the current package with an old document.
-\end{description}
+Where \textsf{OPTION} is one of the following
+\begin{itemize}
+  \item {[roman]}
+  \item {[alph]} \emph{Default}
+  \item {[cleveref]}
+  \item {[pdfbookmark]}
+  \item {[legacy]}
+\end{itemize}
 
 See the \verb|notes.pdf| file for further details of available options.
 
-\vskip 10pt
-\rule{0.4pt}{1em}\hrulefill\rule{0.4pt}{1em}
+%\vskip 10pt
+%\rule{0.4pt}{1em}\hrulefill\rule{0.4pt}{1em}
 
-\end{minipage}
+%\end{minipage}
+\end{tcolorbox}
 \end{center}
 \pagebreak
 
@@ -164,6 +166,15 @@ Since $1^4=1=\frac{1\times2\times3\times5}{30}=f(1)$, then $f(n)$ is valid for a
 
 \end{question}
 
+\begin{tcolorbox}[colback=cyan!10,
+                  colframe=cyan!30,
+                  width=8cm,
+                  arc=3mm, auto outer arc,
+                  boxrule=3pt,
+                 ]
+                 \centering
+Note that by using\\ \verb|\begin{question}[3]|\\ at this point, we can skip question 2 from the numbering.
+\end{tcolorbox}
 
 \begin{question}[3]
 Find the general solution of the equation

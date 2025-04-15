@@ -1,5 +1,5 @@
 \documentclass[a4paper,12pt]{article}
-\usepackage[pdfbookmark]{tma}
+\usepackage[pdfbookmark]{ou-tma}
 \usepackage{multirow}
 \usepackage{hologo}
 
@@ -8,7 +8,7 @@
 \mycourse{\LaTeX 101}
 \mytma{notes}
 
-\fancyhead[L]{tma.sty notes}
+\fancyhead[L]{\textsf{ou-tma.sty} notes}
 \fancyhead[C]{}
 
 \newcommand{\MiKTeX}{\hologo{MiKTeX}}
@@ -16,31 +16,31 @@
 \begin{document}
 	\maketitle
 	
-	\hfill\fbox{Update for 2024/11/08 v1.12}
+	\hfill\fbox{Update for 2025-04-07 v1.20}
 	
 	\section*{Notes}
 	\thispagestyle{empty}
 	
-	This document describes Peter McFarlane's \verb|tma| package.  To use it, the \verb|tma.sty| file should be in the 
+	This document describes Peter McFarlane's \textsf{ou-tma} package.  To use it, the \verb|ou-tma.sty| file should be in the 
 	same directory/folder as your main \verb|.tex| source file or in the file path for your compiler. Using \MiKTeX\footnote{The latest version of \MiKTeX\ is always downloadable from \url{https://miktex.org/}.} v24.1
 	on Windows, installed for all users, this would be:\\
-	\verb|C:\Program Files\MiKTex\tex\latex\tma|\\
-	(you need to create the \verb|tma| folder).
+	\verb|C:\Program Files\MiKTex\tex\latex\ou-tma|\\
+	(you need to create the \verb|ou-tma| folder).
 	
-	Once you have added \verb|tma.sty| to the directory, it is necessary to let \MiKTeX\ know that it is there. So
+	Once you have added \verb|ou-tma.sty| to the directory, it is necessary to let \MiKTeX\ know that it is there. So
 	load \MiKTeX, go to \MiKTeX\ Settings and press the `Refresh FNDB' (\textbf{F}ile \textbf{N}ame \textbf{D}ata\textbf{B}ase) button that tells \LaTeX\ to remake the
 	database of all the files, then it will find \verb|tma.sty|. See:\\
 	\url{http://docs.miktex.org/manual/configuring.html#fndbupdate}.
 	
 	Other \TeX\ installations will have similar centralised file storage settings for style files.
 	
-	The contents of the file in which you write a TMA should look like this:
+	The contents of the file in which you write a TMA should look something like this:
 	\begin{verbatim}
 		\documentclass[a4paper,12pt]{article}
-		\usepackage{tma}
+		\usepackage{ou-tma}
 		%% or include options [roman] or [alph]:
-		% \usepackage[roman]{tma} % For Roman numerals in subparts
-		% \usepackage[alph]{tma}  % For the default alphabetical letters in subparts
+		% \usepackage[roman]{ou-tma} % For Roman numerals in subparts
+		% \usepackage[alph]{ou-tma}  % For the default alphabetical letters in subparts
 		
 		\myname{Nosmo King}
 		\mypin{A1234567}
@@ -78,7 +78,7 @@
 	
 	\subsection*{Options}
 	
-	When requesting the \verb|tma| package with the \verb|\usepackage| command, it is possible to pass one or 
+	When requesting the \textsf{ou-tma}\ package with the \verb|\usepackage| command, it is possible to pass one or 
 	more optional parameters to influence how the package will operate.  Just as it is typical to let the 
 	\verb|\documentclass| have options specifying the paper and font size, so can many other packages being given options.
 	
@@ -97,12 +97,12 @@
 			\verb|[legacy]|      & add backward compatibility for old versions of \verb|tma| package \\
 			\hline
 		\end{tabular}
-		\caption{Options available for \texttt{tma.sty}}
+		\caption{Options available for \texttt{ou-tma.sty}}
 		\label{tab:options}
 	\end{table}
 	
 	To use a package option, place the option(s) before the package name in square brackets, for example:\\
-	\verb|\usepackage[roman,cleveref]{tma}|
+	\verb|\usepackage[roman,cleveref]{ou-5tma}|
 	
 	
 	\subsection*{New commands}
@@ -133,7 +133,7 @@
 	
 	\subsection*{Backward compatibility}
 	
-	As of version 1.04 of the \verb|tma| package, two commands have been renamed to avoid clashes with other libraries. \verb|\C| has been renamed \verb|\Complex|, and \verb|\vec| has been renamed \verb|\vect|. In order to allow order documents to still use the new version of the package, an additional option has been provided, \verb|[legacy]|, and this will reimplement the old names.  These old names, however, are now deprecated and may be removed in future issues.
+	As of version 1.04 of the \textsf{tma} package, two commands have been renamed to avoid clashes with other libraries. \verb|\C| has been renamed \verb|\Complex|, and \verb|\vec| has been renamed \verb|\vect|. To allow order documents to still use the new version of the package, an additional option has been provided, \verb|[legacy]|, and this will reimplement the old names.  These old names, however, are now deprecated and may be removed in future issues.
 	
 	\begin{table}[t]
 		\centering
@@ -153,7 +153,7 @@
 			\hline
 			\noalign{\vskip 4pt}
 			\verb|\re|         & $\re $      & \verb|\Re| will produce the traditional $\Re$ \\
-			\verb|\im|         & $\im $      & \verb|\Im| will produce $\Im$                 \\
+			\verb|\im|         & $\im $      & \verb|\Im| will produce $\Im$       i+          \\
 			\verb|\Log|        & $\Log $     &  \\
 			\verb|\Arg|        & $\Arg $     &  \\
 			\verb|\Wnd|        & $\Wnd $     &  \\
@@ -164,14 +164,14 @@
 			\verb|\Stab|       & $\Stab $    &  \\
 			\verb|\Fix|        & $\Fix $     &  \\ \hline
 		\end{tabular}
-		\caption{Mathematical commands that are made available with \texttt{tma.sty}}
+		\caption{Mathematical commands that are made available with \texttt{ou-tma.sty}}
 		\label{tab:commands}
 	\end{table}
 	
 	\newpage
 	\subsection*{Packages automatically loaded}
 	
-	Some standard packages are automatically loaded when the \verb|tma| package is used. These, in turn, load other packages. A summary of the packages so loaded is listed in table~\ref{tab:packages}.
+	Some standard packages are automatically loaded when the \textsf{ou-tma} package is used. These, in turn, load other packages. A summary of the packages so loaded is listed in table~\ref{tab:packages}.
 	
 	\begin{table}[t]
 		\centering

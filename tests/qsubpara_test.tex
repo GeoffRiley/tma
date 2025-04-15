@@ -1,11 +1,11 @@
 \documentclass[a4paper,12pt]{article}
-\usepackage{tma}
+\usepackage{ou-tma}
 
-\myname{Geoff I. Riley}
+\myname{Claude Heiland-Allen}
 \mypin{A1234567}
 \mycourse{\LaTeX}
 \mytma{test}
-\setdate{Feb 1980}
+\setdate{before today}
 
 % Header suggestion by Claude Heiland-Allen
 \fancyhead[L]{\textrm{\name\ \pin\ \course\ TMA-\tma\ \thedate}}
@@ -16,7 +16,14 @@
 \begin{document}
 
 	\maketitle
-	
+
+    This is demonstrating the alternative header suggestion by Claude Heiland-Allen:
+    \begin{verbatim}
+    \fancyhead[L]{\textrm{\name\ \pin\ \course\ TMA-\tma\ \thedate}}
+    \fancyhead[C]{\relax}
+    \end{verbatim}
+    See the effect at the top of the second produced page.
+
 	\begin{question}
 		This is the question text. \lipsum[1][1-2]
 		

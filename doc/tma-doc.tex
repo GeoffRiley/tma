@@ -15,17 +15,6 @@
   {%\enddecl
   }
 
-%\def\cmd@font{\normalfont\ttfamily\selectfont}
-%\newcommand{\cmd}[2][]{%
-%    \ifblank{#1}{%
-%    \cmd@font{\textbackslash#2}%
-%    }{}%
-%    \normalfont\selectfont%
-%    \def\@cmd{#2}%
-%    \index{#2@\texttt{\textbackslash\@cmd}}%
-%    \index{command!#2@\texttt{\textbackslash\@cmd}}%
-%}%
-
 \def\opt@font{\normalfont\ttfamily\selectfont}
 \newcommand{\opt}[1]{%
     \opt@font{#1}%
@@ -33,7 +22,6 @@
     \index{#1@{\texttt{#1~(option)}}}%
     \index{option!#1@\texttt{#1}}%
 }%
-
 \def\env@font{\normalfont\ttfamily\selectfont}
 \newcommand{\env}[2][]{%
     \ifblank{#1}{%
@@ -70,15 +58,20 @@
 
 \title{The \texttt{ou-tma} Package}
 \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com.com}{geoffr@adaso.com}}
-\date{Version 1.20, 2025/04/07}
+\date{Version 1.20, 2025-04-07}
 
-\makeindex[columns=3,intoc,columnseprule,options=-s index_fmt.ist]
+\makeindex[columns=2,intoc,columnseprule,options=-s indexfmt.ist]
 
 \begin{document}
 
 	\maketitle
 
 	\tableofcontents
+    \section*{This document\dots}
+
+    \dots is intended as an extra reference to the standard |.dtx| documentation, it will not always be fully in line with the full release but should be updated shortly afterwards.
+
+    It, along with the notes, examples, and tests are not specified or supplied as part of the \textsf{ou-tma} package. Additionally it may contain new concepts that have not yet reached the full release, and may never do so.
 
 	\section{Introduction}
 
@@ -86,7 +79,7 @@
 
 	\section{Installation}
 
-	To install the package, place the `ou-tma.sty`\index{ou-tma.sty@{\texttt{ou-tma.sty}}} file in your LaTeX directory or project folder. If using a TeX distribution, you may place it in the local texmf tree.
+	To install the package, place the |ou-tma.sty|\index{ou-tma.sty@{\texttt{ou-tma.sty}}} file in your LaTeX directory or project folder. If using a TeX distribution, you may place it in the local texmf tree.
 
 	\section{Package Options}
 
@@ -443,22 +436,23 @@ Commands to set ordinal indicators after numbers. For example, 1\st, 2\nd, 3\rd 
 \section{Change Log}
 
 \begin{itemize}
-\item \textbf{v1.19 (2025/02/18)}: PDF metadata (apparently) solved with help from Steve Mayers; all down to the use of commands being used as string containers. New (\LaTeX3) commands are robust and fail to expand within the context of the metadata and bookmarks, old (\LaTeX2e) commands are fragile and correctly expanded. I have a mix of old commands and new variables now.
-\item \textbf{v1.18 (2025/02/16)}: PDF metadata doesn't set correctly so I have removed it: the cause is an incompatibility between \LaTeX\ unicode and the PDF restricted character allowance.
-\item \textbf{v1.17 (2025/02/13)}: Rewritten with \LaTeX-3 syntax from the `xparse' package to make commands less fragile. Finally got alignment of part and subpart numbering to line up correctly.
-\item \textbf{v1.16 (2024/11/22)}: Added File, Properties to pdf files using the hyperref setup system when in pdfbookmark mode.
-\item \textbf{v1.15 (2024/11/21)}: Added \verb|\setdate{}| and \verb|\thedate| for setting and using a fixed report date.
-\item \textbf{v1.14 (2024/11/17)}: Allow setting of question string with \verb|\setquestionstring{}|; set indentation for \verb|\qpart| and \verb|\qsubpart| from Steve Mayers contribution.
-\item \textbf{v1.13 (2024/11/16)}: Attempt at placing part and subpart marks on the same line when there is no intervening text.
-\item \textbf{v1.12 (2024/11/08)}: Fixed error with \verb|\renewcommand{\C}|; changed to \\ \verb|\providecommand{\C}|.
-\item \textbf{v1.11 (2024/11/08)}: Added 'legacy' option to allow old definitions of \verb|\vec| and \verb|\C|.
-\item \textbf{v1.10 (2024/09/10)}: Ensured commands are correctly defined before being redefined!
-\item \textbf{v1.09 (2024/09/10)}: Improved code readability.
-\item \textbf{v1.08 (2024/09/05)}: Consolidated geometry settings and adjusted package loading order.
-\item \textbf{v1.07 (2024/09/04)}: Avoided redefining standard \LaTeX\ commands to avoid clashes. Fixed error with \verb|\ExecuteOptions| in package file. Implemented flags to handle the various options simpler.
-\item \textbf{v1.06 (2024/08/28)}: Updated definitions of \verb|\comb|, \verb|\perm| to correctly work after a superscript.
-\item \textbf{v1.05 (2024/08/28)}: Updated definitions of \verb|\ve|, \verb|\vec| to allow use in both maths and text mode.
-\item \textbf{v1.04 (2024/08/26)}: Updated usage of 'fancyhdr' to remove deprecated commands.
+\item \textbf{v1.20 (2025-04-07)}: Package name changed from `tma' to `ou-tma' to become a little more descriptive and to abide by the minimum package name length suggested by CTAN.
+\item \textbf{v1.19 (2025-02-18)}: PDF metadata (apparently) solved with help from Steve Mayers; all down to the use of commands being used as string containers. New (\LaTeX3) commands are robust and fail to expand within the context of the metadata and bookmarks, old (\LaTeX2e) commands are fragile and correctly expanded. I have a mix of old commands and new variables now.
+\item \textbf{v1.18 (2025-02-16)}: PDF metadata doesn't set correctly so I have removed it: the cause is an incompatibility between \LaTeX\ unicode and the PDF restricted character allowance.
+\item \textbf{v1.17 (2025-02-13)}: Rewritten with \LaTeX-3 syntax from the `xparse' package to make commands less fragile. Finally got alignment of part and subpart numbering to line up correctly.
+\item \textbf{v1.16 (2024-11-22)}: Added File, Properties to pdf files using the hyperref setup system when in pdfbookmark mode.
+\item \textbf{v1.15 (2024-11-21)}: Added \verb|\setdate{}| and \verb|\thedate| for setting and using a fixed report date.
+\item \textbf{v1.14 (2024-11-17)}: Allow setting of question string with \verb|\setquestionstring{}|; set indentation for \verb|\qpart| and \verb|\qsubpart| from Steve Mayers contribution.
+\item \textbf{v1.13 (2024-11-16)}: Attempt at placing part and subpart marks on the same line when there is no intervening text.
+\item \textbf{v1.12 (2024-11-08)}: Fixed error with \verb|\renewcommand{\C}|; changed to \\ \verb|\providecommand{\C}|.
+\item \textbf{v1.11 (2024-11-08)}: Added 'legacy' option to allow old definitions of \verb|\vec| and \verb|\C|.
+\item \textbf{v1.10 (2024-09-10)}: Ensured commands are correctly defined before being redefined!
+\item \textbf{v1.09 (2024-09-10)}: Improved code readability.
+\item \textbf{v1.08 (2024-09-05)}: Consolidated geometry settings and adjusted package loading order.
+\item \textbf{v1.07 (2024-09-04)}: Avoided redefining standard \LaTeX\ commands to avoid clashes. Fixed error with \verb|\ExecuteOptions| in package file. Implemented flags to handle the various options simpler.
+\item \textbf{v1.06 (2024-08-28)}: Updated definitions of \verb|\comb|, \verb|\perm| to correctly work after a superscript.
+\item \textbf{v1.05 (2024-08-28)}: Updated definitions of \verb|\ve|, \verb|\vec| to allow use in both maths and text mode.
+\item \textbf{v1.04 (2024-08-26)}: Updated usage of 'fancyhdr' to remove deprecated commands.
 \end{itemize}
 
 \section{License}
