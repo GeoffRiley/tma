@@ -1,0 +1,188 @@
+% ou-tma-sup.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesExplPackage{ou-tma-sup}{2025/07/14}{0.1}{OU-TMA Supplement macros}
+
+% ------------------------------------------------------------------------------
+% README / Package Summary
+% ------------------------------------------------------------------------------
+% This package provides macros for formatting numeric approximations with specified
+% decimal places (dp) or significant figures (sf), using the siunitx package.
+% It is intended for typesetting mathematics and statistics answers in OU TMAs.
+%
+% Main commands:
+%   \tmadp[<options>]{<value(s)>}[<unit>]  % round to <n> decimal places
+%   \tmasf[<options>]{<value(s)>}[<unit>]  % round to <n> significant figures
+%
+% <value(s)> should be either:
+%   - {x, n}           for one value to n dp/sf
+%   - {x, y, n}        for a range from x to y to n dp/sf
+%
+% Optional [<options>] may include:
+%   style=bracket      % for bracketed range: (x, y)
+%   style=to (default) % for range using 'x to y'
+%
+% Works in both math and text mode.
+% Requires: expl3, siunitx, amsmath, xparse
+
+\RequirePackage{expl3}
+\RequirePackage{xparse}
+\RequirePackage{siunitx}
+\RequirePackage{amsmath}
+
+% --- Internal variables ---
+\ExplSyntaxOn
+\tl_new:N \l__tma_style_tl
+\tl_new:N \l__tma_tmp_math_tl
+\tl_new:N \l__tma_tmp_text_tl
+\tl_new:N \l__tma_tmp_options_tl
+
+% --- Key definition ---
+\keys_define:nn { tma }
+  {
+    style .choice:,
+    style / to .code:n = { \tl_set:Nn \l__tma_style_tl {to} },
+    style / bracket .code:n = { \tl_set:Nn \l__tma_style_tl {bracket} },
+    style .initial:n = to,
+  }
+
+% --- Public interface ---
+\NewDocumentCommand{\tmadp}{O{}mO{}}{
+  \tma_format:nnnn {#1} {#2} {#3} {dp}
+}
+
+\NewDocumentCommand{\tmasf}{O{}mO{}}{
+  \tma_format:nnnn {#1} {#2} {#3} {sf}
+}
+
+% --- Main dispatcher ---
+\cs_new_protected:Nn \tma_format:nnnn
+  {
+    \keys_set:nn { tma } {#1}
+    \tma_parse:nnn {#2} {#3} {#4}
+  }
+
+% --- Parse list of 2 or 3 values ---
+\cs_new_protected:Nn \tma_parse:nnn
+  {
+    \clist_set:Nn \l_tmpa_clist {#1}
+    \int_case:nnF { \clist_count:N \l_tmpa_clist }
+      {
+        {2} {
+          \tma_format_single:nnnn
+            { \clist_item:Nn \l_tmpa_clist {1} }
+            { \clist_item:Nn \l_tmpa_clist {2} }
+            {#2} % unit
+            {#3} % mode
+        }
+        {3} {
+          \tma_format_range:nnnnn
+            { \clist_item:Nn \l_tmpa_clist {1} }
+            { \clist_item:Nn \l_tmpa_clist {2} }
+            { \clist_item:Nn \l_tmpa_clist {3} }
+            {#2} % unit
+            {#3} % mode
+        }
+      }
+      {
+        \textbf{Error: expected 2 or 3 comma-separated values.}
+      }
+  }
+
+% --- Single number formatter ---
+\cs_new_protected:Nn \tma_format_single:nnnn
+  {
+    \tl_set:Nx \l__tma_tmp_options_tl
+      {
+        round-mode = \tma_mode:n {#4},
+        round-precision = #2
+      }
+
+    \tl_if_blank:nTF {#3}
+      {
+        \use:x { \num[\l__tma_tmp_options_tl]{#1} }~\text{(to~#2~\tma_mode_label:n {#4})}
+      }
+      {
+        \use:x { \qty[\l__tma_tmp_options_tl]{#1}{#3} }~\text{(to~#2~\tma_mode_label:n {#4})}
+      }
+  }
+
+% --- Range formatter ---
+\cs_new_protected:Nn \tma_format_range:nnnnn
+  {
+    \tl_if_eq:NnTF \l__tma_style_tl {bracket}
+      {
+        \tma_output_bracketed_range:nnnnn {#1} {#2} {#3} {#4} {#5}
+      }
+      {
+        \tl_set:Nx \l__tma_tmp_options_tl
+          {
+            round-mode = \tma_mode:n {#5},
+            round-precision = #3
+          }
+
+        \tl_if_blank:nTF {#4}
+          {
+            \use:x {
+              \num[\l__tma_tmp_options_tl]{#1}
+              ~\text{to~}
+              \num[\l__tma_tmp_options_tl]{#2}
+            }~\text{(to~#3~\tma_mode_label:n {#5})}
+          }
+          {
+            \use:x {
+              \qty[\l__tma_tmp_options_tl]{#1}{#4}
+              ~\text{to~}
+              \qty[\l__tma_tmp_options_tl]{#2}{#4}
+            }~\text{(to~#3~\tma_mode_label:n {#5})}
+          }
+      }
+  }
+
+% --- Bracketed range formatter ---
+\cs_new_protected:Nn \tma_output_bracketed_range:nnnnn
+  {
+    \tl_set:Nx \l__tma_tmp_options_tl
+      {
+        round-mode = \tma_mode:n {#5},
+        round-precision = #3
+      }
+
+    \tl_set:Nn \l__tma_tmp_math_tl
+      {
+        ( \use:x { \qty[\l__tma_tmp_options_tl]{#1}{#4} },~
+          \use:x { \qty[\l__tma_tmp_options_tl]{#2}{#4} } )
+        \text{~(to~#3~\tma_mode_label:n {#5})}
+      }
+
+    \tl_set:Nn \l__tma_tmp_text_tl
+      {
+        \text{(}
+          \use:x { \qty[\l__tma_tmp_options_tl]{#1}{#4} },~
+          \use:x { \qty[\l__tma_tmp_options_tl]{#2}{#4} }
+        \text{)}~\text{(to~#3~\tma_mode_label:n {#5})}
+      }
+
+    \mode_if_math:TF
+      { \tl_use:N \l__tma_tmp_math_tl }
+      { \tl_use:N \l__tma_tmp_text_tl }
+  }
+
+% --- Mode string resolvers ---
+\cs_new:Npn \tma_mode:n #1
+  {
+    \str_case:nn {#1}
+      {
+        {dp}{places}
+        {sf}{figures}
+      }
+  }
+
+\cs_new:Npn \tma_mode_label:n #1
+  {
+    \str_case:nn {#1}
+      {
+        {dp}{dp}
+        {sf}{sf}
+      }
+  }
+\ExplSyntaxOff
