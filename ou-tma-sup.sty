@@ -5,13 +5,15 @@
 % ------------------------------------------------------------------------------
 % README / Package Summary
 % ------------------------------------------------------------------------------
-% This package provides macros for formatting numeric approximations with specified
-% decimal places (dp) or significant figures (sf), using the siunitx package.
+% This package provides macros for formatting numeric approximations, probability
+% expressions, monetary values, and statistical diagrams, using expl3 and siunitx.
 % It is intended for typesetting mathematics and statistics answers in OU TMAs.
 %
-% Main commands:
-%   \tmadp[<options>]{<value(s)>}[<unit>]  % round to <n> decimal places
-%   \tmasf[<options>]{<value(s)>}[<unit>]  % round to <n> significant figures
+% ----------------------
+% Main formatting commands
+% ----------------------
+% \tmadp[<options>]{<value(s)>}[<unit>]  % Round to <n> decimal places
+% \tmasf[<options>]{<value(s)>}[<unit>]  % Round to <n> significant figures
 %
 % <value(s)> should be either:
 %   - {x, n}           for one value to n dp/sf
@@ -21,11 +23,22 @@
 %   style=bracket      % for bracketed range: (x, y)
 %   style=to (default) % for range using 'x to y'
 %
-% Works in both math and text mode.
-% Requires: expl3, siunitx, amsmath, xparse
+% ----------------------
+% Other useful commands
+% ----------------------
+% \prob{event}              % Formats P(event) in upright font
+% \Pounds{amount}           % Formats amount in £ with two dp, e.g. £3.45
+% \FiveStats[<n>]{min}{max}{med}{Q1}{Q3}
+%     Draws a 5-number summary diagram using TikZ.
+%     Optional argument: n = sample size (e.g. \FiveStats[30]{1}{10}{5.5}{3}{8})
+% ------------------------------------------------------------------------------
+%
+% ------------------------------------------------------------------------------
+% Required packages
+% ------------------------------------------------------------------------------
 \RequirePackage{amsmath}
 \RequirePackage{ifthen}
-
+\RequirePackage{etoolbox}
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 \RequirePackage{siunitx}
@@ -36,14 +49,7 @@
     \RequirePackage{tikz}
     \RequirePackage{pgfplots}
     \pgfplotsset{compat=1.18}
-
-    %\@ifundefined{pgfplots@units@use}{%
-    %    \pgfplots@invoke@library{units}%
-    %}{}
     \usepgfplotslibrary[units]
-
-    \show\pgfplots@units@use
-
     \usetikzlibrary{angles,
         quotes,
         calc,

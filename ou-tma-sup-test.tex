@@ -1,19 +1,22 @@
 \documentclass[a4paper,12pt]{article}
 
-\usepackage[pdfbookmark]{ou-tma}
 \usepackage{ou-tma-sup}
-
 
 \begin{document}
 %    \maketitle
-
-\section{Text:}
+%
+\section*{Test: \texttt{\textbackslash tmadp} in text mode}
 
 \begin{tabular}{rl}
                                 Plain dp: & \tmadp{1.237, 2}                                      \\
                      Plain range with dp: & \tmadp{1.237, 2.846, 2}                               \\
                            Units with dp: & \tmadp{1.237, 2}[\centi\metre]                        \\
     To (default) range with units and dp: & \tmadp{1.237, 2.846, 2}[\kilo\gram]                   \\
+\end{tabular}
+
+\section*{Test: \texttt{\textbackslash tmasf} in text mode}
+
+\begin{tabular}{rl}
                              Plain sf(3): & \tmasf{1.237, 3}                                      \\
                              Plain sf(2): & \tmasf{1.237,2}                                       \\
                            Units with sf: & \tmasf{1.237, 2}[\centi\metre]                        \\
@@ -22,13 +25,18 @@
               To range with units and sf: & \tmasf[style=to]{-1.393, 0.615, 3}[\metre\per\second]
 \end{tabular}
 
-\section{Math:}
+\section*{Test: \texttt{\textbackslash tmadp} in maths mode}
 
 \begin{align*}
     \text{Plain dp:} &~ \tmadp{1.237, 2}\\
     \text{Plain range with dp:} &~ \tmadp{1.237, 2.846, 2}\\
     \text{Units with dp:} &~ \tmadp{1.237, 2}[\centi\metre]\\
     \text{To (default) range with units and dp:} &~ \tmadp{1.237, 2.846, 2}[\kilo\gram]\\
+\end{align*}
+
+\section*{Test: \texttt{\textbackslash tmasf} in maths mode}
+
+\begin{align*}
     \text{Plain sf(3):} &~ \tmasf{1.237, 3}\\
     \text{Plain sf(2):} &~ \tmasf{1.237,2}\\
     \text{Units with sf:} &~ \tmasf{1.237, 2}[\centi\metre]\\
@@ -37,9 +45,61 @@
     \text{To range with units and sf:} &~ \tmasf[style=to]{-1.393, 0.615, 3}[\metre\per\second]
 \end{align*}
 
-\section{Five Stats:}
 
-\FiveStats[n]{min}{max}{avg}{2\nd}{4\nth}
+\section*{Test: \texttt{\textbackslash tmadp}}
+
+Expected: 3.14 (2 dp) \\
+Result: \tmadp{3.14159,2}
+
+Expected: 3.14 m (2 dp with unit) \\
+Result: \tmadp{3.14159,2}[m]
+
+Expected: 3.14 to 3.15 (2 dp range) \\
+Result: \tmadp{3.14159,3.1459,2}
+
+Expected: (3.14, 3.15) (bracket style) \\
+Result: \tmadp[style=bracket]{3.14159,3.1459,2}
+
+\section*{Test: \texttt{\textbackslash tmasf}}
+
+Expected: 3.14 (3 sf) \\
+Result: \tmasf{3.14159,3}
+
+Expected: 3.14 m (3 sf with unit) \\
+Result: \tmasf{3.14159,3}[m]
+
+Expected: 3.14 to 3.15 (3 sf range) \\
+Result: \tmasf{3.14159,3.1459,3}
+
+Expected: (3.14, 3.15) (bracket style) \\
+Result: \tmasf[style=bracket]{3.14159,3.1459,3}
+
+\section*{Test: \texttt{\textbackslash prob}}
+
+Expected: P(A) in upright font \\
+Result: $\prob{A}$
+
+Expected: P(X $>$ 2) in upright font \\
+Result: $\prob{X > 2}$
+
+\section*{Test: \texttt{\textbackslash Pounds}}
+
+Expected: £3.45 \\
+Result: \Pounds{3.45}
+
+Expected: £1234.00 \\
+Result: \Pounds{1234}
+
+\section*{Test: \texttt{\textbackslash FiveStats}}
+
+Expected: A five-number summary diagram for min=1, max=10, median=5.5, Q1=3, Q3=8 \\
+Result: \FiveStats[30]{1}{10}{5.5}{3}{8}
+
+Other samples: \\
+\verb|\FiveStats[n]{min}{max}{median}{$2^{nd}$}{$4^{th}$}|\\
+\FiveStats[n]{min}{max}{median}{$2^{nd}$}{$4^{th}$}
+
+\verb|\FiveStats[25]{1}{30}{18}{9}{24}|\\
 \FiveStats[25]{1}{30}{18}{9}{24}
 
 \end{document}
