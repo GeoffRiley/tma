@@ -1,0 +1,45 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[pdfbookmark]{ou-tma}
+\usepackage{ou-tma-sup}
+
+
+\begin{document}
+%    \maketitle
+
+\section{Text:}
+
+\begin{tabular}{rl}
+                                Plain dp: & \tmadp{1.237, 2}                                      \\
+                     Plain range with dp: & \tmadp{1.237, 2.846, 2}                               \\
+                           Units with dp: & \tmadp{1.237, 2}[\centi\metre]                        \\
+    To (default) range with units and dp: & \tmadp{1.237, 2.846, 2}[\kilo\gram]                   \\
+                             Plain sf(3): & \tmasf{1.237, 3}                                      \\
+                             Plain sf(2): & \tmasf{1.237,2}                                       \\
+                           Units with sf: & \tmasf{1.237, 2}[\centi\metre]                        \\
+              To range with units and sf: & \tmasf[style=to]{-1.393, 0.615, 3}[\gram]             \\
+                   Bracket range with sf: & \tmasf[style=bracket]{-1.393, 0.615, 2}               \\
+              To range with units and sf: & \tmasf[style=to]{-1.393, 0.615, 3}[\metre\per\second]
+\end{tabular}
+
+\section{Math:}
+
+\begin{align*}
+    \text{Plain dp:} &~ \tmadp{1.237, 2}\\
+    \text{Plain range with dp:} &~ \tmadp{1.237, 2.846, 2}\\
+    \text{Units with dp:} &~ \tmadp{1.237, 2}[\centi\metre]\\
+    \text{To (default) range with units and dp:} &~ \tmadp{1.237, 2.846, 2}[\kilo\gram]\\
+    \text{Plain sf(3):} &~ \tmasf{1.237, 3}\\
+    \text{Plain sf(2):} &~ \tmasf{1.237,2}\\
+    \text{Units with sf:} &~ \tmasf{1.237, 2}[\centi\metre]\\
+    \text{To range with units and sf:} &~ \tmasf[style=to]{-1.393, 0.615, 3}[\gram]\\
+    \text{Bracket range with sf:} &~ \tmasf[style=bracket]{-1.393, 0.615, 2}\\
+    \text{To range with units and sf:} &~ \tmasf[style=to]{-1.393, 0.615, 3}[\metre\per\second]
+\end{align*}
+
+\section{Five Stats:}
+
+\FiveStats[n]{min}{max}{avg}{2\nd}{4\nth}
+\FiveStats[25]{1}{30}{18}{9}{24}
+
+\end{document}
