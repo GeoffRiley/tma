@@ -30,7 +30,8 @@ New-Item -ItemType Directory -Name "ou-tma" | Out-Null
 Copy-Item ".\ou-tma.dtx" ".\ou-tma\"
 Copy-Item ".\ou-tma.ins" ".\ou-tma\"
 Copy-Item ".\ou-tma.pdf" ".\ou-tma\"
-Copy-Item ".\README.md"   ".\ou-tma\"
+Copy-Item ".\README.md"  ".\ou-tma\"
+Copy-Item ".\examples\SampleTMA.tex"  ".\ou-tma\"
 
 # 5) Convert line endings (CRLF => LF) for the three text-based files:
 (Get-Content -Raw ".\ou-tma\ou-tma.dtx") -replace "`r`n", "`n" | 
@@ -39,6 +40,8 @@ Copy-Item ".\README.md"   ".\ou-tma\"
     Set-Content ".\ou-tma\ou-tma.ins"
 (Get-Content -Raw ".\ou-tma\README.md")  -replace "`r`n", "`n" | 
     Set-Content ".\ou-tma\README.md"
+(Get-Content -Raw ".\ou-tma\SampleTMA.tex")  -replace "`r`n", "`n" | 
+	Set-Content ".\ou-tma\SampleTMA.tex"
 
 # 6) Compress the subdirectory into ou-tma.zip
 Write-Host "Zipping files into ou-tma.zip..."
