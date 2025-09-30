@@ -25,7 +25,7 @@
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<package>\ProvidesPackage{ou-tma}
-%<package>  [2025-04-07 v1.20 OU-TMA package]
+%<package>  [2025-09-30 v1.21 OU-TMA package]
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
@@ -135,7 +135,7 @@
 % of your \LaTeX\ document:
 % \begin{quote}
 %    \cs{documentclass}|[a4paper,11pt]{article}|\\
-%    \cs{usepackage}|{tma}|\\
+%    \cs{usepackage}|{ou-tma}|\\
 %    \vdots\\
 %    \cs{begin}|{document}|\\
 %    \vdots\\
@@ -146,7 +146,7 @@
 %
 % A number of options are available to modify the results of using the \stma\ package. These should be included within the \cs{usepackage} declaration:
 % \begin{quote}
-%    |\usepackage|\oarg{option,\dots}{tma}
+%    |\usepackage|\oarg{option,\dots}|{ou-tma}|
 % \end{quote}
 % The following options are available:
 % \begin{description}
@@ -356,8 +356,11 @@
 % \end{itemize}
 %
 % To use a package option, place the option(s) before the package name:\\\nopagebreak
-% \fqquad\cs{usepackage}|[roman,cleveref]{tma}|
+% \fqquad\cs{usepackage}|[roman,cleveref]{ou-tma}|
 %
+% \changes{v1.21}{2025-09-30}{
+%	 Documentation error spotted and corrected in very first example. A couple of 
+%	 other occurances also corrected in less conspicuous places.}
 % \changes{v1.20}{2025-04-07}{
 %    Package name changed from `tma' to `ou-tma' to become a
 %    little more descriptive and to abide by the minimum package

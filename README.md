@@ -2,7 +2,7 @@
 
 ## Version
 
-v1.20 (2025/04/07)
+v1.21 (2025/09/30)
 
 ## Author
 
@@ -14,7 +14,7 @@ Released under the LaTeX Project Public License v1.3c or later.
 
 ## Description
 
-The `ou-tma` package provides macros and environments to assist in writing and answering Tutor Marked Assessments (TMAs) for Open University courses. It simplifies the formatting of questions, parts, subparts, and includes useful mathematical commands.
+The `ou-tma` package provides macros and environments to assist in writing and answering Tutor Marked Assessments (TMAs) for Open University courses. It simplifies the formatting of questions, parts, subparts, and includes useful mathematical commands. A `SampleTMA.tex` file is now provided as an example of usage.
 
 ## Repository
 
