@@ -25,7 +25,7 @@
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<package>\ProvidesPackage{ou-tma}
-%<package>  [2025-09-30 v1.21 OU-TMA package]
+%<package>  [2025-10-01 v1.21.1 OU-TMA package]
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
@@ -182,7 +182,7 @@
 %
 % These commands are the ones that, though few, comprise the bulk of the body of the \TMA\ answer content of a paper.
 %
-% Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstrimg}\marg{required question number introduction}. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
+% Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\marg{required question number introduction}. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
 %
 % Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
@@ -358,8 +358,11 @@
 % To use a package option, place the option(s) before the package name:\\\nopagebreak
 % \fqquad\cs{usepackage}|[roman,cleveref]{ou-tma}|
 %
+% \changes{v1.21.1}{2025-10-01}{
+%	 Typo notified just after previous errors corrected. Minor error in
+%    \cs{setquestionstri\textbf{m}g} instead of \cs{setquestionstring}.}
 % \changes{v1.21}{2025-09-30}{
-%	 Documentation error spotted and corrected in very first example. A couple of 
+%	 Documentation error spotted and corrected in very first example. A couple of
 %	 other occurances also corrected in less conspicuous places.}
 % \changes{v1.20}{2025-04-07}{
 %    Package name changed from `tma' to `ou-tma' to become a
