@@ -44,6 +44,43 @@
 \fancyhead[L]{\textsf{ou-tma}}
 \fancyhead[R]{\textrm{\thepage}}
 \RenewDocumentCommand{\headrulewidth}{}{1pt} % Remove header rule
+
+\makeatletter
+% Capture the original \PrintChanges before redefining it
+\expandafter\let\csname doc@orig@PrintChanges\endcsname=\PrintChanges
+
+% One-column glossary environment with our own heading and index-style items
+\newenvironment{doc@onecolglossary}{%
+    \GlossaryParms
+    % --- Explicit heading (no hyphenation, no break) ---
+    \par
+    \@ifundefined{chapter}
+        {\section*{\mbox{Change History}}}
+        {\chapter*{\mbox{Change History}}}%
+    \par\nobreak
+    % --- Item shapes expected by the .gls file ---
+    \def\@idxitem{\par\noindent\hangindent=40pt \hangafter=1 }%
+    \def\subitem{\par\noindent\hangindent=40pt \hangafter=1 \hspace*{20pt}}%
+    \def\subsubitem{\par\noindent\hangindent=40pt \hangafter=1 \hspace*{30pt}}%
+    \def\indexspace{\par\vskip 10pt plus 5pt minus 3pt}%
+    \let\item\@idxitem
+}{}
+
+% Use our single-column glossary ONLY for \PrintChanges; leave index alone
+\renewcommand*\PrintChanges{%
+    \begingroup
+    % Neutralise column switches just in case
+    \let\twocolumn\@firstofone
+    \let\onecolumn\relax
+    % Swap the glossary env locally
+    \let\theglossary\doc@onecolglossary
+    \let\endtheglossary\enddoc@onecolglossary
+    % Run the stock change-history printer
+    \doc@orig@PrintChanges
+    \endgroup
+}
+\makeatother
+
 \begin{document}
 	\DocInput{ou-tma.dtx}
 \end{document}
@@ -141,6 +178,8 @@
 %    \vdots\\
 %    \cs{end}|{document}|
 % \end{quote}
+% \changes{v1.21}{2025-09-30}{ Documentation error spotted and corrected in very first
+%    example. A couple of other occurances also corrected in less conspicuous places.}
 %
 % \subsection{Options}
 %
@@ -182,6 +221,8 @@
 %
 % These commands are the ones that, though few, comprise the bulk of the body of the \TMA\ answer content of a paper.
 %
+% \changes{v1.21.1}{2025-10-01}{Typo notified just after previous errors corrected.
+%    Minor error in \cs{setquestionstri\textbf{m}g} instead of \cs{setquestionstring}.}
 % Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\marg{required question number introduction}. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
 %
 % Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
@@ -358,12 +399,6 @@
 % To use a package option, place the option(s) before the package name:\\\nopagebreak
 % \fqquad\cs{usepackage}|[roman,cleveref]{ou-tma}|
 %
-% \changes{v1.21.1}{2025-10-01}{
-%	 Typo notified just after previous errors corrected. Minor error in
-%    \cs{setquestionstri\textbf{m}g} instead of \cs{setquestionstring}.}
-% \changes{v1.21}{2025-09-30}{
-%	 Documentation error spotted and corrected in very first example. A couple of
-%	 other occurances also corrected in less conspicuous places.}
 % \changes{v1.20}{2025-04-07}{
 %    Package name changed from `tma' to `ou-tma' to become a
 %    little more descriptive and to abide by the minimum package
