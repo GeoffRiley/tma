@@ -25,7 +25,7 @@
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<package>\ProvidesPackage{ou-tma}
-%<package>  [2025-10-01 v1.21.1 OU-TMA package]
+%<package>  [2025-10-10 v1.21.1 OU-TMA package]
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
@@ -221,7 +221,7 @@
 %
 % These commands are the ones that, though few, comprise the bulk of the body of the \TMA\ answer content of a paper.
 %
-% \changes{v1.21.1}{2025-10-01}{Typo notified just after previous errors corrected.
+% \changes{v1.21.1}{2025-10-10}{Typo notified just after previous errors corrected.
 %    Minor error in \cs{setquestionstri\textbf{m}g} instead of \cs{setquestionstring}.}
 % Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\marg{required question number introduction}. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
 %
@@ -866,7 +866,10 @@
 
 %% Combinatorial Notations
 \NewDocumentCommand{\comb}{mm}{\ensuremath{{}^{#1}C_{#2}}}
-\NewDocumentCommand{\perm}{mm}{\ensuremath{{}^{#1}P_{#2}}}
+%    \end{macrocode}
+%    \changes{v1.21.1}{2025-10-10}{Adjustment of kerning in \cs{perm} suggested by Peter Osment}
+%    \begin{macrocode}
+\NewDocumentCommand{\perm}{mm}{\ensuremath{{}^{#1}\!P_{#2}}}
 
 %% Mathematical Operators
 \DeclareMathOperator{\re}{Re}
