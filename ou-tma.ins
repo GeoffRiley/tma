@@ -1,4 +1,4 @@
-%% Copyright (C) 2025 by <+author+> <<+email+>>
+%% Copyright (C) 2025 by G. I. Riley geoffr@adaso.com
 %% --------------------------------------------------------------------------
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
@@ -31,7 +31,7 @@ This work may be distributed and/or modified under the
 conditions of the LaTeX Project Public License, either version 1.3
 of this license or (at your option) any later version.
 The latest version of this license is in
-  http://www.latex-project.org/lppl.txt
+http://www.latex-project.org/lppl.txt
 and version 1.3 or later is part of all distributions of LaTeX
 version 2005/12/01 or later.
 
@@ -39,15 +39,19 @@ version 2005/12/01 or later.
 
 %% Freely overwrite any current file
 \askforoverwritefalse
-\generate{\file{ou-tma.sty}{\from{ou-tma.dtx}{package}}}
+\generate{
+    \file{ou-tma.sty}    {\from{ou-tma.dtx}{outma}}
+    \file{ou-tma-sup.sty}{\from{ou-tma.dtx}{outmasup}}
+}
 
 \obeyspaces
 \Msg{*************************************************************}
 \Msg{*                                                           *}
 \Msg{* To finish the installation you have to move the following *}
-\Msg{* file into a directory searched by TeX:                    *}
+\Msg{* files into a directory searched by TeX:                   *}
 \Msg{*                                                           *}
 \Msg{*     ou-tma.sty                                            *}
+\Msg{*     ou-tma-sup.sty                                        *}
 \Msg{*                                                           *}
 \Msg{* To produce the documentation run the file ou-tma.dtx      *}
 \Msg{* through LaTeX.                                            *}

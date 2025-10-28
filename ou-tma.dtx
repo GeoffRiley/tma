@@ -23,9 +23,12 @@
 %<*driver>
 \ProvidesFile{ou-tma.dtx}
 %</driver>
-%<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<package>\ProvidesPackage{ou-tma}
-%<package>  [2025-10-10 v1.21.1 OU-TMA package]
+%<outma>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<outma>\ProvidesExplPackage{ou-tma}
+%<outma>  {2025-10-28} {v1.21.2} {OU-TMA package}
+%<outmasup>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<outmasup>\ProvidesExplPackage{ou-tma-sup}
+%<outmasup>  {2025-10-28} {v0.12} {OU-TMA-SUP package}
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
@@ -39,9 +42,10 @@
 \setlength\hfuzz{15pt}  % don't show so many
 \hbadness=7000          % over- and underfull box warnings
 \usepackage{ou-tma}
+\usepackage{ou-tma-sup}
 \geometry{left=1mm,marginparwidth=40mm,marginparsep=1mm}
 \fancyhf{} % Clear all headers and footers
-\fancyhead[L]{\textsf{ou-tma}}
+\fancyhead[L]{\textsf{ou-tma}\ and \textsf{ou-tma-sup}}
 \fancyhead[R]{\textrm{\thepage}}
 \RenewDocumentCommand{\headrulewidth}{}{1pt} % Remove header rule
 
@@ -87,7 +91,14 @@
 %</driver>
 % \fi
 % \makeatletter
+%\typeout{Looking for ou-tma.sty file details!}
 % \GetFileInfo{ou-tma.sty}
+% \edef\outmadate{\filedate}
+% \edef\outmaversion{\fileversion}
+%\typeout{Looking for ou-tma-sup.sty file details!}
+% \GetFileInfo{ou-tma-sup.sty}
+% \edef\outmasupdate{\filedate}
+% \edef\outmasupversion{\fileversion}
 % \IfPackageLoadedTF{doc}{ ^^A doc
 % \NewDocElement[
 %   macrolike=false,
@@ -97,9 +108,9 @@
 %   printtype=\textit{Var}
 % ]{Variable}{variable}
 % }{^^A not doc
-% \newcommand*{\DescribeVariable}[2][]{%
-% \DTXD@filemaXD@filemarginparindex{#1}{#2}{Var}{variable}{usage}%
-% }
+%   \newcommand*{\DescribeVariable}[2][]{%
+%     \DTXD@filemaXD@filemarginparindex{#1}{#2}{Var}{variable}{usage}%
+%   }
 % }^^A not doc
 % \newcommand{\ItemDescribeVariable}[2][]{%
 %   \item[\texttt{#2}:]%
@@ -110,6 +121,7 @@
 % \makeatother
 %
 % \newcommand{\stma}{\textsf{ou-tma}}
+% \newcommand{\stmas}{\textsf{ou-tma-sup}}
 % \newcommand{\TMA}{\acro{TMA}}
 % \newcommand{\OU}{\acro{OU}}
 % \DoNotIndex{\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname,\else}
@@ -123,10 +135,10 @@
 % \DoNotIndex{\RequirePackage,\setcounter,\setlength,\space,\sqsubset,\sqsupset}
 % \DoNotIndex{\setcounter,\textbf,\textrm,\textsuperscript,\tl,\typeout}
 % \DoNotIndex{\unicode,\vspace,\DeclareMathOperator,\DeclareOption}
-% \title{The \stma\ Package\thanks{This document
-%  corresponds to \stma\ \fileversion, dated~\filedate.}}
+% \title{The \stma\ and \stmas\ Packages\thanks{This document
+%  corresponds to \stma\ \outmaversion, dated~\outmadate, and \stmas\ \outmasupversion, dated~\outmasupdate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
-% \date{\filedate\ (\fileversion)}
+% \date{\outmadate\ (\outmaversion), \outmasupdate\ (\outmasupversion)}
 % \RecordChanges
 % \renewcommand\code[1]{\mbox{$\ell$-#1}}
 % \renewcommand\main[1]{\underline{\mbox{$\ell$-#1}}}
@@ -135,8 +147,9 @@
 % \maketitle
 %
 % \begin{abstract}
-% The \stma\ package provides macros and environments to assist in writing Tutor
-% Marked Assessments (\TMA s) for Open University courses.
+% \noindent The \stma\ package provides macros and environments to assist in writing Tutor
+% Marked Assessments (\TMA s) for Open University courses. The companion file \stmas\ 
+% package provides a number of extra macros that may be useful for some modules.
 % \end{abstract}
 %
 % \tableofcontents
@@ -223,13 +236,16 @@
 %
 % \changes{v1.21.1}{2025-10-10}{Typo notified just after previous errors corrected.
 %    Minor error in \cs{setquestionstri\textbf{m}g} instead of \cs{setquestionstring}.}
-% Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\marg{required question number introduction}. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
+% \changes{vXXX}{2025-XX-XX}{Added alignment variation for question string.}
+% Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the left margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\oarg{alignment}\marg{required question number introduction}. By setting \emph{alignment} to `\texttt{l}' it is possible to left align the question string and number from the margin rather than into it, this is particularly useful for languages where the translation of `Question' is long enough to disappear past the left hand edge of the page: the default is `\texttt{r}' for right aligned. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
 %
 % Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
 % Note that the value should be numerical even if the parts are lettered or in Roman numerals. Each new question restarts the numbering at $1$, which will be rendered as |a| or |i| as dictated by the options in effect.
 %
-% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{qpart}, both marginal markers will be set on the same line.
+% There are frequent occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{qpart}, both marginal markers will be set on the same line.
+%
+% Infrequetly, there may arise the need for alternative questioning paths. This is most frequetly the case when there has been some form of practical that may not be feasible for all students to take part in. Under these circumstances questions get issued with tracking version, so there with be a question line `1' and a question line `2', to accomodate these the \DescribeMacro{\qsubparte}\cs{qsubparte} macro is made available. As with the standard \cs{qsubpart} macro, it may be followed by an optional number to restart the sequence, but it has, in addition, a required parameter to give the track number. \emph{This is included in the \stmas\ package.}
 %
 % Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
 %
@@ -240,6 +256,8 @@
 %     |\qpart|\oarg{part number}\\
 %     \vdots\\
 %     |\qsubpart|\oarg{sub-part number}\\
+%     \vdots\\
+%     |\qsubparte|\oarg{sub-part number}\marg{postfix track number}\\
 %     \vdots\\
 %     |\end{question}|
 % \end{quote}
@@ -330,7 +348,9 @@
 %	\ItemDescribeMacro{\Fix} $\mapsto \Fix$
 % \end{description}
 %
-% \item[Derivatives] There are three derivative forms defined specifically for speeding calculas entry and accuracy. One used the $\dd x$ form and two use the partial, $\partial x$, form.
+% \item[Derivatives] There are three derivative forms defined specifically for
+%  speeding calculas entry and accuracy. One used the $\dd x$ form and two use
+%  the partial, $\partial x$, form.
 %
 % \begin{description}
 % 	\ItemDescribeMacro{\deriv}\marg{y}\marg{x} $\mapsto \deriv{y}{x}$
@@ -338,9 +358,32 @@
 % 	\ItemDescribeMacro{\psderiv}\marg{y}\marg{x}\marg{z} $\mapsto \psderiv{y}{x}{z}$
 % \end{description}
 %
-% \item[Additional symbols] \DescribeMacro{\rect}\cs{rect}, \rect, is defined particularly for the use of \acro{M208} people although others may find it useful.
+% \item[Additional symbols] A couple of additional symbols are available for use in different modules, or purely for convenience.
 %
-% \item[Legacy elements] There are a couple of macros which become enabled when using the \optn{legacy} option. These are now deprecated and may be removed from a future version. There are name clashes with standard \LaTeX\ commands, so please be aware of this if used.
+% \begin{description}
+%   \ItemDescribeMacro{\rect} \cs{rect}, \rect, is defined particularly for the
+%    use of \acro{M208} people although others may find it useful.
+%	\ItemDescribeMacro{\ld} \cs{ld}, \ld, is another useful definition for \acro{M208}
+%    student who may be taxed by the number of times they need to type, and then
+%    correct their spelling of, \cs{lambda}. The macro will work correctly in both
+%    text and maths mode. \emph{This is an \stmas\ macro.}
+%   \ItemDescribeMacro{\Pounds}\marg{value} \cs{Pounds} displays a Pound Sterling
+%    amount in the appropriate format with two decimal places (rounded as necessary).
+%    For example |\Pounds{2.56}| renders as \Pounds{2.56}. \emph{This is an \stmas\ macro.}
+% \end{description}
+%
+% \item[Statistics devices] A common device in statistics is the `Five value statistic summary', it is communicated via a standardised graphic.\\
+% \DescribeMacro{\FiveStats}\oarg{n}\marg{min}\marg{max}\marg{median}\marg{Q1}\marg{Q3}
+%  \cs{FiveStats} uses \texttt{TikZ} to draw the appropriate diagram. For example:\\
+%  |\FiveStats[30]{1}{10}{5.5}{3}{8}| results in \FiveStats[30]{1}{10}{5.5}{3}{8}
+%
+% The count of values, $n$, is optional. \emph{This is part of the \stmas\ package.}
+%
+% \item[Legacy elements] There are a couple of macros which become enabled when
+%   using the \optn{legacy} option. These are now deprecated and may be removed
+%   from a future version. There are name clashes with standard \LaTeX\ commands,
+%   so please be aware of this if used.
+%
 % \begin{description}
 %   \ItemDescribeMacro{\C} is the original version of \cs{Complex}
 %   \ItemDescribeMacro{\vec} is the original version of \cs{vect}
@@ -350,8 +393,9 @@
 %
 % \MaybeStop{}
 %
-% \section{Implementation}
+% \section{Implementation of \stma}
 %
+%<*outma>
 %    \begin{macrocode}
 %% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
@@ -523,13 +567,18 @@
 %    \end{macrocode}
 % In order to allow the question introduction string to be modified, a general \LaTeX\ string is created along with a macro to set it.
 % \begin{description}
+%   \ItemDescribeMacro{\tma@questionalignment} Holds the string alignment to the left margin, the default is `r'. This is particularly useful for question strings that might otherwise extend beyond the left hand reach of the left hand page border.
+%   \changes{vXXX}{2025-XX-XX}{Added alignment variation for question string}
 %   \ItemDescribeMacro{\tma@questionstring} Hold the string to be printed before the question number, the default is `Q'.
-%   \ItemDescribeMacro{\setquestionstring}\marg{string} Set the string to precede the question number
+%   \ItemDescribeMacro{\setquestionstring}\oarg{char}\marg{string} Set the string to precede the question number
 % \end{description}
 %    \begin{macrocode}
+\NewDocumentCommand{\tma@questionalignment}{}{r}
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
-\NewDocumentCommand{\setquestionstring}{m}{%
-	\RenewDocumentCommand{\tma@questionstring}{}{#1}}
+\NewDocumentCommand{\setquestionstring}{O{r} m}{%
+    \RenewDocumentCommand{\tma@questionalignment}{}{#1}%
+    \RenewDocumentCommand{\tma@questionstring}{}{#2}%
+}
 %    \end{macrocode}
 % Set the default date to `today'.
 %    \begin{macrocode}
@@ -798,12 +847,19 @@
 \tma@crefname{qsubpart}{section}{sections}
 \fi
 
+%    \end{macrocode}
+%
+%    Commands to introduce Questions, parts and subparts.
+%
+%    In each case, an optional argument allows a fixed starting `number' to be included to override the defaul of using the next.
+%    \changes{vXXX}{2025-XX-XX}{Added alignment variation for question string, suggested by Bruce Ramsey.}
+%    \begin{macrocode}
 \NewDocumentEnvironment{question}{O{0}}{%
 	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
 	\tma@stepcounter{question}%
 	\tma@bookmark{Question \thequestion}%
 		{question\thequestion}%
-	\makebox[0em][r]{\large{\tma@questionstring~\thequestion%
+	\makebox[0em][\tma@questionalignment]{\large{\tma@questionstring~\thequestion%
         \hspace{0.3em}}}\par%
 }{%
 	\par \vspace{3em}%
@@ -944,11 +1000,439 @@
 \RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% End of Package
+%% End of Package ou-tma
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\endinput
+%\endinput
 %    \end{macrocode}
+%</outma>
+%
+% \setcounter{CodelineNo}{0}
+% \section{Implementation of \stmas}
+%
+%<*outmasup>
+%    \begin{macrocode}
+%% ou-tma-sup.sty
+%% Copyright 2025 G. I. Riley <geoffr@adaso.com>
+%% This package may be freely used, especially by, but not limited to,
+%% students, lecturers and staff of the Open University. It was created
+%% by the efforts of many who are now or have been connected with the
+%% Open University Students Association. No acknowledgement is
+%% _required_ for using this package within the production of a _Tutor
+%% Marked Assessment._
+\RequirePackage{expl3} % LaTeX3 "experimental"
+\RequirePackage{ou-tma} % main ou-tma package
+% ------------------------------------------------------------------------------
+% README / Package Summary
+% ------------------------------------------------------------------------------
+% This package provides macros for formatting numeric approximations, probability
+% expressions, monetary values, and statistical diagrams, using expl3 and siunitx.
+% It is intended for typesetting mathematics and statistics answers in OU TMAs.
+%
+% ----------------------
+% Main formatting commands
+% ----------------------
+% \tmadp[<options>]{<value(s)>}[<unit>]  % Round to <n> decimal places
+% \tmasf[<options>]{<value(s)>}[<unit>]  % Round to <n> significant figures
+%
+% <value(s)> should be either:
+%   - {x, n}           for one value to n dp/sf
+%   - {x, y, n}        for a range from x to y to n dp/sf
+%
+% Optional [<options>] may include:
+%   style=bracket      % for bracketed range: (x, y)
+%   style=to (default) % for range using 'x to y'
+%
+% ----------------------
+% Other useful commands
+% ----------------------
+% \prob{event}              % Formats P(event) in upright font
+% \Pounds{amount}           % Formats amount in £ with two dp, e.g. £3.45
+% \FiveStats[<n>]{min}{max}{med}{Q1}{Q3}
+%     Draws a 5-number summary diagram using TikZ.
+%     Optional argument: n = sample size (e.g. \FiveStats[30]{1}{10}{5.5}{3}{8})
+% ------------------------------------------------------------------------------
+%% Package Initialisation
+\RequirePackage{amsmath}
+\RequirePackage{ifthen}
+
+\RequirePackage{siunitx}
+\sisetup{per-mode = symbol}
+\sisetup{uncertainty-mode = separate}
+
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}
+\usepgfplotslibrary[units]
+\usetikzlibrary{angles,
+    quotes,
+    calc,
+    arrows.meta,
+    positioning,
+    decorations.markings}
+
+%    \end{macrocode}
+%
+%
+% \subsection{TikZ styles for solid and hollow dots}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TikZ styles for solid and hollow dots
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Create TiKZ styles for solid and hollow dots: used to mark included and excluded points on graphs
+\tikzset{
+	soliddot/.style={only marks, mark=*, mark size=2pt, color=black},
+	hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, line width=0.6pt},
+}
+
+%    \end{macrocode}
+%
+%
+% \subsection{Question subpart with extention}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Question subpart with extention
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Make a question subpart with an extension, eg: Q1.a.i-1
+% Usage:
+%  \qsubparte[n]{ext}
+%  where n is an optional value to reset the counter, a decimal value,
+%          omitted or zero continues the previous count.
+%    and ext is the required extension string.
+\NewDocumentCommand{\qsubparte}{O{0}m}{
+    {
+        \iftma@roman
+            \renewcommand{\theqsubpart}{\alph{qsubpart}-#2}
+        \else
+            \renewcommand{\theqsubpart}{\roman{qsubpart}-#2}
+        \fi
+        \qsubpart[#1]
+    }
+}
+
+%    \end{macrocode}
+%
+%
+% \subsection{Macros to render appropriate decimal places and significant figures}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Decimal places and significant figures
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ExplSyntaxOn
+
+\tl_if_exist:NF \l__tma_style_tl { \tl_new:N \l__tma_style_tl }
+
+\keys_define:nn { tma }
+{
+    style .choice:,
+    style / to .code:n = { \tl_set:Nn \l__tma_style_tl {to} },
+    style / bracket .code:n = { \tl_set:Nn \l__tma_style_tl {bracket} },
+    style .initial:n = to,
+}
+
+% Parameters for \tmadp and \tmasf:
+%  #1: keyval options like [style=bracket]
+%  #2: data (e.g. 1.2, 3.4, 2)
+%  #3: optional unit
+%  #4: mode (dp or sf)
+\NewDocumentCommand{\tmadp}{O{}mO{}}{
+    \tma_format:nnnn {#1} {#2} {#3} {dp}
+}
+
+\NewDocumentCommand{\tmasf}{O{}mO{}}{
+    \tma_format:nnnn {#1} {#2} {#3} {sf}
+}
+
+\cs_new_protected:Nn \tma_format:nnnn
+{
+    \keys_set:nn { tma } {#1}
+    \iow_term:x {Style~set~to~\l__tma_style_tl}
+    \tma_parse:nnn {#2} {#3} {#4}
+}
+
+\cs_new_protected:Nn \tma_parse:nnn
+{
+    \clist_set:Nn \l_tmpa_clist {#1}
+    \int_case:nnF { \clist_count:N \l_tmpa_clist }
+    {
+        {2} {
+            \tma_format_single:nnnn
+            { \clist_item:Nn \l_tmpa_clist {1} }
+            { \clist_item:Nn \l_tmpa_clist {2} }
+            {#2} % unit
+            {#3} % mode
+        }
+        {3} {
+            \tma_format_range:nnnnn
+            { \clist_item:Nn \l_tmpa_clist {1} }
+            { \clist_item:Nn \l_tmpa_clist {2} }
+            { \clist_item:Nn \l_tmpa_clist {3} }
+            {#2} % unit
+            {#3} % mode
+        }
+    }
+    {
+        \textbf{Error: expected 2 or 3 comma-separated values.}
+    }
+}
+
+\cs_new_protected:Nn \tma_format_single:nnnn
+{
+    \tl_if_blank:nTF {#3}
+    {
+        \use:x
+        {
+            \num[
+            round-mode = \tma_mode:n {#4},
+            round-precision = #2
+            ]{#1}
+        }
+        \text{~(to~#2~\tma_mode_label:n {#4})}
+    }
+    {
+        \use:x
+        {
+            \qty[
+            round-mode = \tma_mode:n {#4},
+            round-precision = #2
+            ]{#1}{#3}
+        }
+        \text{~(to~#2~\tma_mode_label:n {#4})}
+    }
+}
+
+\cs_new_protected:Nn \tma_format_range:nnnnn
+{
+    %\iow_term:x {Entered~\tma_format_range:nnnnn}
+    \tl_if_blank:nTF {#4}
+    {
+        \tl_if_eq:NnTF \l__tma_style_tl {bracket}
+        {
+            \tma_output_bracketed_range:nnnnn {#1} {#2} {#3} {#4} {#5}
+        }
+        {
+            \use:x
+            {
+                \num[round-mode = \tma_mode:n {#5}, round-precision = #3]{#1}
+                \text{~to~}
+                \num[round-mode = \tma_mode:n {#5}, round-precision = #3]{#2}
+                \text{~(to~#3~\tma_mode_label:n {#5})}
+            }
+        }
+    }
+    {
+        \tl_if_eq:NnTF \l__tma_style_tl {bracket}
+        {
+            \tma_output_bracketed_range:nnnnn {#1} {#2} {#3} {#4} {#5}
+        }
+        {
+            \use:x
+            {
+                \qty[round-mode = \tma_mode:n {#5}, round-precision = #3]{#1}{#4}
+                \text{~to~}
+                \qty[round-mode = \tma_mode:n {#5}, round-precision = #3]{#2}{#4}
+                \text{~(to~#3~\tma_mode_label:n {#5})}
+            }
+        }
+    }
+}
+
+\tl_new:N \l__tma_tmp_math_tl
+\tl_new:N \l__tma_tmp_text_tl
+\tl_new:N \l__tma_tmp_options_tl
+
+\cs_new_protected:Nn \tma_output_bracketed_range:nnnnn
+{
+    %\iow_term:n {Entered~\tma_output_bracketed_range:nnnnn}
+
+    % Expand options NOW so siunitx is happy
+    \tl_set:Nx \l__tma_tmp_options_tl
+    {
+        round-mode = \tma_mode:n {#5},
+        round-precision = #3
+    }
+
+    \tl_set:Nn \l__tma_tmp_math_tl
+    {
+        ( \use:x { \qty[\l__tma_tmp_options_tl]{#1}{#4} },~
+        \use:x { \qty[\l__tma_tmp_options_tl]{#2}{#4} } )
+        \text{~(to~#3~\tma_mode_label:n {#5})}
+    }
+    %\iow_term:n {Setup~\\l__tma_tmp_math_tl}
+
+    \tl_set:Nn \l__tma_tmp_text_tl
+    {
+        \text{(}
+        \use:x { \qty[\l__tma_tmp_options_tl]{#1}{#4} },~
+        \use:x { \qty[\l__tma_tmp_options_tl]{#2}{#4} }
+        \text{)}~\text{(to~#3~\tma_mode_label:n {#5})}
+    }
+    %\iow_term:n {Setup~\\l__tma_tmp_text_tl}
+
+    \mode_if_math:TF
+    {
+        \iow_term:n {Range~print~in~maths~mode}
+        \tl_use:N \l__tma_tmp_math_tl
+    }
+    {
+        \iow_term:n {Range~print~in~text~mode}
+        \tl_use:N \l__tma_tmp_text_tl
+    }
+}
+
+\cs_new:Npn \tma_mode:n #1
+{
+    \str_case:nn {#1}
+    {
+        {dp}{places}
+        {sf}{figures}
+    }
+}
+
+\cs_new:Npn \tma_mode_label:n #1
+{
+    \str_case:nn {#1}
+    {
+        {dp}{dp}
+        {sf}{sf}
+    }
+}
+
+\ExplSyntaxOff
+
+%    \end{macrocode}
+%
+%
+% \subsection{Pound Sterling printing}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Pound Sterling value
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\Pounds}{m}{%
+    \pounds\,\num[round-precision=2,round-mode=places,round-integer-to-decimal]{#1}%
+}
+
+%    \end{macrocode}
+%
+%
+% \subsection{Five value statistics summary}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Five value statistical summary diagram
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Print the five stats `square' with the provided values
+% Arguments: #1 (Optional) number of samples
+%            #2 Extreme minimum value
+%            #3 Extreme Maximum value
+%            #4 Mean average
+%            #5 Seccond quartile value
+%            #6 Fourth quartile value
+\NewDocumentCommand{\FiveStats}{o mmmmm}{%
+    \begingroup
+    \tikzset{
+        every node/.style   = {font=\footnotesize,inner sep=0pt},
+        number/.style       = {text depth=0pt},      % tidy baselines
+    }
+    %--- global layout knobs you might like to tweak --------
+    \def\Pad   {3pt}        % white-space between numbers and walls
+    \def\XGap  {25mm}       % distance between the L & R interior columns
+    \def\Row   {1.7em}      % vertical separation between rows
+    %--------------------------------------------------------
+
+    \begin{tikzpicture}[baseline=(med.base)]
+        % reference x–coordinates for the two interior columns
+        \coordinate (IL) at (0,0);          % interior-left column
+        \coordinate (IR) at (\XGap,0);      % interior-right column
+
+        %---------------- Numbers -----------------
+        \node[number] (med)  at ($ (IL)!0.5!(IR) $) {#4};
+
+        \node[number,anchor=west] (q1)  at ($(IL)+(0,-\Row)$)       {#5};
+        \node[number,anchor=west] (min) at ($(IL)+(0,-2*\Row)$)     {#2};
+
+        \node[number,anchor=east] (q3)  at ($(IR)+(0,-\Row)$)       {#6};
+        \node[number,anchor=east] (max) at ($(IR)+(0,-2*\Row)$)     {#3};
+
+        \IfNoValueF{#1}{
+            % sample size
+            \node[number,anchor=east] (n) at ($(IL)+(-2*\Pad,-\Row)$) {$n = #1$};
+        }
+
+        %---------------- Frame -------------------
+        \coordinate (TL) at ($(q1.west |- med.north)  + (-\Pad,\Pad)$);
+        \coordinate (TR) at ($(q3.east |- med.north)  + ( \Pad,\Pad)$);
+        \coordinate (BL) at ($(q1.west |- min.south) + (-\Pad,-\Pad)$);
+        \coordinate (BR) at ($(q3.east |- min.south) + ( \Pad,-\Pad)$);
+
+        % draw: top, right, and left edges
+        \draw[cyan, line width=.4pt] (BL) -- (TL) -- (TR) -- (BR);
+    \end{tikzpicture}%
+    \endgroup
+}
+
+\ExplSyntaxOn
+
+%    \end{macrocode}
+%
+%
+% \subsection{Probability expression}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Probabilty expression
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Main \prob command
+\NewDocumentCommand{\prob}{m}
+{
+    \prob_prob:n { #1 }
+}
+
+% Internal implementation with local keyword overrides
+\cs_new_protected:Nn \prob_prob:n
+{
+    P\left(
+    \group_begin:
+    % Locally redefine LaTeX primitives — safely!
+    \cs_set_eq:NN \oldand \and
+    \cs_set_eq:NN \oldor \or
+    \cs_set_eq:NN \oldbar \bar
+    \cs_set_eq:NN \oldnot \not
+
+    \cs_set:Npn \and { \;\textit{and}\; }
+    \cs_set:Npn \or  { \;\textit{or}\; }
+    \cs_set:Npn \bar { \mid }
+    \cs_set:Npn \not { \textit{not}\; }
+
+    #1
+    \group_end:
+    \right)
+}
+
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+%
+% \subsection{Extra macros}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Extra macros
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\pflag}{}{\ensuremath{[+]}}
+\NewDocumentCommand{\nflag}{}{\ensuremath{[-]}}
+\NewDocumentCommand{\ld}{}{\ensuremath{\lambda}}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% End of Package ou-tma-sup
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\endinput
+%    \end{macrocode}
+%</outmasup>
 % \Finale
 % \PrintChanges
 % \PrintIndex

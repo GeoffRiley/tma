@@ -4,7 +4,7 @@
 %%
 %% The original source files were:
 %%
-%% ou-tma.dtx  (with options: `package')
+%% ou-tma.dtx  (with options: `outma')
 %% 
 %% This is a generated file.
 %% 
@@ -14,13 +14,13 @@
 %% conditions of the LaTeX Project Public License, either version 1.3
 %% of this license or (at your option) any later version.
 %% The latest version of this license is in
-%%   http://www.latex-project.org/lppl.txt
+%% http://www.latex-project.org/lppl.txt
 %% and version 1.3 or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
 %% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
-\ProvidesPackage{ou-tma}
-  [2025-10-10 v1.21.1 OU-TMA package]
+\ProvidesExplPackage{ou-tma}
+  {2025-10-28} {v1.21.2} {OU-TMA package}
 %% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -60,9 +60,12 @@
 \ExplSyntaxOff
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
+\NewDocumentCommand{\tma@questionalignment}{}{r}
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
-\NewDocumentCommand{\setquestionstring}{m}{%
-\RenewDocumentCommand{\tma@questionstring}{}{#1}}
+\NewDocumentCommand{\setquestionstring}{O{r} m}{%
+    \RenewDocumentCommand{\tma@questionalignment}{}{#1}%
+    \RenewDocumentCommand{\tma@questionstring}{}{#2}%
+}
 \setdate{\today}
 %% Package Loading
 
@@ -225,7 +228,7 @@ pdfsubject=\course%
 \tma@stepcounter{question}%
 \tma@bookmark{Question \thequestion}%
 {question\thequestion}%
-\makebox[0em][r]{\large{\tma@questionstring~\thequestion%
+\makebox[0em][\tma@questionalignment]{\large{\tma@questionstring~\thequestion%
         \hspace{0.3em}}}\par%
 }{%
 \par \vspace{3em}%
@@ -334,7 +337,7 @@ pdfsubject=\course%
 \fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
 \RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
-%% End of Package
+%% End of Package ou-tma
 
 \endinput
 %%
