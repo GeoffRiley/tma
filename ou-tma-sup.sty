@@ -5,9 +5,9 @@
 %% The original source files were:
 %%
 %% ou-tma.dtx  (with options: `outmasup')
-%% 
+%%
 %% This is a generated file.
-%% 
+%%
 %% Copyright (C) 2025 by G. I. Riley <geoffr@adaso.com>
 %% --------------------------------------------------------------------------
 %% This work may be distributed and/or modified under the
@@ -17,7 +17,7 @@
 %% http://www.latex-project.org/lppl.txt
 %% and version 1.3 or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
-%% 
+%%
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
 \ProvidesExplPackage{ou-tma-sup}
   {2025-10-28} {v0.12} {OU-TMA-SUP package}
@@ -29,9 +29,10 @@
 %% Open University Students Association. No acknowledgement is
 %% _required_ for using this package within the production of a _Tutor
 %% Marked Assessment._
-\RequirePackage{expl3} % LaTeX3 "experimental"
 \RequirePackage{ou-tma} % main ou-tma package
+\ExplSyntaxOn
 %% Package Initialisation
+\ExplSyntaxOff
 \RequirePackage{amsmath}
 \RequirePackage{ifthen}
 
@@ -41,6 +42,7 @@
 
 \RequirePackage{tikz}
 \RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \usepgfplotslibrary[units]
 \usetikzlibrary{angles,
     quotes,
@@ -74,43 +76,49 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
 \ExplSyntaxOn
 
 \tl_if_exist:NF \l__tma_style_tl { \tl_new:N \l__tma_style_tl }
+\tl_if_exist:NF \l__tma_label_style_tl { \tl_new:N \l__tma_label_style_tl }
 
 \keys_define:nn { tma }
 {
     style .choice:,
-    style / to .code:n = { \tl_set:Nn \l__tma_style_tl {to} },
-    style / bracket .code:n = { \tl_set:Nn \l__tma_style_tl {bracket} },
-    style .initial:n = to,
+    style / to      .code:n = { \tl_set:Nn \l__tma_style_tl { to } },
+    style / bracket .code:n = { \tl_set:Nn \l__tma_style_tl { bracket } },
+    style           .initial:n = to,
+
+    labels .choice:,
+    labels / words  .code:n = { \tl_set:Nn \l__tma_label_style_tl { words } },
+    labels / long   .code:n = { \tl_set:Nn \l__tma_label_style_tl { long } },
+    labels / abbr   .code:n = { \tl_set:Nn \l__tma_label_style_tl { abbr } },
+    labels / short  .code:n = { \tl_set:Nn \l__tma_label_style_tl { abbr } },
+    labels / dp-sf  .code:n = { \tl_set:Nn \l__tma_label_style_tl { abbr } },
+    labels          .initial:n = abbr,
 }
 
-\NewDocumentCommand{\tmadp}{O{}mO{}}{
-    \tma_format:nnnn {#1} {#2} {#3} {dp}
-}
+% Public commands
+\NewDocumentCommand{\tmadp}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{dp} }
+\NewDocumentCommand{\tmasf}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{sf} }
 
-\NewDocumentCommand{\tmasf}{O{}mO{}}{
-    \tma_format:nnnn {#1} {#2} {#3} {sf}
-}
-
+% Entry point: parse style and data
 \cs_new_protected:Nn \tma_format:nnnn
 {
     \keys_set:nn { tma } {#1}
-    \iow_term:x {Style~set~to~\l__tma_style_tl}
-    \tma_parse:nnn {#2} {#3} {#4}
+    \tma_parse:nnn {#2}{#3}{#4}
 }
 
+% Parse 2- or 3-item list
 \cs_new_protected:Nn \tma_parse:nnn
 {
     \clist_set:Nn \l_tmpa_clist {#1}
     \int_case:nnF { \clist_count:N \l_tmpa_clist }
     {
-        {2} {
+        {2}{
             \tma_format_single:nnnn
             { \clist_item:Nn \l_tmpa_clist {1} }
             { \clist_item:Nn \l_tmpa_clist {2} }
             {#2} % unit
             {#3} % mode
         }
-        {3} {
+        {3}{
             \tma_format_range:nnnnn
             { \clist_item:Nn \l_tmpa_clist {1} }
             { \clist_item:Nn \l_tmpa_clist {2} }
@@ -119,131 +127,106 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
             {#3} % mode
         }
     }
-    {
-        \textbf{Error: expected 2 or 3 comma-separated values.}
-    }
+    { \textbf{Error: expected 2 or 3 comma-separated values.} }
 }
 
+% Single number (optional unit)
 \cs_new_protected:Nn \tma_format_single:nnnn
 {
-    \tl_if_blank:nTF {#3}
+    \tma_with_rounding:nnn {#4}{#2}
     {
-        \use:x
-        {
-            \num[
-            round-mode = \tma_mode:n {#4},
-            round-precision = #2
-            ]{#1}
-        }
-        \text{~(to~#2~\tma_mode_label:n {#4})}
-    }
-    {
-        \use:x
-        {
-            \qty[
-            round-mode = \tma_mode:n {#4},
-            round-precision = #2
-            ]{#1}{#3}
-        }
-        \text{~(to~#2~\tma_mode_label:n {#4})}
+        \tl_if_blank:nTF {#3}
+        { \num{#1} }
+        { \qty{#1}{#3} }
+        \text{~(to~#2~\tma_mode_label:nn {#4}{\l__tma_label_style_tl})}
     }
 }
 
+% Range (optional unit) with style switch
 \cs_new_protected:Nn \tma_format_range:nnnnn
 {
-    %\iow_term:x {Entered~\tma_format_range:nnnnn}
+    % no unit
     \tl_if_blank:nTF {#4}
     {
-        \tl_if_eq:NnTF \l__tma_style_tl {bracket}
+        \tl_if_eq:NnTF \l__tma_style_tl { bracket }
+        { \tma_output_bracketed_range:nnnnn {#1}{#2}{#3}{#4}{#5} }
         {
-            \tma_output_bracketed_range:nnnnn {#1} {#2} {#3} {#4} {#5}
-        }
-        {
-            \use:x
-            {
-                \num[round-mode = \tma_mode:n {#5}, round-precision = #3]{#1}
-                \text{~to~}
-                \num[round-mode = \tma_mode:n {#5}, round-precision = #3]{#2}
-                \text{~(to~#3~\tma_mode_label:n {#5})}
-            }
+            \tma_with_rounding:nnn {#5}{#3}
+            { \num{#1}\text{~to~}\num{#2} }
         }
     }
-    {
-        \tl_if_eq:NnTF \l__tma_style_tl {bracket}
+    { % with unit
+        \tl_if_eq:NnTF \l__tma_style_tl { bracket }
+        { \tma_output_bracketed_range:nnnnn {#1}{#2}{#3}{#4}{#5} }
         {
-            \tma_output_bracketed_range:nnnnn {#1} {#2} {#3} {#4} {#5}
-        }
-        {
-            \use:x
-            {
-                \qty[round-mode = \tma_mode:n {#5}, round-precision = #3]{#1}{#4}
-                \text{~to~}
-                \qty[round-mode = \tma_mode:n {#5}, round-precision = #3]{#2}{#4}
-                \text{~(to~#3~\tma_mode_label:n {#5})}
-            }
+            \tma_with_rounding:nnn {#5}{#3}
+            { \SIrange{#1}{#2}{#4} }
         }
     }
 }
 
-\tl_new:N \l__tma_tmp_math_tl
-\tl_new:N \l__tma_tmp_text_tl
-\tl_new:N \l__tma_tmp_options_tl
+% Core: locally apply siunitx rounding then typeset #3
+%   #1 = mode code dp/sf/off, #2 = precision, #3 = content
+\cs_new_protected:Nn \tma_with_rounding:nnn
+{
+    \group_begin:
+    \exp_args:Nx \sisetup
+    { round-mode=\tma_mode_map:n {#1}, round-precision=\int_eval:n {#2} }
+    #3
+    \group_end:
+}
 
+% Bracketed style output; handles math/text mode parens
 \cs_new_protected:Nn \tma_output_bracketed_range:nnnnn
 {
-    %\iow_term:n {Entered~\tma_output_bracketed_range:nnnnn}
-
-    % Expand options NOW so siunitx is happy
-    \tl_set:Nx \l__tma_tmp_options_tl
+    \tma_with_rounding:nnn {#5}{#3}
     {
-        round-mode = \tma_mode:n {#5},
-        round-precision = #3
-    }
-
-    \tl_set:Nn \l__tma_tmp_math_tl
-    {
-        ( \use:x { \qty[\l__tma_tmp_options_tl]{#1}{#4} },~
-        \use:x { \qty[\l__tma_tmp_options_tl]{#2}{#4} } )
-        \text{~(to~#3~\tma_mode_label:n {#5})}
-    }
-    %\iow_term:n {Setup~\\l__tma_tmp_math_tl}
-
-    \tl_set:Nn \l__tma_tmp_text_tl
-    {
-        \text{(}
-        \use:x { \qty[\l__tma_tmp_options_tl]{#1}{#4} },~
-        \use:x { \qty[\l__tma_tmp_options_tl]{#2}{#4} }
-        \text{)}~\text{(to~#3~\tma_mode_label:n {#5})}
-    }
-    %\iow_term:n {Setup~\\l__tma_tmp_text_tl}
-
-    \mode_if_math:TF
-    {
-        \iow_term:n {Range~print~in~maths~mode}
-        \tl_use:N \l__tma_tmp_math_tl
-    }
-    {
-        \iow_term:n {Range~print~in~text~mode}
-        \tl_use:N \l__tma_tmp_text_tl
+        \mode_if_math:TF
+        {
+            ( \qty{#1}{#4},~\qty{#2}{#4} )
+            \text{~(to~#3~\tma_mode_label:nn {#5}{\l__tma_label_style_tl})}
+        }
+        {
+            \text{(}\qty{#1}{#4},~\qty{#2}{#4}\text{)}
+            \text{~(to~#3~\tma_mode_label:nn {#5}{\l__tma_label_style_tl})}
+        }
     }
 }
 
-\cs_new:Npn \tma_mode:n #1
+% Mapping + label text
+\cs_new:Npn \tma_mode_map:n #1
 {
-    \str_case:nn {#1}
-    {
-        {dp}{places}
-        {sf}{figures}
-    }
+    \str_case:nnF {#1}
+    { {dp}{places} {sf}{figures} {off}{off} }
+    { places }
 }
 
-\cs_new:Npn \tma_mode_label:n #1
+\cs_new:Npn \tma_mode_label:nn #1#2
 {
-    \str_case:nn {#1}
+    \str_case:nnF {#2}
     {
-        {dp}{dp}
-        {sf}{sf}
+        {words}{ \tma_label_words:n {#1} }
+        {long} { \tma_label_long:n  {#1} }
+        {abbr} { \tma_label_abbr:n  {#1} }
     }
+    { \tma_label_abbr:n {#1} }
+}
+
+\cs_new:Npn \tma_label_words:n #1
+{
+    \str_case:nnF {#1} { {dp}{places} {sf}{figures} {off}{off} } {places}
+}
+
+\cs_new:Npn \tma_label_long:n #1
+{
+    \str_case:nnF {#1}
+    { {dp}{decimal~places} {sf}{significant~figures} {off}{off} }
+    { decimal~places }
+}
+
+\cs_new:Npn \tma_label_abbr:n #1
+{
+    \str_case:nnF {#1} { {dp}{dp} {sf}{sf} {off}{off} } { dp }
 }
 
 \ExplSyntaxOff
@@ -323,14 +306,13 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
     \cs_set:Npn \bar { \mid }
     \cs_set:Npn \not { \textit{not}\; }
 
-    #1
+    \text{#1}
     \group_end:
     \right)
 }
 
 \ExplSyntaxOff
 %% Extra macros
-
 \NewDocumentCommand{\pflag}{}{\ensuremath{[+]}}
 \NewDocumentCommand{\nflag}{}{\ensuremath{[-]}}
 \NewDocumentCommand{\ld}{}{\ensuremath{\lambda}}
