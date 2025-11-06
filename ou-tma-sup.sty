@@ -4,10 +4,10 @@
 %%
 %% The original source files were:
 %%
-%% ou-tma.dtx  (with options: `outmasup')
-%%
+%% ou-tma.dtx  (with options: `ou-tma-sup.sty')
+%% 
 %% This is a generated file.
-%%
+%% 
 %% Copyright (C) 2025 by G. I. Riley <geoffr@adaso.com>
 %% --------------------------------------------------------------------------
 %% This work may be distributed and/or modified under the
@@ -17,7 +17,7 @@
 %% http://www.latex-project.org/lppl.txt
 %% and version 1.3 or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
-%%
+%% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
 \ProvidesExplPackage{ou-tma-sup}
   {2025-10-28} {v0.12} {OU-TMA-SUP package}
@@ -31,7 +31,6 @@
 %% Marked Assessment._
 \RequirePackage{ou-tma} % main ou-tma package
 \ExplSyntaxOn
-%% Package Initialisation
 \ExplSyntaxOff
 \RequirePackage{amsmath}
 \RequirePackage{ifthen}
@@ -52,12 +51,28 @@
     decorations.markings}
 
 %% TikZ styles for solid and hollow dots
+%% --- number line ---
+%% --- tick marks and labels (adjust as you like) ---
+%% intervals
+%% use your styles here:
 
 \tikzset{
-soliddot/.style={only marks, mark=*, mark size=2pt, color=black},
-hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, line width=0.6pt},
+    soliddot/.style={
+        fill=black,
+        draw=black,
+        circle,
+        minimum size=4pt,
+        inner sep=0pt,
+    },
+    hollowdot/.style={
+        fill=white,
+        draw=black,
+        circle,
+        line width=0.6pt,
+        minimum size=4pt,
+        inner sep=0pt,
+    },
 }
-
 %% Question subpart with extention
 
 \NewDocumentCommand{\qsubparte}{O{0}m}{
@@ -94,18 +109,16 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
     labels          .initial:n = abbr,
 }
 
-% Public commands
+%% Public commands
 \NewDocumentCommand{\tmadp}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{dp} }
 \NewDocumentCommand{\tmasf}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{sf} }
 
-% Entry point: parse style and data
 \cs_new_protected:Nn \tma_format:nnnn
 {
     \keys_set:nn { tma } {#1}
     \tma_parse:nnn {#2}{#3}{#4}
 }
 
-% Parse 2- or 3-item list
 \cs_new_protected:Nn \tma_parse:nnn
 {
     \clist_set:Nn \l_tmpa_clist {#1}
@@ -130,7 +143,6 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
     { \textbf{Error: expected 2 or 3 comma-separated values.} }
 }
 
-% Single number (optional unit)
 \cs_new_protected:Nn \tma_format_single:nnnn
 {
     \tma_with_rounding:nnn {#4}{#2}
@@ -142,7 +154,6 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
     }
 }
 
-% Range (optional unit) with style switch
 \cs_new_protected:Nn \tma_format_range:nnnnn
 {
     % no unit
@@ -165,8 +176,6 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
     }
 }
 
-% Core: locally apply siunitx rounding then typeset #3
-%   #1 = mode code dp/sf/off, #2 = precision, #3 = content
 \cs_new_protected:Nn \tma_with_rounding:nnn
 {
     \group_begin:
@@ -176,7 +185,6 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
     \group_end:
 }
 
-% Bracketed style output; handles math/text mode parens
 \cs_new_protected:Nn \tma_output_bracketed_range:nnnnn
 {
     \tma_with_rounding:nnn {#5}{#3}
@@ -193,7 +201,6 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
     }
 }
 
-% Mapping + label text
 \cs_new:Npn \tma_mode_map:n #1
 {
     \str_case:nnF {#1}
@@ -238,7 +245,6 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
 }
 
 %% Five value statistical summary diagram
-
 \NewDocumentCommand{\FiveStats}{o mmmmm}{%
     \begingroup
     \tikzset{
@@ -250,32 +256,25 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
     \def\XGap  {25mm}       % distance between the L & R interior columns
     \def\Row   {1.7em}      % vertical separation between rows
     %--------------------------------------------------------
-
     \begin{tikzpicture}[baseline=(med.base)]
         % reference x–coordinates for the two interior columns
         \coordinate (IL) at (0,0);          % interior-left column
         \coordinate (IR) at (\XGap,0);      % interior-right column
-
         %---------------- Numbers -----------------
         \node[number] (med)  at ($ (IL)!0.5!(IR) $) {#4};
-
         \node[number,anchor=west] (q1)  at ($(IL)+(0,-\Row)$)       {#5};
         \node[number,anchor=west] (min) at ($(IL)+(0,-2*\Row)$)     {#2};
-
         \node[number,anchor=east] (q3)  at ($(IR)+(0,-\Row)$)       {#6};
         \node[number,anchor=east] (max) at ($(IR)+(0,-2*\Row)$)     {#3};
-
         \IfNoValueF{#1}{
             % sample size
             \node[number,anchor=east] (n) at ($(IL)+(-2*\Pad,-\Row)$) {$n = #1$};
         }
-
         %---------------- Frame -------------------
         \coordinate (TL) at ($(q1.west |- med.north)  + (-\Pad,\Pad)$);
         \coordinate (TR) at ($(q3.east |- med.north)  + ( \Pad,\Pad)$);
         \coordinate (BL) at ($(q1.west |- min.south) + (-\Pad,-\Pad)$);
         \coordinate (BR) at ($(q3.east |- min.south) + ( \Pad,-\Pad)$);
-
         % draw: top, right, and left edges
         \draw[cyan, line width=.4pt] (BL) -- (TL) -- (TR) -- (BR);
     \end{tikzpicture}%
@@ -293,7 +292,7 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
 
 \cs_new_protected:Nn \prob_prob:n
 {
-    P\left(
+    \mathrm{P}\left(
     \group_begin:
     % Locally redefine LaTeX primitives — safely!
     \cs_set_eq:NN \oldand \and
@@ -318,6 +317,8 @@ hollowdot/.style={only marks, mark=o, mark size=2pt, color=black, fill=white, li
 \NewDocumentCommand{\ld}{}{\ensuremath{\lambda}}
 
 %% End of Package ou-tma-sup
+
+
 
 \endinput
 %%
