@@ -24,12 +24,12 @@
 	This document describes Peter McFarlane's \textsf{ou-tma} package.  To use it, the \verb|ou-tma.sty| file should be in the 
 	same directory/folder as your main \verb|.tex| source file or in the file path for your compiler. Using \MiKTeX\footnote{The latest version of \MiKTeX\ is always downloadable from \url{https://miktex.org/}.} v24.1
 	on Windows, installed for all users, this would be:\\
-	\verb|C:\Program Files\MiKTex\tex\latex\ou-tma|\\
+        \verb|C:\Program Files\MiKTeX\tex\latex\ou-tma|\\
 	(you need to create the \verb|ou-tma| folder).
 	
 	Once you have added \verb|ou-tma.sty| to the directory, it is necessary to let \MiKTeX\ know that it is there. So
 	load \MiKTeX, go to \MiKTeX\ Settings and press the `Refresh FNDB' (\textbf{F}ile \textbf{N}ame \textbf{D}ata\textbf{B}ase) button that tells \LaTeX\ to remake the
-	database of all the files, then it will find \verb|tma.sty|. See:\\
+        database of all the files, then it will find \verb|ou-tma.sty|. See:\\
 	\url{http://docs.miktex.org/manual/configuring.html#fndbupdate}.
 	
 	Other \TeX\ installations will have similar centralised file storage settings for style files.
@@ -60,7 +60,7 @@
 	separate files for each question, or write all the questions in the main text.
 	
 	If you wish to have margin notes, then include \verb|\marginnotes| in your preamble, whereupon
-	\verb|\marginnote{}| is equivalent to \verb|\marginpar{}| and places the context of the brackets in the margin.
+        \verb|\marginnote{}| is equivalent to \verb|\marginpar{}| and places the contents of the brackets in the margin.
 	
 	The question numbers and question parts appear in the margin.
 	
@@ -69,7 +69,7 @@
 	numerals for the part, such as M381, then you can pass the option \verb|[roman]| to the
 	\verb|\usepackage| command to vary the numbering system. See below for further details of options.
 	
-	If you want to skip a question (i.e. jump straight from question 1 to question 3, then use (for example)
+        If you want to skip a question (i.e. jump straight from question 1 to question 3), then use (for example)
 	\verb|\begin{question}[3]|. To get parts of questions (a), (b), (c) etc, use \verb|\qpart|. To skip part
 	question numbers \verb|\qpart[3]| would force a (c).  For subparts (i), (ii), (iii), etc, then use \verb|\qsubpart|.
 	
@@ -82,9 +82,9 @@
 	more optional parameters to influence how the package will operate.  Just as it is typical to let the 
 	\verb|\documentclass| have options specifying the paper and font size, so can many other packages being given options.
 	
-	\begin{table}[h]
-		\centering
-		\begin{tabular}[2]{lp{0.8\textwidth}}
+        \begin{table}[h]
+                \centering
+                \begin{tabular}{lp{0.8\textwidth}}
 			\hline
 			\noalign{\vskip 3pt}
 			\textbf{\sc Option}      & \textbf{\sc Effect} \\
@@ -102,7 +102,7 @@
 	\end{table}
 	
 	To use a package option, place the option(s) before the package name in square brackets, for example:\\
-	\verb|\usepackage[roman,cleveref]{ou-5tma}|
+        \verb|\usepackage[roman,cleveref]{ou-tma}|
 	
 	
 	\subsection*{New commands}
@@ -111,7 +111,7 @@
 	
 	\hfil\verb|\R|\qquad\R\hfil\verb|\N|\qquad\N\hfil\verb|\Z|\qquad\Z\hfil\verb|\Q|\qquad\Q\hfil\verb|\Complex|\qquad\Complex
 	
-	In typeset mathematics, constants such as \e , \ii \ $(\sqrt{-1})$, and $\uppi$ should be not be italic,
+        In typeset mathematics, constants such as \e , \ii \ $(\sqrt{-1})$, and $\uppi$ should not be italic,
 	nor should \dd \ (as in $\deriv{y}{x}$ or $\int \e^x \,\dd x$). Hence:
 	
 	\hfil\verb|\dd|\qquad\dd\hfil\verb|\e|\qquad\e\hfil\verb|\ii|\qquad\ii\hfil\verb|\uppi|\qquad$\uppi$
@@ -127,17 +127,17 @@
 	\qquad \qquad \verb|\psderiv{z}{x}{y}|\qquad  $\genfrac{}{}{}{0}{\partial ^2z}{\partial y\partial x}$ %
 	
 	Other commands, some of which have been plagiarised from other peoples' style files, include mathematical
-	functions for the principle logarithm and various group theory and complex analysis functions.  Also, a
+        functions for the principal logarithm and various group theory and complex analysis functions.  Also, a
 	\verb|\rect| is included for M208 people (other shapes are included by virtue of the \verb|wasysym| package).
 	Commands available are given in table~\ref{tab:commands}; the upper set of commands will work in text or maths mode, whilst the lower commands are only designed to work in maths mode.
 	
 	\subsection*{Backward compatibility}
 	
-	As of version 1.04 of the \textsf{tma} package, two commands have been renamed to avoid clashes with other libraries. \verb|\C| has been renamed \verb|\Complex|, and \verb|\vec| has been renamed \verb|\vect|. To allow order documents to still use the new version of the package, an additional option has been provided, \verb|[legacy]|, and this will reimplement the old names.  These old names, however, are now deprecated and may be removed in future issues.
+        As of version 1.04 of the \textsf{tma} package, two commands have been renamed to avoid clashes with other libraries. \verb|\C| has been renamed \verb|\Complex|, and \verb|\vec| has been renamed \verb|\vect|. To allow older documents to still use the new version of the package, an additional option has been provided, \verb|[legacy]|, and this will reimplement the old names.  These old names, however, are now deprecated and may be removed in future issues.
 	
-	\begin{table}[t]
-		\centering
-		\begin{tabular}[3]{lll}
+        \begin{table}[t]
+                \centering
+                \begin{tabular}{lll}
 			\hline
 			\noalign{\vskip 3pt}
 			\textbf{\sc Command} & \textbf{\sc Example} & \textbf{\sc Note} \\
@@ -148,18 +148,17 @@
 			\verb|\vect{AB}|   & $\vect{AB}$ & for traditional vectors                       \\
 			\verb|1\st|        & $1\st$      & also \verb|\nd|, \verb|\rd|, \verb|\nth|      \\
 			\verb|\rect|       & \rect       &  \\
-			\verb|\comb{3}{5}| & \comb{5}{3} &  \\
-			\verb|\perm{3}{5}| & \perm{5}{0} &  \\[4pt]
+                        \verb|\comb{5}{3}| & \comb{5}{3} &  \\
+                        \verb|\perm{5}{3}| & \perm{5}{3} &  \\[4pt]
 			\hline
 			\noalign{\vskip 4pt}
 			\verb|\re|         & $\re $      & \verb|\Re| will produce the traditional $\Re$ \\
-			\verb|\im|         & $\im $      & \verb|\Im| will produce $\Im$       i+          \\
+                        \verb|\im|         & $\im $      & \verb|\Im| will produce $\Im$                 \\
 			\verb|\Log|        & $\Log $     &  \\
 			\verb|\Arg|        & $\Arg $     &  \\
 			\verb|\Wnd|        & $\Wnd $     &  \\
-			\verb|\Res|        & $\Res $     &  \\
-			\verb|\Ker|        & $\Ker $     &  \\
-			\verb|\Res|        & $\Res $     &  \\
+                        \verb|\Res|        & $\Res $     &  \\
+                        \verb|\Ker|        & $\Ker $     &  \\
 			\verb|\Orb|        & $\Orb $     &  \\
 			\verb|\Stab|       & $\Stab $    &  \\
 			\verb|\Fix|        & $\Fix $     &  \\ \hline
@@ -203,7 +202,7 @@
 			\texttt{hyperref}  & {This is only loaded if the \verb|cleveref| or \verb|pdfbookmark| option is given to the style.} \\
 			\hline
 		\end{tabular}
-		\caption{Packages auto-loaded by \texttt{tma.sty}}
+                \caption{Packages auto-loaded by \texttt{ou-tma.sty}}
 		\label{tab:packages}
 	\end{table}
 	
