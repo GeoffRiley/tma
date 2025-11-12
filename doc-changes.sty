@@ -19,7 +19,7 @@
 %% version 2005/12/01 or later.
 %% 
 \ProvidesExplPackage{doc-changes}
-  {2025-11-06} {v0.1} {Split change logs to per-stream doc glossaries}
+  {2025-11-06} {v0.2} {Split change logs to per-stream doc glossaries (single column printing)}
 %% doc-changes.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -118,7 +118,6 @@
 %% Single-column printing support for theglossary
 %% ============================================================
 
-%%^^A Save/restore original begin/end of theglossary; support nesting
 \int_new:N \g__doc_changes_sc_depth_int
 \cs_new_eq:NN \doc_changes_orig_theglossary_begin: \scan_stop:
 \cs_new_eq:NN \doc_changes_orig_theglossary_end:   \scan_stop:
@@ -183,7 +182,7 @@
     \par\bigskip
     \tl_if_blank:nF {#1} { \section*{#1} }
     \doc_changes_singlecolumn_begin:
-    \InputIfFileExists{ \jobname-#2.gls }{}{ \emph{No changes recorded.} }
+    \InputIfFileExists{ \jobname-#2.gls }{}{ \emph{No~changes~recorded.} }
     \doc_changes_singlecolumn_end:
 }
 

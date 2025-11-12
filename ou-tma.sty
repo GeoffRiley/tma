@@ -20,7 +20,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
 \ProvidesExplPackage{ou-tma}
-  {2025-10-28} {v1.21.2} {OU-TMA package}
+  {2025-11-12} {v1.21.3} {OU-TMA package}
 %% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -214,7 +214,6 @@ pdfsubject=\course%
 \fi
 
 \setquestionstring{Q}
-
 %% Question Environment
 
 \iftma@usecleveref
@@ -222,7 +221,6 @@ pdfsubject=\course%
 \tma@crefname{qpart}{part}{parts}
 \tma@crefname{qsubpart}{section}{sections}
 \fi
-
 \NewDocumentEnvironment{question}{O{0}}{%
 \ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
 \tma@stepcounter{question}%
@@ -252,7 +250,6 @@ pdfsubject=\course%
 {\par}{}%
 \hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
 }
-
 %% Mathematical Commands
 
 %% Differential Operators
@@ -312,22 +309,70 @@ pdfsubject=\course%
 \ProvideDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
-
 %% Theorem Environment
+\@ifpackageloaded{hyperref}%
+{}%
+{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
+\RequirePackage{cleveref}
+\ExplSyntaxOn
+\tl_new:N \g_sanitise_tag_tl
+\tl_new:N \l_sanitise_result_tl
 
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
+\def\NOTAG{NOTAG}
+
+\cs_new_protected:Npn \sanitisetag_check:n #1
+{
+    \tl_set:Nn \l_tmpb_tl {#1}
+    \regex_replace_all:nnN { [^a-z0-9:\.\-_]+ } { - } \l_tmpb_tl
+    \tl_put_right:Nx \l_sanitise_result_tl \l_tmpb_tl
+}
+
+\cs_set:Npn \ConcatSanitisedTag #1 {
+    #1 : \tl_use:N \g_sanitise_tag_tl
+}
+
+\NewDocumentCommand{\SanitiseTag}{m}
+{
+    \group_begin:
+    \tl_set:Nn \l_sanitise_result_tl {}
+    \tl_set:Nx \l_tmpa_tl {\text_lowercase:n {#1}}
+    \str_map_function:NN \l_tmpa_tl \sanitisetag_check:n
+    \tl_gset_eq:NN \g_sanitise_tag_tl \l_sanitise_result_tl
+    \group_end:
+}
+\ExplSyntaxOff
+\NewDocumentCommand{\NewTheoremWithAutoLabel}{m m O{section} O{#2}}
+{
+    \newtheorem{#2}{#1}[#3]
+    % Define the wrapper environment
+    \NewDocumentEnvironment{#1}{O{\NOTAG}}{
+        \ifstrequal{##1}{\NOTAG}{
+            % No tag: use standard numbering
+            \csname #2\endcsname%
+        }{
+            % Tag provided: use the tag and suppress numbering
+            \addtocounter{#2}{-1}
+            \expandafter\renewcommand\csname the#2\endcsname{##1}
+            \SanitiseTag{##1}
+            \edef\@auto@label{\ConcatSanitisedTag{#4}}
+            \csname #2\endcsname%
+            \label{\@auto@label}
+        }
+    }{
+        \csname end#2\endcsname
+    }
+}
+\NewTheoremWithAutoLabel{Lemma}{lemma}[][thm]
+\NewTheoremWithAutoLabel{Theorem}{theorem}[][lem]
 \ProvideDocumentCommand{\blacksmiley}{}{%
 \ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
-
 %% Miscellaneous Settings
 
 \RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
 \numberwithin{equation}{question}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
-
 %% Header and Footer Settings
 
 \pagestyle{fancy}

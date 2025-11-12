@@ -2,7 +2,7 @@
 
 ## Versions
 
-v1.21.2 (2025/10/28)
+v1.21.3 (2025/11/12)
 v0.12 (2025/10/28)
 
 ## Author
@@ -27,7 +27,8 @@ If the `ou-tma.sty` and `ou-tma-sup.sty` files are not provided, and you have, i
 - Compile the `ou-tma` package with `pdflatex ou-tma.ins`. This will create the `ou-tma.sty` and `ou-tma-sup.sty` files.
 - Compile the `ou-tma` documentation with:
 -  - `pdflatex ou-tma.dtx` (repeated several times)
--  - `makeindex -s gglo.ist -o ou-tma.gls ou-tma.glo`
+-  - `makeindex -s gglo.ist -o ou-tma-chg-tma.gls ou-tma-chg-tma.glo`
+-  - `makeindex -s gglo.ist -o ou-tma-chg-sup.gls ou-tma-chg-sup.glo`
 -  - `makeindex -s gind.ist ou-tma`
 -  - `pdflatex ou-tma.dtx` (several times again)
 

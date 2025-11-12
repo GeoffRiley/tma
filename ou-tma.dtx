@@ -25,7 +25,7 @@
 %</driver>
 %<ou-tma.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<ou-tma.sty>\ProvidesExplPackage{ou-tma}
-%<ou-tma.sty>  {2025-10-28} {v1.21.2} {OU-TMA package}
+%<ou-tma.sty>  {2025-11-12} {v1.21.3} {OU-TMA package}
 %<ou-tma-sup.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
 %<ou-tma-sup.sty>  {2025-10-28} {v0.12} {OU-TMA-SUP package}
@@ -34,7 +34,7 @@
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
-\usepackage{dtxdescribe}
+\usepackage{doc,dtxdescribe}
 \usepackage{expl3,xparse}
 % \OnlyDescription
 \listfiles
@@ -824,7 +824,6 @@
 \fi
 
 \setquestionstring{Q}
-
 %    \end{macrocode}
 %
 % \subsection{Question Environment}
@@ -839,7 +838,6 @@
 \tma@crefname{qpart}{part}{parts}
 \tma@crefname{qsubpart}{section}{sections}
 \fi
-
 %    \end{macrocode}
 %
 %    Commands to introduce Questions, parts and subparts.
@@ -876,7 +874,6 @@
 	{\par}{}%
 	\hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
 }
-
 %    \end{macrocode}
 %
 % \subsection{Mathematical commands}
@@ -948,22 +945,98 @@
 \ProvideDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
-
 %    \end{macrocode}
 %
 % \subsection{Theorem Environment}
+%    \changesTMA{v1.21.3}{2025-11-12}{Experimental extentions to theorem code allowing a name to override the given number, and for an automatic label to be appllied using the name.}
+% Theorems and Lemmas. Predefined environments for setting\dots the obvious.
+% \begin{description}
+%     \ItemDescribeMacro{\Theory}\oarg{title} If title is given, then it will replace the incrementing number normally attached to the theorem. It will also be used to automatically create a label in the form {\tt thm:title} which may be used by the referencing system.
+%     \ItemDescribeMacro{\Lemma}\oarg{title} As with `Theory' above, specifying a title will replace the incrementing number and create an automatic label in the form {\tt lem:title}.
+% \end{description}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Theorem Environment
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\@ifpackageloaded{hyperref}%
+{}%
+{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
+\RequirePackage{cleveref}
+\ExplSyntaxOn
+% Declare global variables to store the sanitised tag
+\tl_new:N \g_sanitise_tag_tl
+\tl_new:N \l_sanitise_result_tl
 
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
+% Define a sentinel value for no tag
+\def\NOTAG{NOTAG}
+
+% Helper function to sanitise a tag
+\cs_new_protected:Npn \sanitisetag_check:n #1
+{
+    \tl_set:Nn \l_tmpb_tl {#1}
+    \regex_replace_all:nnN { [^a-z0-9:\.\-_]+ } { - } \l_tmpb_tl
+    \tl_put_right:Nx \l_sanitise_result_tl \l_tmpb_tl
+}
+
+% Accessor command
+\cs_set:Npn \ConcatSanitisedTag #1 {
+    #1 : \tl_use:N \g_sanitise_tag_tl
+}
+
+\NewDocumentCommand{\SanitiseTag}{m}
+{
+    \group_begin:
+    \tl_set:Nn \l_sanitise_result_tl {}
+    \tl_set:Nx \l_tmpa_tl {\text_lowercase:n {#1}}
+    \str_map_function:NN \l_tmpa_tl \sanitisetag_check:n
+    \tl_gset_eq:NN \g_sanitise_tag_tl \l_sanitise_result_tl
+    \group_end:
+}
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+% Here we have the \textbf{Theorem Factory}. The function is used to declare families of names that may be used as Theorem-like environments.
+%
+% The resultant commands will create numerically sequenced entities, each with the option of having the numerical index being replaced by a supplied tag.
+% \begin{description}
+%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Wrapper} The wrapper is the name of the class of entities that you wish to use. It will be used as the title of the declaration preceding either the number or the tag.
+%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Base} The base is the name of the underlying \textsf{asmthm} counter. If two or more wrappers share the same base, they will share the same count.
+%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Outer wrapper} The outer wrapper is an optional parameter (default: section) which will supply the first half of a dot separated counter. Any bounding environment with an associated count will be acceptable such as `chapter' or `section'. Giving a blank outer wrapper eliminates the wrapper from the counter.
+%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Prefix} The prefix is a short character sequence used to categorise automatically created labels. The default is to use the base name, but tradition dictates that a three or four letter abbreviation is provided such as `thm' for theorem or `lem' for lemma.
+%\end{description}
+%
+% An example declaration would be\\
+% \cs{NewTheoremWithAutoLabel}|{Lemma}{lemma}[][lem]|
+%
+%    \begin{macrocode}
+% Theorem factory
+\NewDocumentCommand{\NewTheoremWithAutoLabel}{m m O{section} O{#2}}
+{
+    \newtheorem{#2}{#1}[#3]
+    % Define the wrapper environment
+    \NewDocumentEnvironment{#1}{O{\NOTAG}}{
+        \ifstrequal{##1}{\NOTAG}{
+            % No tag: use standard numbering
+            \csname #2\endcsname%
+        }{
+            % Tag provided: use the tag and suppress numbering
+            \addtocounter{#2}{-1}
+            \expandafter\renewcommand\csname the#2\endcsname{##1}
+            \SanitiseTag{##1}
+            \edef\@auto@label{\ConcatSanitisedTag{#4}}
+            \csname #2\endcsname%
+            \label{\@auto@label}
+        }
+    }{
+        \csname end#2\endcsname
+    }
+}
+\NewTheoremWithAutoLabel{Lemma}{lemma}[][thm]
+\NewTheoremWithAutoLabel{Theorem}{theorem}[][lem]
 % Define \blacksmiley without loading wasysym
 \ProvideDocumentCommand{\blacksmiley}{}{%
 	\ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
-
 %    \end{macrocode}
 %
 % \subsection{Miscellaneous Settings}
@@ -976,7 +1049,6 @@
 \numberwithin{equation}{question}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
-
 %    \end{macrocode}
 %
 % \subsection{Header and Footer Settings}
