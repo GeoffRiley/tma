@@ -19,7 +19,7 @@
 %% version 2005/12/01 or later.
 %% 
 \ProvidesExplPackage{doc-changes}
-  {2025-11-06} {v0.2} {Split change logs to per-stream doc glossaries (single column printing)}
+  {2025-11-13} {v0.3} {Split change logs to per-stream doc glossaries (single column printing)}
 %% doc-changes.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -31,13 +31,13 @@
 
 \ExplSyntaxOn
 
-%%^^A ---- State
+%% Store State
 \tl_new:N   \g__doc_changes_target_tl
 \seq_new:N  \g__doc_changes_stack_seq
 \prop_new:N \g__doc_changes_stream_prop
 \bool_new:N \g__doc_changes_setup_bool
 
-%%^^A ---- Remember original \glossary and install dispatcher (once)
+%% Remember original \glossary and install dispatcher (once)
 \cs_new_protected:Npn \doc_changes_setup:
 {
     \bool_if:NF \g__doc_changes_setup_bool
@@ -49,7 +49,7 @@
 }
 \cs_new_eq:NN \doc_changes_glossary_orig: \scan_stop:
 
-%%^^A ---- Ensure a stream exists & is open: name -> iow csname
+%% Ensure a stream exists & is open: name -> iow csname
 \cs_new_protected:Npn \doc_changes_stream_ensure_open:n #1
 {
     \prop_if_in:NnF \g__doc_changes_stream_prop {#1}
@@ -60,7 +60,7 @@
     }
 }
 
-%%^^A ---- Current target (no stack)
+%% Current target (no stack)
 \cs_new_protected:Npn \doc_changes_set_target:n #1
 {
     \doc_changes_setup:
@@ -70,7 +70,7 @@
 \cs_new_protected:Npn \doc_changes_clear_target:
 { \tl_gclear:N \g__doc_changes_target_tl }
 
-%%^^A ---- Push / Pop targets
+%% Push / Pop targets
 \cs_new_protected:Npn \doc_changes_push_target:n #1
 {
     \seq_gpush:NV \g__doc_changes_stack_seq \g__doc_changes_target_tl
@@ -84,11 +84,11 @@
     { \tl_gset:NV \g__doc_changes_target_tl \l_tmpa_tl }
 }
 
-%%^^A ---- Declare (open) a list of streams now
+%% Declare (open) a list of streams now
 \cs_new_protected:Npn \doc_changes_declare_streams:n #1
 { \clist_map_inline:nn {#1} { \doc_changes_stream_ensure_open:n {##1} } }
 
-%%^^A ---- Dispatcher replacing \glossary
+%% Dispatcher replacing \glossary
 \cs_new_protected:Npn \doc_changes_glossary:n #1
 {
     \tl_if_blank:VTF \g__doc_changes_target_tl
@@ -106,18 +106,13 @@
     }
 }
 
-%%^^A ---- Close all streams at end of document
+%% Close all streams at end of document
 \cs_new_protected:Npn \doc_changes_close_all:
 {
     \prop_map_inline:Nn \g__doc_changes_stream_prop
     { \exp_args:Nc \iow_close:N {##2} }
 }
 \AtEndDocument{ \doc_changes_close_all: }
-
-%% ============================================================
-%% Single-column printing support for theglossary
-%% ============================================================
-
 \int_new:N \g__doc_changes_sc_depth_int
 \cs_new_eq:NN \doc_changes_orig_theglossary_begin: \scan_stop:
 \cs_new_eq:NN \doc_changes_orig_theglossary_end:   \scan_stop:
@@ -162,21 +157,19 @@
         { \cs_set_eq:NN \endtheglossary \doc_changes_orig_theglossary_end: }
     }
 }
-
-%%^^A ---- Public API (document commands)
 \NewDocumentCommand \DocChangeDeclareStreams { m }
 { \doc_changes_declare_streams:n {#1} }
 
-\NewDocumentCommand \DocChangeSet   { m } { \doc_changes_set_target:n   {#1} }
-\NewDocumentCommand \DocChangeClear {   } { \doc_changes_clear_target:     }
+\NewDocumentCommand \DocChangeSet   { m } { \doc_changes_set_target:n  {#1} }
+\NewDocumentCommand \DocChangeClear {   } { \doc_changes_clear_target:      }
 \NewDocumentCommand \DocChangePush  { m } { \doc_changes_push_target:n {#1} }
-\NewDocumentCommand \DocChangePop   {   } { \doc_changes_pop_target:       }
+\NewDocumentCommand \DocChangePop   {   } { \doc_changes_pop_target:        }
 
-%%^^A Convenience: globally enable/disable single-column glossary layout
+%% Convenience: globally enable/disable single-column glossary layout
 \NewDocumentCommand \DocChangeSingleColumnOn  { } { \doc_changes_singlecolumn_begin: }
 \NewDocumentCommand \DocChangeSingleColumnOff { } { \doc_changes_singlecolumn_end:   }
 
-%%^^A Print helper (single-column during print)
+%% Print helper (single-column during print)
 \NewDocumentCommand \DocChangePrint { O{} m }
 {
     \par\bigskip
@@ -187,7 +180,6 @@
 }
 
 \ExplSyntaxOff
-
 
 
 \endinput
