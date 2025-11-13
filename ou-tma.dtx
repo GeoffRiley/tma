@@ -30,7 +30,7 @@
 %<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
 %<ou-tma-sup.sty>  {2025-10-28} {v0.12} {OU-TMA-SUP package}
 %<doc-changes.sty>\ProvidesExplPackage{doc-changes}
-%<doc-changes.sty>  {2025-11-06} {v0.2} {Split change logs to per-stream doc glossaries (single column printing)}
+%<doc-changes.sty>  {2025-11-13} {v0.3} {Split change logs to per-stream doc glossaries (single column printing)}
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
@@ -55,7 +55,7 @@
 
 \makeatletter
 
-\DocChangeDeclareStreams{ chg-tma , chg-sup }
+\DocChangeDeclareStreams{ chg-tma , chg-sup, chg-chg }
 
 \NewDocumentCommand{\changesTMA}{mmm}{
     \DocChangeSet{chg-tma}
@@ -65,6 +65,10 @@
     \DocChangeSet{chg-sup}
     \changes{#1}{#2}{#3}
 }
+\NewDocumentCommand{\changesCHG}{mmm}{
+    \DocChangeSet{chg-chg}
+    \changes{#1}{#2}{#3}
+}
 \NewDocumentCommand{\printchangesTMA}{}{
     \section*{Changes for \textsf{ou-tma}}
     \DocChangePrint{chg-tma}
@@ -72,6 +76,10 @@
 \NewDocumentCommand{\printchangesSUP}{}{
     \section*{Changes for \textsf{ou-tma-sup}}
     \DocChangePrint{chg-sup}
+}
+\NewDocumentCommand{\printchangesCHG}{}{
+    \section*{Changes for \textsf{doc-changes}}
+    \DocChangePrint{chg-chg}
 }
 
 \makeatother
@@ -228,7 +236,7 @@
 % \changesTMA{v1.21.1}{2025-10-10}{Typo notified just after previous errors corrected.
 %    Minor error in \cs{setquestionstri\textbf{m}g} instead of \cs{setquestionstring}.}
 % \changesTMA{v1.21.2}{2025-10-28}{Added alignment variation for question string, suggested by Bruce Ramsey.}
-% Within a \TMA, each answer should be placeed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the left margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\oarg{alignment}\marg{required question number introduction}. By setting \emph{alignment} to `\texttt{l}' it is possible to left align the question string and number from the margin rather than into it, this is particularly useful for languages where the translation of `Question' is long enough to disappear past the left hand edge of the page: the default is `\texttt{r}' for right aligned. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
+% Within a \TMA, each answer should be placed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the left margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\oarg{alignment}\marg{required question number introduction}. By setting \emph{alignment} to `\texttt{l}' it is possible to left align the question string and number from the margin rather than into it, this is particularly useful for languages where the translation of `Question' is long enough to disappear past the left hand edge of the page: the default is `\texttt{r}' for right aligned. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
 %
 % Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
@@ -795,7 +803,7 @@
 		urlcolor=blue,%
 		pdfstartview=FitH,%
 		pdftitle={TMA~\tma}, %
-		pdfauthor={\name~—~\pin}, %
+		pdfauthor={\name~\textemdash~\pin}, %
 		pdfkeywords={OUCU:~\pin, TMA~\tma}, %
 		pdfsubject=\course%
 	}%
@@ -1497,9 +1505,6 @@
     \end{tikzpicture}%
     \endgroup
 }
-
-\ExplSyntaxOn
-
 %    \end{macrocode}
 %
 %
@@ -1518,6 +1523,7 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Probabilty expression
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ExplSyntaxOn
 
 % Main \prob command
 \NewDocumentCommand{\prob}{m}
@@ -1574,7 +1580,7 @@
 % \setcounter{CodelineNo}{0}
 % \section{Implementation of \textsf{doc-changes}}
 %
-% This is a `bonus' file developed for looking after multiple change log files within the same package. It is not ready for third party use as yet.
+% This is a `bonus' file developed for looking after multiple change log files within the same package. Use at your own risk.
 %
 % \iffalse
 %<*doc-changes.sty>
@@ -1607,13 +1613,13 @@
 
 \ExplSyntaxOn
 
-%%^^A ---- State
+%% Store State
 \tl_new:N   \g__doc_changes_target_tl
 \seq_new:N  \g__doc_changes_stack_seq
 \prop_new:N \g__doc_changes_stream_prop
 \bool_new:N \g__doc_changes_setup_bool
 
-%%^^A ---- Remember original \glossary and install dispatcher (once)
+%% Remember original \glossary and install dispatcher (once)
 \cs_new_protected:Npn \doc_changes_setup:
 {
     \bool_if:NF \g__doc_changes_setup_bool
@@ -1625,7 +1631,7 @@
 }
 \cs_new_eq:NN \doc_changes_glossary_orig: \scan_stop:
 
-%%^^A ---- Ensure a stream exists & is open: name -> iow csname
+%% Ensure a stream exists & is open: name -> iow csname
 \cs_new_protected:Npn \doc_changes_stream_ensure_open:n #1
 {
     \prop_if_in:NnF \g__doc_changes_stream_prop {#1}
@@ -1636,7 +1642,7 @@
     }
 }
 
-%%^^A ---- Current target (no stack)
+%% Current target (no stack)
 \cs_new_protected:Npn \doc_changes_set_target:n #1
 {
     \doc_changes_setup:
@@ -1646,7 +1652,7 @@
 \cs_new_protected:Npn \doc_changes_clear_target:
 { \tl_gclear:N \g__doc_changes_target_tl }
 
-%%^^A ---- Push / Pop targets
+%% Push / Pop targets
 \cs_new_protected:Npn \doc_changes_push_target:n #1
 {
     \seq_gpush:NV \g__doc_changes_stack_seq \g__doc_changes_target_tl
@@ -1660,11 +1666,11 @@
     { \tl_gset:NV \g__doc_changes_target_tl \l_tmpa_tl }
 }
 
-%%^^A ---- Declare (open) a list of streams now
+%% Declare (open) a list of streams now
 \cs_new_protected:Npn \doc_changes_declare_streams:n #1
 { \clist_map_inline:nn {#1} { \doc_changes_stream_ensure_open:n {##1} } }
 
-%%^^A ---- Dispatcher replacing \glossary
+%% Dispatcher replacing \glossary
 \cs_new_protected:Npn \doc_changes_glossary:n #1
 {
     \tl_if_blank:VTF \g__doc_changes_target_tl
@@ -1682,18 +1688,18 @@
     }
 }
 
-%%^^A ---- Close all streams at end of document
+%% Close all streams at end of document
 \cs_new_protected:Npn \doc_changes_close_all:
 {
     \prop_map_inline:Nn \g__doc_changes_stream_prop
     { \exp_args:Nc \iow_close:N {##2} }
 }
 \AtEndDocument{ \doc_changes_close_all: }
-
-%% ============================================================
-%% Single-column printing support for theglossary
-%% ============================================================
-
+%    \end{macrocode}
+%
+% \subsection{Single-column printing support for theglossary}
+%
+%    \begin{macrocode}
 \int_new:N \g__doc_changes_sc_depth_int
 \cs_new_eq:NN \doc_changes_orig_theglossary_begin: \scan_stop:
 \cs_new_eq:NN \doc_changes_orig_theglossary_end:   \scan_stop:
@@ -1738,21 +1744,36 @@
         { \cs_set_eq:NN \endtheglossary \doc_changes_orig_theglossary_end: }
     }
 }
-
-%%^^A ---- Public API (document commands)
+%    \end{macrocode}
+%
+% \changesCHG{0.3}{2025-11-13}{Documenting Public API}
+% \subsection{Public API (document commands)}
+%
+% \begin{description}
+%     \ItemDescribeMacro[changes]{DocChangeDeclareStreams}\marg{change sets} Comman separated list of change sets required.
+%     \ItemDescribeMacro[changes]{DocChangeSet}\marg{change set} Set the active change set.
+%     \ItemDescribeMacro[changes]{DocChangeClear} Save the current change set.
+%     \ItemDescribeMacro[changes]{DocChangePush}\marg{change set} Switch to the indicated change set, but remember which was active before.
+%     \ItemDescribeMacro[changes]{DocChangePop} Restore the previously active change set.
+%     \ItemDescribeMacro[changes]{DocChangeSingleColumnOn} Set single column glossary printing.
+%     \ItemDescribeMacro[changes]{DocChangeSingleColumnOff} Set double column glossary printing.
+%     \ItemDescribeMacro[changes]{DocChangePrint}\oarg{title}\marg{change set} Print the change set as a glossary using the provided title.
+% \end{description}
+%
+%    \begin{macrocode}
 \NewDocumentCommand \DocChangeDeclareStreams { m }
 { \doc_changes_declare_streams:n {#1} }
 
-\NewDocumentCommand \DocChangeSet   { m } { \doc_changes_set_target:n   {#1} }
-\NewDocumentCommand \DocChangeClear {   } { \doc_changes_clear_target:     }
+\NewDocumentCommand \DocChangeSet   { m } { \doc_changes_set_target:n  {#1} }
+\NewDocumentCommand \DocChangeClear {   } { \doc_changes_clear_target:      }
 \NewDocumentCommand \DocChangePush  { m } { \doc_changes_push_target:n {#1} }
-\NewDocumentCommand \DocChangePop   {   } { \doc_changes_pop_target:       }
+\NewDocumentCommand \DocChangePop   {   } { \doc_changes_pop_target:        }
 
-%%^^A Convenience: globally enable/disable single-column glossary layout
+%% Convenience: globally enable/disable single-column glossary layout
 \NewDocumentCommand \DocChangeSingleColumnOn  { } { \doc_changes_singlecolumn_begin: }
 \NewDocumentCommand \DocChangeSingleColumnOff { } { \doc_changes_singlecolumn_end:   }
 
-%%^^A Print helper (single-column during print)
+%% Print helper (single-column during print)
 \NewDocumentCommand \DocChangePrint { O{} m }
 {
     \par\bigskip
@@ -1763,7 +1784,6 @@
 }
 
 \ExplSyntaxOff
-
 %    \end{macrocode}
 % \iffalse
 %</doc-changes.sty>
@@ -1778,6 +1798,8 @@
 % \printchangesTMA
 % \bigskip
 % \printchangesSUP
+% \bigskip
+% \printchangesCHG
 % \clearpage
 % \PrintIndex
 %
