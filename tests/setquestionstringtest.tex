@@ -1,0 +1,73 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[roman]{ou-tma}
+\usepackage{lipsum}
+
+\myname{Geoff I. Riley}
+\mypin{ABCDEFGH}
+\mycourse{\LaTeX}
+\mytma{test}
+
+\begin{document}
+%\maketitle
+Using the \verb|\setquestionstring| allows the default `Q' to be replaced by a different, possibly language independent, alternative.
+
+Usage:\\
+\verb|\setquestionstring{|$\langle$string$\rangle$\verb|}|
+
+First we start a question with the default question string.
+
+\begin{question}
+\qpart
+\lipsum[1][1]
+\end{question}
+
+Next we'll use \verb|\setquestionstring{Question}| to change the label and start another question.
+
+\setquestionstring{Question}
+\begin{question}
+\qpart
+\lipsum[1][1]
+\end{question}
+
+If question strings are too long, we get an effect like the following, using\\
+\verb|\setquestionstring{Long Question}|:
+
+\setquestionstring{Long Question}
+\begin{question}
+\qpart
+\lipsum[1][1]
+\end{question}
+
+The solution is to use an additional, but optional parameter, to specify alignment before the string. So we now have:\\
+\verb|\setquestionstring[|$\langle$l$\rangle$ \textit{or} $\langle$r$\rangle$\verb|]{|$\langle$string$\rangle$\verb|}|\\
+Where the optional parameter indicates whether to align to the \textbf{l}eft or \textbf{r}ight end of the string: default is \textbf{r}ight.
+
+\setquestionstring[l]{Long Question}
+
+\begin{question}
+\qpart
+\lipsum[1][1]
+\end{question}
+
+Und f\"ur unsere deutschen Freunde.
+
+\setquestionstring[l]{\"Ubersetzung}
+
+\begin{question}
+\qpart
+\lipsum[1][1]
+\end{question}
+
+Ac yn olaf, yn y Gymraeg mae gennym ni.
+
+\setquestionstring[r]{Cwestiwn}
+
+\begin{question}
+\qpart
+\lipsum[1][1]
+\end{question}
+
+Ardderchog, da iawn! Partïo ymlaen bois!
+
+\end{document}

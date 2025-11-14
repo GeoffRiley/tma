@@ -1,0 +1,188 @@
+%%
+%% This is file `doc-changes.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% ou-tma.dtx  (with options: `doc-changes.sty')
+%% 
+%% This is a generated file.
+%% 
+%% Copyright (C) 2025 by G. I. Riley <geoffr@adaso.com>
+%% --------------------------------------------------------------------------
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%% http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%% 
+\ProvidesExplPackage{doc-changes}
+  {2025-11-13} {v0.3} {Split change logs to per-stream doc glossaries (single column printing)}
+%% doc-changes.sty
+%% Copyright 2025 G. I. Riley <geoffr@adaso.com>
+%% This package may be freely used, especially by, but not limited to,
+%% students, lecturers and staff of the Open University. No acknowledgement
+%% is _required_ for using this package within the production of a _Tutor
+%% Marked Assessment._
+\RequirePackage{expl3}
+\RequirePackage{doc}
+\SetupDoc{reportchangedates}
+\ExplSyntaxOn
+
+%% Store State
+\tl_new:N   \g__doc_changes_target_tl
+\seq_new:N  \g__doc_changes_stack_seq
+\prop_new:N \g__doc_changes_stream_prop
+\bool_new:N \g__doc_changes_setup_bool
+
+%% Remember original \glossary and install dispatcher (once)
+\cs_new_protected:Npn \doc_changes_setup:
+{
+    \bool_if:NF \g__doc_changes_setup_bool
+    {
+        \cs_set_eq:NN \doc_changes_glossary_orig: \glossary
+        \cs_set_protected:Npn \glossary ##1 { \doc_changes_glossary:n {##1} }
+        \bool_gset_true:N \g__doc_changes_setup_bool
+    }
+}
+\cs_new_eq:NN \doc_changes_glossary_orig: \scan_stop:
+
+%% Ensure a stream exists & is open: name -> iow csname
+\cs_new_protected:Npn \doc_changes_stream_ensure_open:n #1
+{
+    \prop_if_in:NnF \g__doc_changes_stream_prop {#1}
+    {
+        \iow_new:c { g__doc_changes_iow_#1 }
+        \exp_args:Nc \iow_open:Nn { g__doc_changes_iow_#1 } { \jobname-#1.glo }
+        \prop_put:Nnx \g__doc_changes_stream_prop {#1} { g__doc_changes_iow_#1 }
+    }
+}
+
+%% Current target (no stack)
+\cs_new_protected:Npn \doc_changes_set_target:n #1
+{
+    \doc_changes_setup:
+    \doc_changes_stream_ensure_open:n {#1}
+    \tl_gset:Nn \g__doc_changes_target_tl {#1}
+}
+\cs_new_protected:Npn \doc_changes_clear_target:
+{ \tl_gclear:N \g__doc_changes_target_tl }
+
+%% Push / Pop targets
+\cs_new_protected:Npn \doc_changes_push_target:n #1
+{
+    \seq_gpush:NV \g__doc_changes_stack_seq \g__doc_changes_target_tl
+    \doc_changes_set_target:n {#1}
+}
+\cs_new_protected:Npn \doc_changes_pop_target:
+{
+    \seq_gpop:NN \g__doc_changes_stack_seq \l_tmpa_tl
+    \tl_if_blank:VTF \l_tmpa_tl
+    { \doc_changes_clear_target: }
+    { \tl_gset:NV \g__doc_changes_target_tl \l_tmpa_tl }
+}
+
+%% Declare (open) a list of streams now
+\cs_new_protected:Npn \doc_changes_declare_streams:n #1
+{ \clist_map_inline:nn {#1} { \doc_changes_stream_ensure_open:n {##1} } }
+
+%% Dispatcher replacing \glossary
+\cs_new_protected:Npn \doc_changes_glossary:n #1
+{
+    \tl_if_blank:VTF \g__doc_changes_target_tl
+    { % No active target -> pass through to original doc \glossary
+        \doc_changes_glossary_orig:{#1}
+    }
+    {
+        % Lookup iow for current target
+        \prop_get:NVN \g__doc_changes_stream_prop \g__doc_changes_target_tl \l_tmpa_tl
+        % Freeze page number now
+        \tl_set:Nx \l_tmpb_tl { \thepage }
+        % Mirror doc.sty: \protected@write<stream>{}{\string\glossaryentry{#1}{<page>}}
+        \exp_args:Nc \protected@write { \l_tmpa_tl } {} {%
+          \string\glossaryentry{#1}{\l_tmpb_tl}%
+        }%
+    }
+}
+
+%% Close all streams at end of document
+\cs_new_protected:Npn \doc_changes_close_all:
+{
+    \prop_map_inline:Nn \g__doc_changes_stream_prop
+    { \exp_args:Nc \iow_close:N {##2} }
+}
+\AtEndDocument{ \doc_changes_close_all: }
+\int_new:N \g__doc_changes_sc_depth_int
+\cs_new_eq:NN \doc_changes_orig_theglossary_begin: \scan_stop:
+\cs_new_eq:NN \doc_changes_orig_theglossary_end:   \scan_stop:
+
+\cs_new_protected:Npn \doc_changes_singlecolumn_begin:
+{
+    \int_compare:nNnTF { \g__doc_changes_sc_depth_int } = { 0 }
+    {
+        % First activation: capture originals
+        \cs_if_exist:NT \theglossary   { \cs_set_eq:NN \doc_changes_orig_theglossary_begin: \theglossary }
+        \cs_if_exist:NT \endtheglossary{ \cs_set_eq:NN \doc_changes_orig_theglossary_end:   \endtheglossary }
+        % Install single-column 'theglossary'
+        \cs_set_protected:Npn \theglossary
+        {
+            % Minimal single-column list layout compatible with gglo.ist entries
+            \par\bigskip
+            \begingroup
+            \parindent\z@ \parskip\z@ \relax
+            % Basic index-style paragraph items:
+            \providecommand\indexspace{\par \vskip 10pt plus 2pt minus 2pt\relax}
+            \providecommand\@idxitem{\par\hangindent 40\p@}
+            \providecommand\subitem{\@idxitem\hspace*{20\p@}}
+            \providecommand\subsubitem{\@idxitem\hspace*{30\p@}}
+            \let\item\@idxitem
+        }
+        \cs_set_protected:Npn \endtheglossary
+        { \par \endgroup }
+    }
+    { } % nested activation: keep our replacement
+    \int_gincr:N \g__doc_changes_sc_depth_int
+}
+
+\cs_new_protected:Npn \doc_changes_singlecolumn_end:
+{
+    \int_gdecr:N \g__doc_changes_sc_depth_int
+    \int_compare:nNnT { \g__doc_changes_sc_depth_int } = { 0 }
+    {
+        % Restore originals when last guard unwinds
+        \cs_if_eq:NNF \doc_changes_orig_theglossary_begin: \scan_stop:
+        { \cs_set_eq:NN \theglossary   \doc_changes_orig_theglossary_begin: }
+        \cs_if_eq:NNF \doc_changes_orig_theglossary_end:   \scan_stop:
+        { \cs_set_eq:NN \endtheglossary \doc_changes_orig_theglossary_end: }
+    }
+}
+\NewDocumentCommand \DocChangeDeclareStreams { m }
+{ \doc_changes_declare_streams:n {#1} }
+
+\NewDocumentCommand \DocChangeSet   { m } { \doc_changes_set_target:n  {#1} }
+\NewDocumentCommand \DocChangeClear {   } { \doc_changes_clear_target:      }
+\NewDocumentCommand \DocChangePush  { m } { \doc_changes_push_target:n {#1} }
+\NewDocumentCommand \DocChangePop   {   } { \doc_changes_pop_target:        }
+
+%% Convenience: globally enable/disable single-column glossary layout
+\NewDocumentCommand \DocChangeSingleColumnOn  { } { \doc_changes_singlecolumn_begin: }
+\NewDocumentCommand \DocChangeSingleColumnOff { } { \doc_changes_singlecolumn_end:   }
+
+%% Print helper (single-column during print)
+\NewDocumentCommand \DocChangePrint { O{} m }
+{
+    \par\bigskip
+    \tl_if_blank:nF {#1} { \section*{#1} }
+    \doc_changes_singlecolumn_begin:
+    \InputIfFileExists{ \jobname-#2.gls }{}{ \emph{No~changes~recorded.} }
+    \doc_changes_singlecolumn_end:
+}
+
+\ExplSyntaxOff
+
+
+\endinput
+%%
+%% End of file `doc-changes.sty'.

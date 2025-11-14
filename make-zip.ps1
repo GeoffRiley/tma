@@ -1,6 +1,6 @@
 # make-zip.ps1
 # ----------------
-# Usage: 
+# Usage:
 #   1. Open PowerShell in this folder
 #   2. Run: .\make-zip.ps1
 #      (You may need to enable script execution with `Set-ExecutionPolicy RemoteSigned` or similar.)
@@ -11,7 +11,8 @@ if ( !(Test-Path ".\ou-tma.pdf") ) {
     pdflatex "./ou-tma.ins"
     pdflatex "./ou-tma.dtx"
     pdflatex "./ou-tma.dtx"
-    makeindex -s gglo.ist -o "ou-tma.gls" "ou-tma.glo"
+    makeindex -s gglo.ist -o "ou-tma-chg-tma.gls" "ou-tma-chg-tma.glo"
+    makeindex -s gglo.ist -o "ou-tma-chg-sup.gls" "ou-tma-chg-sup.glo"
     makeindex -s gind.ist "ou-tma"
     pdflatex "./ou-tma.dtx"
     pdflatex "./ou-tma.dtx"
@@ -34,13 +35,13 @@ Copy-Item ".\README.md"  ".\ou-tma\"
 Copy-Item ".\examples\SampleTMA.tex"  ".\ou-tma\"
 
 # 5) Convert line endings (CRLF => LF) for the three text-based files:
-(Get-Content -Raw ".\ou-tma\ou-tma.dtx") -replace "`r`n", "`n" | 
+(Get-Content -Raw ".\ou-tma\ou-tma.dtx") -replace "`r`n", "`n" |
     Set-Content ".\ou-tma\ou-tma.dtx"
-(Get-Content -Raw ".\ou-tma\ou-tma.ins") -replace "`r`n", "`n" | 
+(Get-Content -Raw ".\ou-tma\ou-tma.ins") -replace "`r`n", "`n" |
     Set-Content ".\ou-tma\ou-tma.ins"
-(Get-Content -Raw ".\ou-tma\README.md")  -replace "`r`n", "`n" | 
+(Get-Content -Raw ".\ou-tma\README.md")  -replace "`r`n", "`n" |
     Set-Content ".\ou-tma\README.md"
-(Get-Content -Raw ".\ou-tma\SampleTMA.tex")  -replace "`r`n", "`n" | 
+(Get-Content -Raw ".\ou-tma\SampleTMA.tex")  -replace "`r`n", "`n" |
 	Set-Content ".\ou-tma\SampleTMA.tex"
 
 # 6) Compress the subdirectory into ou-tma.zip

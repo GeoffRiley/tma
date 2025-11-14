@@ -19,7 +19,8 @@ if [[ ! -f "./ou-tma.pdf" ]]; then
   pdflatex "./ou-tma.ins"
   pdflatex "./ou-tma.dtx"
   pdflatex "./ou-tma.dtx"
-  makeindex -s gglo.ist -o "ou-tma.gls" "ou-tma.glo" || true
+  makeindex -s gglo.ist -o "ou-tma-chg-tma.gls" "ou-tma-chg-tma.glo" || true
+  makeindex -s gglo.ist -o "ou-tma-chg-sup.gls" "ou-tma-chg-sup.glo" || true
   makeindex -s gind.ist "ou-tma" || true
   pdflatex "./ou-tma.dtx"
   pdflatex "./ou-tma.dtx"

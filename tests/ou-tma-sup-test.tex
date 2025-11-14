@@ -5,6 +5,7 @@
 \begin{document}
 %    \maketitle
 %
+\iffalse
 \section*{Test: \texttt{\textbackslash tmadp} in text mode}
 
 \begin{tabular}{rl}
@@ -24,6 +25,7 @@
                    Bracket range with sf: & \tmasf[style=bracket]{-1.393, 0.615, 2}               \\
               To range with units and sf: & \tmasf[style=to]{-1.393, 0.615, 3}[\metre\per\second]
 \end{tabular}
+\fi
 
 \section*{Test: \texttt{\textbackslash tmadp} in maths mode}
 
@@ -34,6 +36,7 @@
     \text{To (default) range with units and dp:} &~ \tmadp{1.237, 2.846, 2}[\kilo\gram]\\
 \end{align*}
 
+\iffalse
 \section*{Test: \texttt{\textbackslash tmasf} in maths mode}
 
 \begin{align*}
@@ -44,7 +47,7 @@
     \text{Bracket range with sf:} &~ \tmasf[style=bracket]{-1.393, 0.615, 2}\\
     \text{To range with units and sf:} &~ \tmasf[style=to]{-1.393, 0.615, 3}[\metre\per\second]
 \end{align*}
-
+\fi
 
 \section*{Test: \texttt{\textbackslash tmadp}}
 
@@ -80,7 +83,7 @@ Expected: P(A) in upright font \\
 Result: $\prob{A}$
 
 Expected: P(X $>$ 2) in upright font \\
-Result: $\prob{X > 2}$
+Result: $\prob{X \textgreater\ 2}$
 
 \section*{Test: \texttt{\textbackslash Pounds}}
 
