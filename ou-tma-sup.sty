@@ -49,7 +49,6 @@
     arrows.meta,
     positioning,
     decorations.markings}
-
 %% TikZ styles for solid and hollow dots
 %% --- number line ---
 %% --- tick marks and labels (adjust as you like) ---
@@ -237,13 +236,11 @@
 }
 
 \ExplSyntaxOff
-
 %% Pound Sterling value
 
 \NewDocumentCommand{\Pounds}{m}{%
     \pounds\,\num[round-precision=2,round-mode=places,round-integer-to-decimal]{#1}%
 }
-
 %% Five value statistical summary diagram
 \NewDocumentCommand{\FiveStats}{o mmmmm}{%
     \begingroup

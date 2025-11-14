@@ -34,6 +34,14 @@
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
+\AtBeginDocument{
+  \IfPackageLoadedTF{makeidx}{}{
+    \IfPackageLoadedTF{splitidx}{}{
+      \RequirePackage{makeidx}
+      \makeindex
+    }
+  }
+}
 \usepackage{doc,dtxdescribe}
 \usepackage{expl3,xparse}
 % \OnlyDescription
@@ -171,12 +179,12 @@
 % \fqquad(several times)
 % \userentry{makeindex -s gglo.ist -o ou-tma-chg-tma.gls ou-tma-chg-tma.glo}
 % \userentry{makeindex -s gglo.ist -o ou-tma-chg-sup.gls ou-tma-chg-sup.glo}
+% \userentry{makeindex -s gglo.ist -o ou-tma-chg-chg.gls ou-tma-chg-chg.glo}
 % \userentry{makeindex -s gind.ist ou-tma}
 % \userentry{pdflatex ou-tma.dtx}
 % \fqquad(several times)
 %
-% The file \filenm{ou-tma.sty} should be placed in an appropriate location within the \TeX\
-% directory structure. For example in a directory such as \filenm{tex/latex/tma}.
+% The files \filenm{ou-tma.sty} and \filenm{ou-tma-sup.sty} should be placed in an appropriate location within the \TeX\ directory structure. For example in a directory such as \filenm{tex/latex/tma}. The file \filenm{doc-changes.sty} is only used for formatting this documentation and may safely be ignored thereafter.
 %
 % \section{Usage}
 %
@@ -373,7 +381,7 @@
 %
 % \item[Statistics devices] A common device in statistics is the `Five value statistic summary', it is communicated via a standardised graphic.\\
 % \DescribeMacro{\FiveStats}\oarg{n}\marg{min}\marg{max}\marg{median}\marg{Q1}\marg{Q3}
-%  \cs{FiveStats} uses \texttt{TikZ} to draw the appropriate diagram. For example:\\
+%  \cs{FiveStats} uses \TikZ to draw the appropriate diagram. For example:\\
 %  |\FiveStats[30]{1}{10}{5.5}{3}{8}| results in \FiveStats[30]{1}{10}{5.5}{3}{8}
 %
 % The count of values, $n$, is optional. \emph{This is part of the \stmas\ package.}
@@ -447,7 +455,7 @@
 % \changesTMA{v1.20}{2025-04-07}{
 %    Package name changed from `tma' to `ou-tma' to become a
 %    little more descriptive and to abide by the minimum package
-%    name length suggested by CTAN.}
+%    name length suggested by \CTAN.}
 % \changesTMA{v1.19}{2025-02-18}{
 %    PDF metadata (apparently) was solved with help from Steve Mayers; all down
 %    to the use of commands as string containers. New (\LaTeX3) commands
@@ -478,7 +486,7 @@
 %    there is no intervening text
 %    \cs{qsubpart} indents further than \cs{qpart}.}
 % \changesTMA{v1.12}{2024-11-08}{
-%    Standardized package name to 'tma' to make it compatible with CTAN.
+%    Standardized package name to 'tma' to make it compatible with \CTAN.
 %    Avoided redefining standard \LaTeX\ commands.
 %    Consolidated geometry settings.
 %    Adjusted loading order of packages.
@@ -607,6 +615,7 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{geometry}
 \RequirePackage{calc}
+\RequirePackage{etoolbox}
 \RequirePackage[UKenglish]{isodate} % use UK format for date
 \cleanlookdateon % remove th,st, rd from date
 
@@ -1023,6 +1032,9 @@
     \newtheorem{#2}{#1}[#3]
     % Define the wrapper environment
     \NewDocumentEnvironment{#1}{O{\NOTAG}}{
+        % Save the original version of \the<counter>
+        \expandafter\let\csname tma@orig@the#2\expandafter\endcsname
+            \csname the#2\endcsname
         \ifstrequal{##1}{\NOTAG}{
             % No tag: use standard numbering
             \csname #2\endcsname%
@@ -1037,10 +1049,13 @@
         }
     }{
         \csname end#2\endcsname
+        % Restore the original \the<counter>
+        \expandafter\let\csname the#2\endcsname
+            \csname tma@orig@the#2\endcsname
     }
 }
-\NewTheoremWithAutoLabel{Lemma}{lemma}[][thm]
-\NewTheoremWithAutoLabel{Theorem}{theorem}[][lem]
+\NewTheoremWithAutoLabel{Lemma}{lemma}[][lem]
+\NewTheoremWithAutoLabel{Theorem}{theorem}[][thm]
 % Define \blacksmiley without loading wasysym
 \ProvideDocumentCommand{\blacksmiley}{}{%
 	\ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
@@ -1119,17 +1134,17 @@
 %^^A ----------------------
 % \subsection{Main formatting commands}
 %^^A ----------------------
-% \cs{tmadp}[<options>]{<value(s)>}[<unit>]  % Round to <n> decimal places
+% \DescribeMacro{\tmadp}\oarg{options}\marg{value(s)}\oarg{units}: Round to <n> decimal places
 %
-% \cs{tmasf}[<options>]{<value(s)>}[<unit>]  % Round to <n> significant figures
+% \DescribeMacro{\tmasf}\oarg{options}\marg{value(s)}\oarg{units}: Round to <n> significant figures
 %
-% <value(s)> should be either:
+% \DescribeArgument[rounding]{value(s)}: should be a comma separated lists giving either two or three numbers:
 % \begin{itemize}
-%   \item  [{x, n}]           for one value to n dp/sf
-%   \item  [{x, y, n}]        for a range from x to y to n dp/sf
+%   \item  |{x, n}|    for one value to n dp/sf
+%   \item  |{x, y, n}| for a range from x to y to n dp/sf
 % \end{itemize}
 %
-% Optional [<options>] may include:
+% \DescribeArgument[rounding]{options}: may be one or more pairs of strings joined by an equals sign. Currently defined are the mutually exclusive:
 % \begin{itemize}
 %   \item   |style=bracket|       for bracketed range: (x, y)
 %   \item   |style=to| (default)  for range using: `x to y'
@@ -1138,12 +1153,30 @@
 %^^A ----------------------
 % \subsection{Other useful commands}
 %^^A ----------------------
-% \cs{prob}{event}              % Formats P(event) in upright font
-% \cs{Pounds}{amount}           % Formats amount in £ with two dp, e.g. £3.45
-% \cs{FiveStats}[<n>]{min}{max}{med}{Q1}{Q3}
-%     Draws a 5-number summary diagram using TikZ.
-%     Optional argument: n = sample size (e.g. \FiveStats[30]{1}{10}{5.5}{3}{8})
-% ------------------------------------------------------------------------------
+% \DescribeMacro{\prob}\marg{event}: Formats $\prob{event}$ when in maths mode. The event may contain logically connecting commands, |\and|, |\or|, |\bar| and |\not|, to build probability expressions so that expressions like \\
+%  |$\prob{(Journey A \or Journey B) \and Bus}$|
+%  may be set:\\
+%  $\prob{(Journey A \or Journey B) \and Bus}$.
+%
+% \DescribeMacro{\Pounds}\marg{amount}: Formats an amount in pounds sterling with two dp, e.g. \Pounds{3.45}
+%
+% \DescribeMacro{\FiveStats}\oarg{n}\marg{min}\marg{max}\marg{med}\marg{Q1}\marg{Q3}:
+%     Draws a 5-number summary diagram using \TikZ.
+%
+% \begin{description}
+%    \ItemDescribeArgument[fivestats]{n}: (Optional) number of samples
+%    \ItemDescribeArgument[fivestats]{min}: Extreme minimum value
+%    \ItemDescribeArgument[fivestats]{max}: Extreme Maximum value
+%    \ItemDescribeArgument[fivestats]{median}: Median average
+%    \ItemDescribeArgument[fivestats]{Q1}: First quartile value
+%    \ItemDescribeArgument[fivestats]{Q3}: Third quartile value
+% \end{description}
+%
+%     e.g. |\FiveStats[30]{1}{10}{5.5}{3}{8}|
+%
+% \FiveStats[30]{1}{10}{5.5}{3}{8}
+%
+%^^A ------------------------------------------------------------------------------
 % \subsection{Package Initialisation}
 %    \begin{macrocode}
 \ExplSyntaxOff
@@ -1164,18 +1197,17 @@
     arrows.meta,
     positioning,
     decorations.markings}
-
 %    \end{macrocode}
 %
 %
-% \subsection{TikZ styles for solid and hollow dots}
-%\changesSUP{v0.12}{2025-10-28}{Added TikZ styles for solid and hollow dots used in inclusive and exclusive number lines}
+% \subsection{\TikZ\ styles for solid and hollow dots}
+%\changesSUP{v0.12}{2025-10-28}{Added \TikZ\ styles for solid and hollow dots used in inclusive and exclusive number lines}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TikZ styles for solid and hollow dots
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \end{macrocode}
-% Create TiKZ styles for solid and hollow dots: used to mark included and excluded points on number lines and graphs etc. For example $(2,5]\cup[8,10]\cup[12,16)$:
+% Create \TikZ\ styles for solid and hollow dots: used to mark included and excluded points on number lines and graphs etc. For example $(2,5]\cup[8,10]\cup[12,16)$:
 %\begin{tikzpicture}[x=0.5cm, y=1cm, thick]
 %% --- number line ---
 %\draw[->] (0,0) -- (18,0) node[below right] {$x$};
@@ -1290,6 +1322,7 @@
 
 %% Public commands
 %    \end{macrocode}
+%
 % Parameters for |\tmadp|\oarg{keyval}\marg{data}\oarg{units} and |\tmasf|\oarg{keyval}\marg{data}\oarg{units}:
 % \begin{itemize}
 %    \item  keyval: keyval options like |[style=bracket]|
@@ -1297,6 +1330,7 @@
 %    \item  units: optional units (e.g. |[\gram]|)
 %    \item  mode added to |\tma_format:nnnn| routine: mode (|dp| or |sf|)
 % \end{itemize}
+%
 %    \begin{macrocode}
 \NewDocumentCommand{\tmadp}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{dp} }
 \NewDocumentCommand{\tmasf}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{sf} }
@@ -1433,8 +1467,6 @@
 }
 
 \ExplSyntaxOff
-
-
 %    \end{macrocode}
 %
 %
@@ -1448,7 +1480,6 @@
 \NewDocumentCommand{\Pounds}{m}{%
     \pounds\,\num[round-precision=2,round-mode=places,round-integer-to-decimal]{#1}%
 }
-
 %    \end{macrocode}
 %
 %
@@ -1750,14 +1781,14 @@
 % \subsection{Public API (document commands)}
 %
 % \begin{description}
-%     \ItemDescribeMacro[changes]{DocChangeDeclareStreams}\marg{change sets} Comman separated list of change sets required.
-%     \ItemDescribeMacro[changes]{DocChangeSet}\marg{change set} Set the active change set.
-%     \ItemDescribeMacro[changes]{DocChangeClear} Save the current change set.
-%     \ItemDescribeMacro[changes]{DocChangePush}\marg{change set} Switch to the indicated change set, but remember which was active before.
-%     \ItemDescribeMacro[changes]{DocChangePop} Restore the previously active change set.
-%     \ItemDescribeMacro[changes]{DocChangeSingleColumnOn} Set single column glossary printing.
-%     \ItemDescribeMacro[changes]{DocChangeSingleColumnOff} Set double column glossary printing.
-%     \ItemDescribeMacro[changes]{DocChangePrint}\oarg{title}\marg{change set} Print the change set as a glossary using the provided title.
+%     \ItemDescribeMacro[changes]{\DocChangeDeclareStreams}\marg{change sets} Comman separated list of change sets required.
+%     \ItemDescribeMacro[changes]{\DocChangeSet}\marg{change set} Set the active change set.
+%     \ItemDescribeMacro[changes]{\DocChangeClear} Save the current change set.
+%     \ItemDescribeMacro[changes]{\DocChangePush}\marg{change set} Switch to the indicated change set, but remember which was active before.
+%     \ItemDescribeMacro[changes]{\DocChangePop} Restore the previously active change set.
+%     \ItemDescribeMacro[changes]{\DocChangeSingleColumnOn} Set single column glossary printing.
+%     \ItemDescribeMacro[changes]{\DocChangeSingleColumnOff} Set double column glossary printing.
+%     \ItemDescribeMacro[changes]{\DocChangePrint}\oarg{title}\marg{change set} Print the change set as a glossary using the provided title.
 % \end{description}
 %
 %    \begin{macrocode}
