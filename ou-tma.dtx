@@ -1641,7 +1641,7 @@
 %    \begin{macrocode}
 \RequirePackage{expl3}
 \RequirePackage{doc}
-
+\SetupDoc{reportchangedates}
 \ExplSyntaxOn
 
 %% Store State
@@ -1713,9 +1713,10 @@
         \prop_get:NVN \g__doc_changes_stream_prop \g__doc_changes_target_tl \l_tmpa_tl
         % Freeze page number now
         \tl_set:Nx \l_tmpb_tl { \thepage }
-        % Immediate write: \glossaryentry{<content>}{<page>}
-        \exp_args:Nc \iow_now:Nx { \l_tmpa_tl }
-        { \exp_not:N \glossaryentry { \exp_not:n  {#1} } { \thepage } }
+        % Mirror doc.sty: \protected@write<stream>{}{\string\glossaryentry{#1}{<page>}}
+        \exp_args:Nc \protected@write { \l_tmpa_tl } {} {%
+          \string\glossaryentry{#1}{\l_tmpb_tl}%
+        }%
     }
 }
 
