@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{ou-tma}
+
+\begin{document}
+
+    \typeout{ [DRV] Theorem: no tag, no auto-label}
+    \begin{Theorem}
+        This theorem will have automatic numbering.
+    \end{Theorem}
+
+    \typeout{ [DRV] Theorem: tag, auto-label}
+    \begin{Theorem}[B35]
+        This theorem will use the tag "B35" and suppress numbering.
+    \end{Theorem}
+
+    \typeout{ [DRV] Theorem: no tag, no auto-label}
+    \begin{Theorem}
+        Ordinary theorem. Numbered, but no auto-label.
+    \end{Theorem}
+
+    \typeout{ [DRV] Theorem: no tag, no auto-label}
+    \begin{Theorem}
+        This theorem will have no auto-label.
+    \end{Theorem}
+
+    \typeout{ [DRV] Theorem: tagged, auto-label}
+    \begin{Theorem}[B36]
+        Tagged theorem. Tag printed, label auto-sanitised.
+    \end{Theorem}
+
+    \typeout{ [DRV] Theorem: no tag, no auto-label}
+    \begin{Theorem}
+        Back to the ordinary. Numbered and not auto-labelled.
+    \end{Theorem}
+
+    \typeout{ [DRV] Reference to Theorem B36 auto-label}
+    See \Cref{thm:b35} for reference.
+
+    \typeout{ [DRV] Lemma: no tag, no auto-label}
+    \begin{Lemma}
+        This is a Lemma, look how its fur glistens. Numbered but with no auto-label.
+    \end{Lemma}
+
+    \typeout{ [DRV] Lemma: tagged, auto-label}
+    \begin{Lemma}[Famous]
+        If there was ever such a well known Lemma, this is it! Tagged and auto-labelled.
+    \end{Lemma}
+
+    \typeout{ [DRV] Theorem: no tag, no auto-label}
+    \begin{Theorem}
+        Oh there must be another numbered Theorem without tag or label!
+    \end{Theorem}
+
+    \typeout{ [DRV] Reference to Lemma Famous auto-label}
+    See \cref{lem:famous} for reference
+
+\end{document}

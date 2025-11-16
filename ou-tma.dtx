@@ -23,13 +23,28 @@
 %<*driver>
 \ProvidesFile{ou-tma.dtx}
 %</driver>
-%<package>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<package>\ProvidesPackage{ou-tma}
-%<package>  [2025-10-10 v1.21.1 OU-TMA package]
+%<ou-tma.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<ou-tma.sty>\ProvidesExplPackage{ou-tma}
+%<ou-tma.sty>  {2025-11-12} {v1.21.3} {OU-TMA package}
+%<ou-tma-sup.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
+%<ou-tma-sup.sty>  {2025-10-28} {v0.12} {OU-TMA-SUP package}
+%<doc-changes.sty>\ProvidesExplPackage{doc-changes}
+%<doc-changes.sty>  {2025-11-13} {v0.3} {Split change logs to per-stream doc glossaries (single column printing)}
 %<*driver>
 \documentclass[a4paper,11pt]{ltxdoc}
 \usepackage[T1]{fontenc}
+\AtBeginDocument{
+  \IfPackageLoadedTF{makeidx}{}{
+    \IfPackageLoadedTF{splitidx}{}{
+      \RequirePackage{makeidx}
+      \makeindex
+    }
+  }
+}
+\usepackage{doc}
 \usepackage{dtxdescribe}
+\usepackage{expl3,xparse}
 % \OnlyDescription
 \listfiles
 \EnableCrossrefs
@@ -39,55 +54,58 @@
 \setlength\hfuzz{15pt}  % don't show so many
 \hbadness=7000          % over- and underfull box warnings
 \usepackage{ou-tma}
+\usepackage{ou-tma-sup}
+\usepackage{doc-changes}
 \geometry{left=1mm,marginparwidth=40mm,marginparsep=1mm}
 \fancyhf{} % Clear all headers and footers
-\fancyhead[L]{\textsf{ou-tma}}
+\fancyhead[L]{\textsf{ou-tma}\ and \textsf{ou-tma-sup}}
 \fancyhead[R]{\textrm{\thepage}}
 \RenewDocumentCommand{\headrulewidth}{}{1pt} % Remove header rule
 
 \makeatletter
-% Capture the original \PrintChanges before redefining it
-\expandafter\let\csname doc@orig@PrintChanges\endcsname=\PrintChanges
 
-% One-column glossary environment with our own heading and index-style items
-\newenvironment{doc@onecolglossary}{%
-    \GlossaryParms
-    % --- Explicit heading (no hyphenation, no break) ---
-    \par
-    \@ifundefined{chapter}
-        {\section*{\mbox{Change History}}}
-        {\chapter*{\mbox{Change History}}}%
-    \par\nobreak
-    % --- Item shapes expected by the .gls file ---
-    \def\@idxitem{\par\noindent\hangindent=40pt \hangafter=1 }%
-    \def\subitem{\par\noindent\hangindent=40pt \hangafter=1 \hspace*{20pt}}%
-    \def\subsubitem{\par\noindent\hangindent=40pt \hangafter=1 \hspace*{30pt}}%
-    \def\indexspace{\par\vskip 10pt plus 5pt minus 3pt}%
-    \let\item\@idxitem
-}{}
+\DocChangeDeclareStreams{ chg-tma , chg-sup, chg-chg }
 
-% Use our single-column glossary ONLY for \PrintChanges; leave index alone
-\renewcommand*\PrintChanges{%
-    \begingroup
-    % Neutralise column switches just in case
-    \let\twocolumn\@firstofone
-    \let\onecolumn\relax
-    % Swap the glossary env locally
-    \let\theglossary\doc@onecolglossary
-    \let\endtheglossary\enddoc@onecolglossary
-    % Run the stock change-history printer
-    \doc@orig@PrintChanges
-    \endgroup
+\NewDocumentCommand{\changesTMA}{mmm}{
+    \DocChangeSet{chg-tma}
+    \changes{#1}{#2}{#3}
 }
+\NewDocumentCommand{\changesSUP}{mmm}{
+    \DocChangeSet{chg-sup}
+    \changes{#1}{#2}{#3}
+}
+\NewDocumentCommand{\changesCHG}{mmm}{
+    \DocChangeSet{chg-chg}
+    \changes{#1}{#2}{#3}
+}
+\NewDocumentCommand{\printchangesTMA}{}{
+    \section*{Changes for \textsf{ou-tma}}
+    \DocChangePrint{chg-tma}
+}
+\NewDocumentCommand{\printchangesSUP}{}{
+    \section*{Changes for \textsf{ou-tma-sup}}
+    \DocChangePrint{chg-sup}
+}
+\NewDocumentCommand{\printchangesCHG}{}{
+    \section*{Changes for \textsf{doc-changes}}
+    \DocChangePrint{chg-chg}
+}
+
 \makeatother
 
 \begin{document}
-	\DocInput{ou-tma.dtx}
+    \DocInput{ou-tma.dtx}
 \end{document}
 %</driver>
 % \fi
+%
 % \makeatletter
 % \GetFileInfo{ou-tma.sty}
+% \edef\outmadate{\filedate}
+% \edef\outmaversion{\fileversion}
+% \GetFileInfo{ou-tma-sup.sty}
+% \edef\outmasupdate{\filedate}
+% \edef\outmasupversion{\fileversion}
 % \IfPackageLoadedTF{doc}{ ^^A doc
 % \NewDocElement[
 %   macrolike=false,
@@ -97,9 +115,9 @@
 %   printtype=\textit{Var}
 % ]{Variable}{variable}
 % }{^^A not doc
-% \newcommand*{\DescribeVariable}[2][]{%
-% \DTXD@filemaXD@filemarginparindex{#1}{#2}{Var}{variable}{usage}%
-% }
+%   \newcommand*{\DescribeVariable}[2][]{%
+%     \DTXD@filemaXD@filemarginparindex{#1}{#2}{Var}{variable}{usage}%
+%   }
 % }^^A not doc
 % \newcommand{\ItemDescribeVariable}[2][]{%
 %   \item[\texttt{#2}:]%
@@ -109,7 +127,8 @@
 %
 % \makeatother
 %
-% \newcommand{\stma}{\textsf{ou-tma}}
+% \newcommand{\stma}{\pkg{ou-tma}}
+% \newcommand{\stmas}{\pkg{ou-tma-sup}}
 % \newcommand{\TMA}{\acro{TMA}}
 % \newcommand{\OU}{\acro{OU}}
 % \DoNotIndex{\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname,\else}
@@ -123,10 +142,10 @@
 % \DoNotIndex{\RequirePackage,\setcounter,\setlength,\space,\sqsubset,\sqsupset}
 % \DoNotIndex{\setcounter,\textbf,\textrm,\textsuperscript,\tl,\typeout}
 % \DoNotIndex{\unicode,\vspace,\DeclareMathOperator,\DeclareOption}
-% \title{The \stma\ Package\thanks{This document
-%  corresponds to \stma\ \fileversion, dated~\filedate.}}
+% \title{The \stma\ and \stmas\ Packages\thanks{This document
+%  corresponds to \stma\ \outmaversion, dated~\outmadate, and \stmas\ \outmasupversion, dated~\outmasupdate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
-% \date{\filedate\ (\fileversion)}
+% \date{\outmadate\ (\outmaversion), \outmasupdate\ (\outmasupversion)}
 % \RecordChanges
 % \renewcommand\code[1]{\mbox{$\ell$-#1}}
 % \renewcommand\main[1]{\underline{\mbox{$\ell$-#1}}}
@@ -135,8 +154,9 @@
 % \maketitle
 %
 % \begin{abstract}
-% The \stma\ package provides macros and environments to assist in writing Tutor
-% Marked Assessments (\TMA s) for Open University courses.
+% \noindent The \stma\ package provides macros and environments to assist in writing Tutor
+% Marked Assessments (\TMA s) for Open University courses. The companion file \stmas\
+% package provides a number of extra macros that may be useful for some modules.
 % \end{abstract}
 %
 % \tableofcontents
@@ -150,7 +170,7 @@
 %
 % \section{Compiling and installing \stma}
 %
-% To compile the \stma\ package:
+% To compile the \stma\ package (extract the \filenm{.sty} files):
 %
 % \userentry{pdflatex tma.ins}
 %
@@ -158,13 +178,14 @@
 %
 % \userentry{pdflatex ou-tma.dtx}
 % \fqquad(several times)
-% \userentry{makeindex -s gglo.ist -o ou-tma.gls ou-tma.glo}
+% \userentry{makeindex -s gglo.ist -o ou-tma-chg-tma.gls ou-tma-chg-tma.glo}
+% \userentry{makeindex -s gglo.ist -o ou-tma-chg-sup.gls ou-tma-chg-sup.glo}
+% \userentry{makeindex -s gglo.ist -o ou-tma-chg-chg.gls ou-tma-chg-chg.glo}
 % \userentry{makeindex -s gind.ist ou-tma}
 % \userentry{pdflatex ou-tma.dtx}
 % \fqquad(several times)
 %
-% The file \filenm{ou-tma.sty} should be placed in an appropriate location within the \TeX\
-% directory structure. For example in a directory such as \filenm{tex/latex/tma}.
+% The files \filenm{ou-tma.sty} and \filenm{ou-tma-sup.sty} should be placed in an appropriate location within the \TeX\ directory structure. For example in a directory such as \filenm{tex/latex/tma}. The file \filenm{doc-changes.sty} is only used for formatting this documentation and may safely be ignored thereafter.
 %
 % \section{Usage}
 %
@@ -178,7 +199,7 @@
 %    \vdots\\
 %    \cs{end}|{document}|
 % \end{quote}
-% \changes{v1.21}{2025-09-30}{ Documentation error spotted and corrected in very first
+% \changesTMA{v1.21}{2025-09-30}{ Documentation error spotted and corrected in very first
 %    example. A couple of other occurances also corrected in less conspicuous places.}
 %
 % \subsection{Options}
@@ -189,11 +210,11 @@
 % \end{quote}
 % The following options are available:
 % \begin{description}
-%    \ItemDescribeOption{alph} (default) question numbering as 1(b)(iii);
-%    \ItemDescribeOption{roman} varies question numbering to sequence used by M381 i.e. 1(ii)(c);
-%    \ItemDescribeOption{cleveref} question numbering creates automatic referencing for use with cleveref package;
-%    \ItemDescribeOption{pdfbookmark} add PDF bookmarks for each question using hyperref package; and
-%    \ItemDescribeOption{legacy} enables old definitions of |\vec| and |\C| for backward compatibility.
+%    \ItemDescribeOption[c=package options]{alph} (default) question numbering as 1(b)(iii);
+%    \ItemDescribeOption[c=package options]{roman} varies question numbering to sequence used by M381 i.e. 1(ii)(c);
+%    \ItemDescribeOption[c=package options]{cleveref} question numbering creates automatic referencing for use with cleveref package;
+%    \ItemDescribeOption[c=package options]{pdfbookmark} add PDF bookmarks for each question using hyperref package; and
+%    \ItemDescribeOption[c=package options]{legacy} enables old definitions of |\vec| and |\C| for backward compatibility.
 % \end{description}
 %
 % \subsection{Macros and environments}
@@ -204,34 +225,39 @@
 %
 % The document-level commands are intended for use within the document's preamble. They generally affect what appears on the title page and the headers/footers.
 %
-% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the \OU\ allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}. This is distinct from the \acro{OUCU}, or \OU\ Computer User identifier that is used to log in to the \OU\ website.
-% Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
-% The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro{\setdate}\cs{setdate}. This will override the default of using the compile date.
+% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro[c=header]{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the \OU\ allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro[c=header]{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}. This is distinct from the \acro{OUCU}, or \OU\ Computer User identifier that is used to log in to the \OU\ website.
+%
+% Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro[c=header]{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro[c=header]{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
+%
+% The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro[c=header]{\setdate}\cs{setdate}. This will override the default of using the compile date.
 %
 % Example:
-% \begin{verbatim}
+% \begin{sourceverb}
 %    \myname{Anthony Neil Other}
 %    \mypin{A1234567}
 %    \mycourse{M101} % The original Maths introduction module
 %    \mytma{02} % TMA02
 %    \setdate{March 2025}
-% \end{verbatim}
+% \end{sourceverb}
 %
 % \subsubsection{Question environment commands}
 %
 % These commands are the ones that, though few, comprise the bulk of the body of the \TMA\ answer content of a paper.
 %
-% \changes{v1.21.1}{2025-10-10}{Typo notified just after previous errors corrected.
+% \changesTMA{v1.21.1}{2025-10-10}{Typo notified just after previous errors corrected.
 %    Minor error in \cs{setquestionstri\textbf{m}g} instead of \cs{setquestionstring}.}
-% Within a \TMA, each answer should be placed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\marg{required question number introduction}. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
+% \changesTMA{v1.21.2}{2025-10-28}{Added alignment variation for question string, suggested by Bruce Ramsey.}
+% Within a \TMA, each answer should be placed in a \DescribeEnv[c=question]{question}\env{question} environment. The question number is printed across the left margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro[c=question]{\setquestionstring}\cs{setquestionstring}\oarg{alignment}\marg{required question number introduction}. By setting \emph{alignment} to `\texttt{l}' it is possible to left align the question string and number from the margin rather than into it, this is particularly useful for languages where the translation of `Question' is long enough to disappear past the left hand edge of the page: the default is `\texttt{r}' for right aligned. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
 %
-% Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
+% Often questions are comprised of multiple parts, therefore, \DescribeMacro[c=question]{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
 % Note that the value should be numerical even if the parts are lettered or in Roman numerals. Each new question restarts the numbering at $1$, which will be rendered as |a| or |i| as dictated by the options in effect.
 %
-% There are occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{qpart}, both marginal markers will be set on the same line.
+% There are frequent occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro[c=question]{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{qpart}, both marginal markers will be set on the same line.
 %
-% Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
+% Infrequetly, there may arise the need for alternative questioning paths. This is most frequetly the case when there has been some form of practical that may not be feasible for all students to take part in. Under these circumstances questions get issued with tracking version, so there with be a question line `1' and a question line `2', to accomodate these the \DescribeMacro[c=question]{\qsubparte}\cs{qsubparte} macro is made available. As with the standard \cs{qsubpart} macro, it may be followed by an optional number to restart the sequence, but it has, in addition, a required parameter to give the track number. \emph{This is included in the \stmas\ package.}
+%
+% Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart}, \cs{qsubpart} and \cs{qsubparte} are all macros that lay down markers in the margin, and are designed to be used within the \env{question} environment on their own.
 %
 % Example:
 % \begin{quote}
@@ -240,6 +266,8 @@
 %     |\qpart|\oarg{part number}\\
 %     \vdots\\
 %     |\qsubpart|\oarg{sub-part number}\\
+%     \vdots\\
+%     |\qsubparte|\oarg{sub-part number}\marg{postfix track number}\\
 %     \vdots\\
 %     |\end{question}|
 % \end{quote}
@@ -253,7 +281,9 @@
 % \begin{description}
 % \item[Differential operators] \DescribeMacro{\dd}\DescribeMacro{\e}\DescribeMacro{\ii}The general advise for most \OU\ modules is to use an upright letter `d' when specifying differential variables, thus \cs{dd} is provided to allow simple accomodation of this. Similarly, Euler's number and the imaginary unit representation of $\sqrt{-1}$ are both usually given upright letters of `e', (\cs{e}), and `i', (\cs{ii}), respectively.
 %
-%\emph{Remember that it is always the exception that proves the rule: follow the the module guidebook for the course being completed.}
+%\begin{docsidebar}[Note]
+% Remember that it is the exception that proves the rule: always follow the the module guidebook for course being completed.
+% \end{docsidebar}
 % \begin{dtxexample}*{Differential}
 % In display mode, compare \dd\ with $d$:
 % \[
@@ -330,7 +360,9 @@
 %	\ItemDescribeMacro{\Fix} $\mapsto \Fix$
 % \end{description}
 %
-% \item[Derivatives] There are three derivative forms defined specifically for speeding calculas entry and accuracy. One used the $\dd x$ form and two use the partial, $\partial x$, form.
+% \item[Derivatives] There are three derivative forms defined specifically for
+%  speeding calculas entry and accuracy. One used the $\dd x$ form and two use
+%  the partial, $\partial x$, form.
 %
 % \begin{description}
 % 	\ItemDescribeMacro{\deriv}\marg{y}\marg{x} $\mapsto \deriv{y}{x}$
@@ -338,20 +370,85 @@
 % 	\ItemDescribeMacro{\psderiv}\marg{y}\marg{x}\marg{z} $\mapsto \psderiv{y}{x}{z}$
 % \end{description}
 %
-% \item[Additional symbols] \DescribeMacro{\rect}\cs{rect}, \rect, is defined particularly for the use of \acro{M208} people although others may find it useful.
+% \item[Additional symbols] A couple of additional symbols are available for use in different modules, or purely for convenience.
 %
-% \item[Legacy elements] There are a couple of macros which become enabled when using the \optn{legacy} option. These are now deprecated and may be removed from a future version. There are name clashes with standard \LaTeX\ commands, so please be aware of this if used.
 % \begin{description}
-%   \ItemDescribeMacro{\C} is the original version of \cs{Complex}
-%   \ItemDescribeMacro{\vec} is the original version of \cs{vect}
+%   \ItemDescribeMacro{\rect} \cs{rect}, \rect, is defined particularly for the
+%    use of \acro{M208} people although others may find it useful.
+%	\ItemDescribeMacro{\ld} \cs{ld}, \ld, is another useful definition for \acro{M208}
+%    student who may be taxed by the number of times they need to type, and then
+%    correct their spelling of, \cs{lambda}. The macro will work correctly in both
+%    text and maths mode. \emph{This is an \stmas\ macro.}
+%   \ItemDescribeMacro{\Pounds}\marg{value} \cs{Pounds} displays a Pound Sterling
+%    amount in the appropriate format with two decimal places (rounded as necessary).
+%    For example |\Pounds{2.56}| renders as \Pounds{2.56}. \emph{This is an \stmas\ macro.}
 % \end{description}
+%
+% \item[Statistics devices] A common device in statistics is the `Five value statistic summary', it is communicated via a standardised graphic.\\
+% \DescribeMacro{\FiveStats}\oarg{n}\marg{min}\marg{max}\marg{median}\marg{Q1}\marg{Q3}
+%  \cs{FiveStats} uses \TikZ to draw the appropriate diagram. For example:\\
+%  |\FiveStats[30]{1}{10}{5.5}{3}{8}| results in \FiveStats[30]{1}{10}{5.5}{3}{8}
+%
+% The count of values, $n$, is optional. \emph{This is part of the \stmas\ package.}
+%
+% \item[Legacy elements] There are a couple of macros which become enabled when
+%   using the \optn{legacy} option. These are now deprecated and may be removed
+%   from a future version. There are name clashes with standard \LaTeX\ commands,
+%   so please be aware of this if used.
+%
+% \begin{description}
+%   \ItemDescribeMacro[c=legacy]{\C} is the original version of \cs{Complex}
+%   \ItemDescribeMacro[c=legacy]{\vec} is the original version of \cs{vect}
+% \end{description}
+%
+% \item[Theorem and Lemma] When setting Theorem and Lemma it is normal to number them for referencing. However, there are also occasions that require `named' statements.
+% \begin{description}
+%    \ItemDescribeEnv{Theorem}\oarg{title} If no title is provided then an automatically incrementing counter will be added after the word \env{Theorem}, however, if a title is provided then that will be inserted after the word \env{Theorem} when output and a reference label automatically generated in the form \texttt{thm:\textlangle title\textrangle}.
+%
+%     \begin{Theorem}{
+%       Without a title, a theory is just numbered. If a reference
+%       label is required, then it must be applied using the normal
+%       \cs{label} tag.
+%     }\end{Theorem}
+%     \begin{Theorem}[with a title]{
+%       With a title, a theory becomes multi-talented. It is viewed as
+%       something special, so it automatcially gets a label created,
+%       in this case it would be \texttt{thm:with-a-title}.
+%     }\end{Theorem}
+%     \begin{Theorem}{
+%       A further theorem can easily reference back to a previous
+%       labelled theorem with `see \Cref{thm:with-a-title} on \cpageref{thm:with-a-title}'.
+%     }\end{Theorem}
+%
+%    \ItemDescribeEnv{Lemma}\oarg{title} In exactly the same way as the \env{Theorem} environment above is used, so is the \env{Lemma} environment.
+%
+% \end{description}
+%
+%   Similar environments may be created by using the command\\
+% \DescribeMacro{NewTheoremWithAutoLabel}\cs{NewTheoremWithAutoLabel}\marg{class}\marg{base}\oarg{wrapper}\oarg{prefix}\\
+%   Where:
+%    \begin{itemize}
+%        \ItemDescribeArgument[c=newtheorem]{class} The name of the class of entities this will be used as the main title of the output
+%        \ItemDescribeArgument[c=newtheorem]{base} The base name of the underlying \pkg{amsthm} counter. If two or more classes share the same base, they will also share the same counter.
+%        \ItemDescribeArgument[c=newtheorem]{wrapper} Optional. The wrapper is the name of the outer environment that will provide the first part of the count number. The default value is \env{section}, but it could be \env{chapter} or even blank if the requirement is for a single value counter.
+%        \ItemDescribeArgument[c=newtheorem]{prefix} The prefix is a short character sequence used when creating the automatic labels for titled environments. It is usually a three or four character string. For example, the \env{Theory} environment uses `thm' and the \env{Lemma} environment uses `lem'.
+%    \end{itemize}
+% Example:\\
+% \cs{NewTheoremWithAutoLabel}|{Corollory}{corollory}[][cor]|
+% \NewTheoremWithAutoLabel{Corollory}{corollory}[][cor]
+% \begin{Corollory}
+%   A Corollory!
+% \end{Corollory}
 %
 % \end{description}
 %
 % \MaybeStop{}
 %
-% \section{Implementation}
+% \section{Implementation of \stma}
 %
+% \iffalse
+%<*ou-tma.sty>
+% \fi
 %    \begin{macrocode}
 %% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
@@ -399,41 +496,41 @@
 % To use a package option, place the option(s) before the package name:\\\nopagebreak
 % \fqquad\cs{usepackage}|[roman,cleveref]{ou-tma}|
 %
-% \changes{v1.20}{2025-04-07}{
+% \changesTMA{v1.20}{2025-04-07}{
 %    Package name changed from `tma' to `ou-tma' to become a
 %    little more descriptive and to abide by the minimum package
-%    name length suggested by CTAN.}
-% \changes{v1.19}{2025-02-18}{
+%    name length suggested by \CTAN.}
+% \changesTMA{v1.19}{2025-02-18}{
 %    PDF metadata (apparently) was solved with help from Steve Mayers; all down
 %    to the use of commands as string containers. New (\LaTeX3) commands
 %    are robust and fail to expand within the context of the metadata and
 %    bookmarks; old (\LaTeX2e) commands are fragile and correctly expanded. I
 %    have a mix of old commands and new variables now.}
-% \changes{v1.18}{2025-02-16}{
+% \changesTMA{v1.18}{2025-02-16}{
 %    PDF metadata doesn't set correctly so I have removed it: the cause is an
 %    incompatibility between \LaTeX\ unicode and the PDF restricted character
 %    allowance.}
-% \changes{v1.17}{2025-02-13}{
+% \changesTMA{v1.17}{2025-02-13}{
 %    Rewritten with \LaTeX3\ syntax from the `xparse' package to make commands
 %    less fragile.
 %    Finally, I got the alignment of part and subpart numbering to line up correctly.}
-% \changes{v1.16}{2024-11-22}{
+% \changesTMA{v1.16}{2024-11-22}{
 %    Added File Properties to pdf files using the hyperref setup system when
 %    in pdfbookmark mode.}
-% \changes{v1.15}{2024-11-21}{
+% \changesTMA{v1.15}{2024-11-21}{
 %    Define \cs{setdate} and \cs{thedate} to allow the header date to be used within
 %    the document, eg header and footer.}
-% \changes{v1.14}{2024-11-17}{
+% \changesTMA{v1.14}{2024-11-17}{
 %    Allow replacement of Question marker tag using \cs{setquestionstring}.
 %    References with cleveref not working.
 %    Replaced my attempts at keeping \cs{qpart} and \cs{qsubpart} on the same line with
 %    Steve Mayers contribution.}
-% \changes{v1.13}{2024-11-16}{
+% \changesTMA{v1.13}{2024-11-16}{
 %    Arranged for \cs{qsubpart} to go on the same line as the \cs{qpart} when
 %    there is no intervening text
 %    \cs{qsubpart} indents further than \cs{qpart}.}
-% \changes{v1.12}{2024-11-08}{
-%    Standardized package name to 'tma' to make it compatible with CTAN.
+% \changesTMA{v1.12}{2024-11-08}{
+%    Standardized package name to 'tma' to make it compatible with \CTAN.
 %    Avoided redefining standard \LaTeX\ commands.
 %    Consolidated geometry settings.
 %    Adjusted loading order of packages.
@@ -523,13 +620,18 @@
 %    \end{macrocode}
 % In order to allow the question introduction string to be modified, a general \LaTeX\ string is created along with a macro to set it.
 % \begin{description}
+%   \ItemDescribeMacro{\tma@questionalignment} Holds the string alignment to the left margin, the default is `r'. This is particularly useful for question strings that might otherwise extend beyond the left hand reach of the left hand page border.
+%   \changesTMA{v1.21.2}{2025-10-28}{Added alignment variation for question string, suggested by Bruce Ramsey.}
 %   \ItemDescribeMacro{\tma@questionstring} Hold the string to be printed before the question number, the default is `Q'.
-%   \ItemDescribeMacro{\setquestionstring}\marg{string} Set the string to precede the question number
+%   \ItemDescribeMacro{\setquestionstring}\oarg{char}\marg{string} Set the string to precede the question number
 % \end{description}
 %    \begin{macrocode}
+\NewDocumentCommand{\tma@questionalignment}{}{r}
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
-\NewDocumentCommand{\setquestionstring}{m}{%
-	\RenewDocumentCommand{\tma@questionstring}{}{#1}}
+\NewDocumentCommand{\setquestionstring}{O{r} m}{%
+    \RenewDocumentCommand{\tma@questionalignment}{}{#1}%
+    \RenewDocumentCommand{\tma@questionstring}{}{#2}%
+}
 %    \end{macrocode}
 % Set the default date to `today'.
 %    \begin{macrocode}
@@ -557,6 +659,7 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{geometry}
 \RequirePackage{calc}
+\RequirePackage{etoolbox}
 \RequirePackage[UKenglish]{isodate} % use UK format for date
 \cleanlookdateon % remove th,st, rd from date
 
@@ -753,12 +856,12 @@
 		urlcolor=blue,%
 		pdfstartview=FitH,%
 		pdftitle={TMA~\tma}, %
-		pdfauthor={\name~—~\pin}, %
+		pdfauthor={\name~\textemdash~\pin}, %
 		pdfkeywords={OUCU:~\pin, TMA~\tma}, %
 		pdfsubject=\course%
 	}%
 }
-\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}
+\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}
 \fi
 
 % Load cleveref if necessary
@@ -766,7 +869,7 @@
 % Ensure hyperref is loaded before cleveref
 \@ifpackageloaded{hyperref}%
 {}%
-{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
+{\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}}
 \RequirePackage{cleveref}
 % Redefine commands for cleveref
 \RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
@@ -782,7 +885,6 @@
 \fi
 
 \setquestionstring{Q}
-
 %    \end{macrocode}
 %
 % \subsection{Question Environment}
@@ -797,13 +899,19 @@
 \tma@crefname{qpart}{part}{parts}
 \tma@crefname{qsubpart}{section}{sections}
 \fi
-
+%    \end{macrocode}
+%
+%    Commands to introduce Questions, parts and subparts.
+%
+%    In each case, an optional argument allows a fixed starting `number' to be included to override the default of using the next.
+%    \changesTMA{v1.21.2}{2025-10-28}{Added alignment variation for question string, suggested by Bruce Ramsey.}
+%    \begin{macrocode}
 \NewDocumentEnvironment{question}{O{0}}{%
 	\ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
 	\tma@stepcounter{question}%
 	\tma@bookmark{Question \thequestion}%
 		{question\thequestion}%
-	\makebox[0em][r]{\large{\tma@questionstring~\thequestion%
+	\makebox[0em][\tma@questionalignment]{\large{\tma@questionstring~\thequestion%
         \hspace{0.3em}}}\par%
 }{%
 	\par \vspace{3em}%
@@ -827,7 +935,6 @@
 	{\par}{}%
 	\hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
 }
-
 %    \end{macrocode}
 %
 % \subsection{Mathematical commands}
@@ -867,7 +974,7 @@
 %% Combinatorial Notations
 \NewDocumentCommand{\comb}{mm}{\ensuremath{{}^{#1}C_{#2}}}
 %    \end{macrocode}
-%    \changes{v1.21.1}{2025-10-10}{Adjustment of kerning in \cs{perm} suggested by Peter Osment}
+%    \changesTMA{v1.21.1}{2025-10-10}{Adjustment of kerning in \cs{perm} suggested by Peter Osment}
 %    \begin{macrocode}
 \NewDocumentCommand{\perm}{mm}{\ensuremath{{}^{#1}\!P_{#2}}}
 
@@ -899,22 +1006,104 @@
 \ProvideDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
-
 %    \end{macrocode}
 %
 % \subsection{Theorem Environment}
+%    \changesTMA{v1.21.3}{2025-11-12}{Experimental extentions to theorem code allowing a name to override the given number, and for an automatic label to be appllied using the name.}
+% Theorems and Lemmas. Predefined environments for setting\dots the obvious.
+% \begin{description}
+%     \ItemDescribeMacro{\Theory}\oarg{title} If title is given, then it will replace the incrementing number normally attached to the theorem. It will also be used to automatically create a label in the form {\tt thm:title} which may be used by the referencing system.
+%     \ItemDescribeMacro{\Lemma}\oarg{title} As with `Theory' above, specifying a title will replace the incrementing number and create an automatic label in the form {\tt lem:title}.
+% \end{description}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Theorem Environment
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\@ifpackageloaded{hyperref}%
+{}%
+{\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}}
+\RequirePackage{cleveref}
+\ExplSyntaxOn
+% Declare global variables to store the sanitised tag
+\tl_new:N \g_sanitise_tag_tl
+\tl_new:N \l_sanitise_result_tl
 
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
+% Define a sentinel value for no tag
+\def\NOTAG{NOTAG}
+
+% Helper function to sanitise a tag
+\cs_new_protected:Npn \sanitisetag_check:n #1
+{
+    \tl_set:Nn \l_tmpb_tl {#1}
+    \regex_replace_all:nnN { [^a-z0-9:\.\-_]+ } { - } \l_tmpb_tl
+    \tl_put_right:Nx \l_sanitise_result_tl \l_tmpb_tl
+}
+
+% Accessor command
+\cs_set:Npn \ConcatSanitisedTag #1 {
+    #1 : \tl_use:N \g_sanitise_tag_tl
+}
+
+\NewDocumentCommand{\SanitiseTag}{m}
+{
+    \group_begin:
+    \tl_set:Nn \l_sanitise_result_tl {}
+    \tl_set:Nx \l_tmpa_tl {\text_lowercase:n {#1}}
+    \str_map_function:NN \l_tmpa_tl \sanitisetag_check:n
+    \tl_gset_eq:NN \g_sanitise_tag_tl \l_sanitise_result_tl
+    \group_end:
+}
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+% Here we have the \textbf{Theorem Factory}. The function is used to declare families of names that may be used as Theorem-like environments.
+%
+% The resultant commands will create numerically sequenced entities, each with the option of having the numerical index being replaced by a supplied tag.
+% \begin{description}
+%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Wrapper} The wrapper is the name of the class of entities that you wish to use. It will be used as the title of the declaration preceding either the number or the tag.
+%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Base} The base is the name of the underlying \textsf{asmthm} counter. If two or more wrappers share the same base, they will share the same count.
+%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Outer wrapper} The outer wrapper is an optional parameter (default: section) which will supply the first half of a dot separated counter. Any bounding environment with an associated count will be acceptable such as `chapter' or `section'. Giving a blank outer wrapper eliminates the wrapper from the counter.
+%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Prefix} The prefix is a short character sequence used to categorise automatically created labels. The default is to use the base name, but tradition dictates that a three or four letter abbreviation is provided such as `thm' for theorem or `lem' for lemma.
+%\end{description}
+%
+% An example declaration would be\\
+% \cs{NewTheoremWithAutoLabel}|{Lemma}{lemma}[][lem]|
+%
+%    \begin{macrocode}
+% Theorem factory
+\NewDocumentCommand{\NewTheoremWithAutoLabel}{m m O{section} O{#2}}
+{
+    \newtheorem{#2}{#1}[#3]
+    % Define the wrapper environment
+    \NewDocumentEnvironment{#1}{O{\NOTAG}}{
+        % Save the original version of \the<counter>
+        \expandafter\let\csname tma@orig@the#2\expandafter\endcsname
+            \csname the#2\endcsname
+        \ifstrequal{##1}{\NOTAG}{
+            % No tag: use standard numbering
+            \csname #2\endcsname%
+        }{
+            % Tag provided: use the tag and suppress numbering
+            \addtocounter{#2}{-1}
+            \expandafter\renewcommand\csname the#2\endcsname{##1}
+            \SanitiseTag{##1}
+            \edef\@auto@label{\ConcatSanitisedTag{#4}}
+            \csname #2\endcsname%
+            \label{\@auto@label}
+        }
+    }{
+        \csname end#2\endcsname
+        % Restore the original \the<counter>
+        \expandafter\let\csname the#2\endcsname
+            \csname tma@orig@the#2\endcsname
+    }
+}
+\NewTheoremWithAutoLabel{Lemma}{lemma}[][lem]
+\NewTheoremWithAutoLabel{Theorem}{theorem}[][thm]
 % Define \blacksmiley without loading wasysym
 \ProvideDocumentCommand{\blacksmiley}{}{%
 	\ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
-
 %    \end{macrocode}
 %
 % \subsection{Miscellaneous Settings}
@@ -927,7 +1116,6 @@
 \numberwithin{equation}{question}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
-
 %    \end{macrocode}
 %
 % \subsection{Header and Footer Settings}
@@ -944,11 +1132,750 @@
 \RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% End of Package
+%% End of Package ou-tma
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\endinput
+%    \end{macrocode}
+% \iffalse
+%</ou-tma.sty>
+% \fi
+%
+% \setcounter{CodelineNo}{0}
+% \section{Implementation of \stmas}
+%
+% \iffalse
+%<*ou-tma-sup.sty>
+% \fi
+%    \begin{macrocode}
+%% ou-tma-sup.sty
+%% Copyright 2025 G. I. Riley <geoffr@adaso.com>
+%% This package may be freely used, especially by, but not limited to,
+%% students, lecturers and staff of the Open University. It was created
+%% by the efforts of many who are now or have been connected with the
+%% Open University Students Association. No acknowledgement is
+%% _required_ for using this package within the production of a _Tutor
+%% Marked Assessment._
+%    \end{macrocode}
+%
+% This is the \OU\ \TMA\ supplementary file. It's purpose is to contain commands
+% that are less commonly used, probably used by only one or two modules; and
+% for experimental commands that may be included for testing by a wider
+% audience but may be deemed unnecessary in the long run.
+%
+%    \begin{macrocode}
+% \RequirePackage{expl3} % Automatically loaded with the \ProvidesExplPackage
+\RequirePackage{ou-tma} % main ou-tma package
+\ExplSyntaxOn
+%    \end{macrocode}
+%^^A ------------------------------------------------------------------------------
+%^^A README / Package Summary
+%^^A ------------------------------------------------------------------------------
+% This package provides macros for formatting numeric approximations, probability
+% expressions, monetary values, and statistical diagrams, using expl3 and siunitx.
+% It is intended for typesetting mathematics and statistics answers in OU TMAs.
+%
+%^^A ----------------------
+% \subsection{Main formatting commands}
+%^^A ----------------------
+% \DescribeMacro{\tmadp}\oarg{options}\marg{value(s)}\oarg{units}: Round to <n> decimal places
+%
+% \DescribeMacro{\tmasf}\oarg{options}\marg{value(s)}\oarg{units}: Round to <n> significant figures
+%
+% \DescribeArgument[rounding]{value(s)}: should be a comma separated lists giving either two or three numbers:
+% \begin{itemize}
+%   \item  |{x, n}|    for one value to n dp/sf
+%   \item  |{x, y, n}| for a range from x to y to n dp/sf
+% \end{itemize}
+%
+% \DescribeArgument[rounding]{options}: may be one or more pairs of strings joined by an equals sign. Currently defined are the mutually exclusive:
+% \begin{itemize}
+%   \item   |style=bracket|       for bracketed range: (x, y)
+%   \item   |style=to| (default)  for range using: `x to y'
+% \end{itemize}
+%
+%^^A ----------------------
+% \subsection{Other useful commands}
+%^^A ----------------------
+% \DescribeMacro{\prob}\marg{event}: Formats $\prob{event}$ when in maths mode. The event may contain logically connecting commands, |\and|, |\or|, |\bar| and |\not|, to build probability expressions so that expressions like \\
+%  |$\prob{(Journey A \or Journey B) \and Bus}$|
+%  may be set:\\
+%  $\prob{(Journey A \or Journey B) \and Bus}$.
+%
+% \DescribeMacro{\Pounds}\marg{amount}: Formats an amount in pounds sterling with two dp, e.g. \Pounds{3.45}
+%
+% \DescribeMacro{\FiveStats}\oarg{n}\marg{min}\marg{max}\marg{med}\marg{Q1}\marg{Q3}:
+%     Draws a 5-number summary diagram using \TikZ.
+%
+% \begin{description}
+%    \ItemDescribeArgument[fivestats]{n}: (Optional) number of samples
+%    \ItemDescribeArgument[fivestats]{min}: Extreme minimum value
+%    \ItemDescribeArgument[fivestats]{max}: Extreme Maximum value
+%    \ItemDescribeArgument[fivestats]{median}: Median average
+%    \ItemDescribeArgument[fivestats]{Q1}: First quartile value
+%    \ItemDescribeArgument[fivestats]{Q3}: Third quartile value
+% \end{description}
+%
+%     e.g. |\FiveStats[30]{1}{10}{5.5}{3}{8}|
+%
+% \FiveStats[30]{1}{10}{5.5}{3}{8}
+%
+%^^A ------------------------------------------------------------------------------
+% \subsection{Package Initialisation}
+%    \begin{macrocode}
+\ExplSyntaxOff
+\RequirePackage{amsmath}
+\RequirePackage{ifthen}
+
+\RequirePackage{siunitx}
+\sisetup{per-mode = symbol}
+\sisetup{uncertainty-mode = separate}
+
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary[units]
+\usetikzlibrary{angles,
+    quotes,
+    calc,
+    arrows.meta,
+    positioning,
+    decorations.markings}
+%    \end{macrocode}
+%
+%
+% \subsection{\TikZ\ styles for solid and hollow dots}
+%\changesSUP{v0.12}{2025-10-28}{Added \TikZ\ styles for solid and hollow dots used in inclusive and exclusive number lines}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TikZ styles for solid and hollow dots
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \end{macrocode}
+% Create \TikZ\ styles for solid and hollow dots: used to mark included and excluded points on number lines and graphs etc. For example $(2,5]\cup[8,10]\cup[12,16)$:
+%\begin{tikzpicture}[x=0.5cm, y=1cm, thick]
+%% --- number line ---
+%\draw[->] (0,0) -- (18,0) node[below right] {$x$};
+%% --- tick marks and labels (adjust as you like) ---
+%\foreach \x in {0,2,4,6,8,10,12,14,16}
+%{
+%    \draw (\x,0.1) -- (\x,-0.1);
+%    \node[below] at (\x,-0.1) {\x};
+%}
+%% intervals
+%\draw[very thick] (2,0.3) -- (5,0.3);
+%\draw[very thick] (8,0.3) -- (9,0.3);
+%\draw[very thick] (13,0.3) -- (16,0.3);
+%% use your styles here:
+%\node[hollowdot] at (2,0.3) {}; \node[soliddot] at (5,0.3) {};
+%\node[soliddot] at (8,0.3) {}; \node[soliddot] at (9,0.3) {};
+%\node[soliddot] at (13,0.3) {}; \node[hollowdot] at (16,0.3) {};
+%\end{tikzpicture}
+
+%    \begin{macrocode}
+\tikzset{
+    soliddot/.style={
+        fill=black,
+        draw=black,
+        circle,
+        minimum size=4pt,
+        inner sep=0pt,
+    },
+    hollowdot/.style={
+        fill=white,
+        draw=black,
+        circle,
+        line width=0.6pt,
+        minimum size=4pt,
+        inner sep=0pt,
+    },
+}
+%    \end{macrocode}
+%
+%
+% \subsection{Question subpart with extention}
+%\changesSUP{v0.12}{2025-10-28}{Added \cs{qsubparte} to allow a suffix on a question subpart}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Question subpart with extention
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \end{macrocode}
+
+% Make a question subpart with an extension, eg: Q1.a.i-1\\
+% Usage:\\
+% |\qsubparte[n]{ext}|\\
+% \begin{itemize}
+%   \item where \texttt{n} is an optional value to reset the counter, a decimal value,
+%     if omitted, or zero, then continues the previous count; and
+%   \item \texttt{ext} is the required extension string.
+% \end{itemize}
+%    \begin{macrocode}
+\NewDocumentCommand{\qsubparte}{O{0}m}{
+    {
+        \iftma@roman
+            \renewcommand{\theqsubpart}{\alph{qsubpart}-#2}
+        \else
+            \renewcommand{\theqsubpart}{\roman{qsubpart}-#2}
+        \fi
+        \qsubpart[#1]
+    }
+}
+
+%    \end{macrocode}
+%
+% \DescribeMacro{\tmadp}\oarg{options}\marg{values}\oarg{units}\\
+% \DescribeMacro{\tmasf}\oarg{options}\marg{values}\oarg{units}\\
+% Each of these macros follow the same format, they produce automatically rendered $n$ decimal
+% places or significant figures, and can optionally display ranges and units thereof.
+% The values should be a comma separated list of two or three numbers, the last specifying the
+% appropriate digit count. If two values are given then they represent a real number followed
+% by the digit count; and if three values are given, then they represent a range of two real
+% numbers followed by the digit count.
+%
+% Zero padding is applied where needed, so:\\
+% |\tmadp(5.5,3)| correctly returns \tmadp{5.5,3}; and\\
+% |\tmadp[style=bracket]{2.25,7.25,2}[\gram]| returns
+% \tmadp[style=bracket]{2.25,7.25,2}[\gram]
+%
+% \subsection{Macros to render appropriate decimal places and significant figures}
+%\changesSUP{v0.12}{2025-10-28}{Added \cs{tmadp} and \cs{tmasf} for setting d.p. amd s.f. texts}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Decimal places and significant figures
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\endinput
+\ExplSyntaxOn
+
+\tl_if_exist:NF \l__tma_style_tl { \tl_new:N \l__tma_style_tl }
+\tl_if_exist:NF \l__tma_label_style_tl { \tl_new:N \l__tma_label_style_tl }
+
+\keys_define:nn { tma }
+{
+    style .choice:,
+    style / to      .code:n = { \tl_set:Nn \l__tma_style_tl { to } },
+    style / bracket .code:n = { \tl_set:Nn \l__tma_style_tl { bracket } },
+    style           .initial:n = to,
+
+    labels .choice:,
+    labels / words  .code:n = { \tl_set:Nn \l__tma_label_style_tl { words } },
+    labels / long   .code:n = { \tl_set:Nn \l__tma_label_style_tl { long } },
+    labels / abbr   .code:n = { \tl_set:Nn \l__tma_label_style_tl { abbr } },
+    labels / short  .code:n = { \tl_set:Nn \l__tma_label_style_tl { abbr } },
+    labels / dp-sf  .code:n = { \tl_set:Nn \l__tma_label_style_tl { abbr } },
+    labels          .initial:n = abbr,
+}
+
+%% Public commands
 %    \end{macrocode}
+%
+% Parameters for |\tmadp|\oarg{keyval}\marg{data}\oarg{units} and |\tmasf|\oarg{keyval}\marg{data}\oarg{units}:
+% \begin{itemize}
+%    \item  keyval: keyval options like |[style=bracket]|
+%    \item  data: data (e.g. |{1.2, 3.4, 2}|)
+%    \item  units: optional units (e.g. |[\gram]|)
+%    \item  mode added to |\tma_format:nnnn| routine: mode (|dp| or |sf|)
+% \end{itemize}
+%
+%    \begin{macrocode}
+\NewDocumentCommand{\tmadp}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{dp} }
+\NewDocumentCommand{\tmasf}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{sf} }
+
+% Entry point: parse style and data
+\cs_new_protected:Nn \tma_format:nnnn
+{
+    \keys_set:nn { tma } {#1}
+    \tma_parse:nnn {#2}{#3}{#4}
+}
+
+% Parse 2- or 3-item list
+\cs_new_protected:Nn \tma_parse:nnn
+{
+    \clist_set:Nn \l_tmpa_clist {#1}
+    \int_case:nnF { \clist_count:N \l_tmpa_clist }
+    {
+        {2}{
+            \tma_format_single:nnnn
+            { \clist_item:Nn \l_tmpa_clist {1} }
+            { \clist_item:Nn \l_tmpa_clist {2} }
+            {#2} % unit
+            {#3} % mode
+        }
+        {3}{
+            \tma_format_range:nnnnn
+            { \clist_item:Nn \l_tmpa_clist {1} }
+            { \clist_item:Nn \l_tmpa_clist {2} }
+            { \clist_item:Nn \l_tmpa_clist {3} }
+            {#2} % unit
+            {#3} % mode
+        }
+    }
+    { \textbf{Error: expected 2 or 3 comma-separated values.} }
+}
+
+% Single number (optional unit)
+\cs_new_protected:Nn \tma_format_single:nnnn
+{
+    \tma_with_rounding:nnn {#4}{#2}
+    {
+        \tl_if_blank:nTF {#3}
+        { \num{#1} }
+        { \qty{#1}{#3} }
+        \text{~(to~#2~\tma_mode_label:nn {#4}{\l__tma_label_style_tl})}
+    }
+}
+
+% Range (optional unit) with style switch
+\cs_new_protected:Nn \tma_format_range:nnnnn
+{
+    % no unit
+    \tl_if_blank:nTF {#4}
+    {
+        \tl_if_eq:NnTF \l__tma_style_tl { bracket }
+        { \tma_output_bracketed_range:nnnnn {#1}{#2}{#3}{#4}{#5} }
+        {
+            \tma_with_rounding:nnn {#5}{#3}
+            { \num{#1}\text{~to~}\num{#2} }
+        }
+    }
+    { % with unit
+        \tl_if_eq:NnTF \l__tma_style_tl { bracket }
+        { \tma_output_bracketed_range:nnnnn {#1}{#2}{#3}{#4}{#5} }
+        {
+            \tma_with_rounding:nnn {#5}{#3}
+            { \SIrange{#1}{#2}{#4} }
+        }
+    }
+}
+
+% Core: locally apply siunitx rounding then typeset #3
+%   #1 = mode code dp/sf/off, #2 = precision, #3 = content
+\cs_new_protected:Nn \tma_with_rounding:nnn
+{
+    \group_begin:
+    \exp_args:Nx \sisetup
+    { round-mode=\tma_mode_map:n {#1}, round-precision=\int_eval:n {#2} }
+    #3
+    \group_end:
+}
+
+% Bracketed style output; handles math/text mode parens
+\cs_new_protected:Nn \tma_output_bracketed_range:nnnnn
+{
+    \tma_with_rounding:nnn {#5}{#3}
+    {
+        \mode_if_math:TF
+        {
+            ( \qty{#1}{#4},~\qty{#2}{#4} )
+            \text{~(to~#3~\tma_mode_label:nn {#5}{\l__tma_label_style_tl})}
+        }
+        {
+            \text{(}\qty{#1}{#4},~\qty{#2}{#4}\text{)}
+            \text{~(to~#3~\tma_mode_label:nn {#5}{\l__tma_label_style_tl})}
+        }
+    }
+}
+
+% Mapping + label text
+\cs_new:Npn \tma_mode_map:n #1
+{
+    \str_case:nnF {#1}
+    { {dp}{places} {sf}{figures} {off}{off} }
+    { places }
+}
+
+\cs_new:Npn \tma_mode_label:nn #1#2
+{
+    \str_case:nnF {#2}
+    {
+        {words}{ \tma_label_words:n {#1} }
+        {long} { \tma_label_long:n  {#1} }
+        {abbr} { \tma_label_abbr:n  {#1} }
+    }
+    { \tma_label_abbr:n {#1} }
+}
+
+\cs_new:Npn \tma_label_words:n #1
+{
+    \str_case:nnF {#1} { {dp}{places} {sf}{figures} {off}{off} } {places}
+}
+
+\cs_new:Npn \tma_label_long:n #1
+{
+    \str_case:nnF {#1}
+    { {dp}{decimal~places} {sf}{significant~figures} {off}{off} }
+    { decimal~places }
+}
+
+\cs_new:Npn \tma_label_abbr:n #1
+{
+    \str_case:nnF {#1} { {dp}{dp} {sf}{sf} {off}{off} } { dp }
+}
+
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+%
+% \subsection{Pound Sterling printing}
+%\changesSUP{v0.12}{2025-10-28}{Added \cs{Pounds} for setting Pound Sterling}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Pound Sterling value
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\Pounds}{m}{%
+    \pounds\,\num[round-precision=2,round-mode=places,round-integer-to-decimal]{#1}%
+}
+%    \end{macrocode}
+%
+%
+% \subsection{Five value statistics summary}
+%\changesSUP{v0.12}{2025-10-28}{Added \cs{FiveStats} for setting statistic summaries}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Five value statistical summary diagram
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \end{macrocode}
+% \cs{FiveStats}\oarg{n}\marg{$min_n$}\marg{$max_n$}\marg{$median_n$}\marg{Q1}\marg{Q3}
+% Print the five stats `square' with the provided values:
+% \begin{itemize}
+%    \item [$n$]: (Optional) number of samples
+%    \item [$min_n$]: Extreme minimum value
+%    \item [$max_n$]: Extreme Maximum value
+%    \item [$median_n$]: Median average
+%    \item [$Q1$]: First quartile value
+%    \item [$Q3$]: Third quartile value
+% \end{itemize}
+%    \begin{macrocode}
+\NewDocumentCommand{\FiveStats}{o mmmmm}{%
+    \begingroup
+    \tikzset{
+        every node/.style   = {font=\footnotesize,inner sep=0pt},
+        number/.style       = {text depth=0pt},      % tidy baselines
+    }
+    %--- global layout knobs you might like to tweak --------
+    \def\Pad   {3pt}        % white-space between numbers and walls
+    \def\XGap  {25mm}       % distance between the L & R interior columns
+    \def\Row   {1.7em}      % vertical separation between rows
+    %--------------------------------------------------------
+    \begin{tikzpicture}[baseline=(med.base)]
+        % reference x–coordinates for the two interior columns
+        \coordinate (IL) at (0,0);          % interior-left column
+        \coordinate (IR) at (\XGap,0);      % interior-right column
+        %---------------- Numbers -----------------
+        \node[number] (med)  at ($ (IL)!0.5!(IR) $) {#4};
+        \node[number,anchor=west] (q1)  at ($(IL)+(0,-\Row)$)       {#5};
+        \node[number,anchor=west] (min) at ($(IL)+(0,-2*\Row)$)     {#2};
+        \node[number,anchor=east] (q3)  at ($(IR)+(0,-\Row)$)       {#6};
+        \node[number,anchor=east] (max) at ($(IR)+(0,-2*\Row)$)     {#3};
+        \IfNoValueF{#1}{
+            % sample size
+            \node[number,anchor=east] (n) at ($(IL)+(-2*\Pad,-\Row)$) {$n = #1$};
+        }
+        %---------------- Frame -------------------
+        \coordinate (TL) at ($(q1.west |- med.north)  + (-\Pad,\Pad)$);
+        \coordinate (TR) at ($(q3.east |- med.north)  + ( \Pad,\Pad)$);
+        \coordinate (BL) at ($(q1.west |- min.south) + (-\Pad,-\Pad)$);
+        \coordinate (BR) at ($(q3.east |- min.south) + ( \Pad,-\Pad)$);
+        % draw: top, right, and left edges
+        \draw[cyan, line width=.4pt] (BL) -- (TL) -- (TR) -- (BR);
+    \end{tikzpicture}%
+    \endgroup
+}
+%    \end{macrocode}
+%
+%
+% \subsection{Probability expression}
+%  \textbf{\textit{Maths mode only.}}
+%
+% \DescribeMacro{\prob}
+%  \cs{prob}\marg{text} typesets a probability statement. It allows the use of
+%  \cs{and}, \cs{or}, \cs{bar} and \cs{not} within the definition so
+%  that expressions like \\
+%  |$\prob{(Journey A \or Journey B) \and Bus}$|
+%  may be set:\\
+%  $\prob{(Journey A \or Journey B) \and Bus}$.
+%\changesSUP{v0.12}{2025-10-28}{Added \cs{prob} for setting probability texts}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Probabilty expression
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ExplSyntaxOn
+
+% Main \prob command
+\NewDocumentCommand{\prob}{m}
+{
+    \prob_prob:n { #1 }
+}
+
+% Internal implementation with local keyword overrides
+\cs_new_protected:Nn \prob_prob:n
+{
+    \mathrm{P}\left(
+    \group_begin:
+    % Locally redefine LaTeX primitives — safely!
+    \cs_set_eq:NN \oldand \and
+    \cs_set_eq:NN \oldor \or
+    \cs_set_eq:NN \oldbar \bar
+    \cs_set_eq:NN \oldnot \not
+
+    \cs_set:Npn \and { \;\textit{and}\; }
+    \cs_set:Npn \or  { \;\textit{or}\; }
+    \cs_set:Npn \bar { \mid }
+    \cs_set:Npn \not { \textit{not}\; }
+
+    \text{#1}
+    \group_end:
+    \right)
+}
+
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+%
+% \subsection{Extra macros}
+%\changesSUP{v0.12}{2025-10-28}{Added shortcuts for plus and minus flags used in sign tables.}
+%\changesSUP{v0.12}{2025-10-28}{Added shortcut \cs{ld} for \cs{lambda}.}
+%    \begin{macrocode}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Extra macros
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewDocumentCommand{\pflag}{}{\ensuremath{[+]}}
+\NewDocumentCommand{\nflag}{}{\ensuremath{[-]}}
+\NewDocumentCommand{\ld}{}{\ensuremath{\lambda}}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% End of Package ou-tma-sup
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\endinput
+%    \end{macrocode}
+% \iffalse
+%</ou-tma-sup.sty>
+% \fi
+%
+% \setcounter{CodelineNo}{0}
+% \section{Implementation of \textsf{doc-changes}}
+%
+% This is a `bonus' file developed for looking after multiple change log files within the same package. Use at your own risk.
+%
+% \iffalse
+%<*doc-changes.sty>
+% \fi
+%    \begin{macrocode}
+%% doc-changes.sty
+%% Copyright 2025 G. I. Riley <geoffr@adaso.com>
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005-12-01 or later.
+%
+% This work has the LPPL maintenance status `maintained.'
+%
+% The Current Maintainer of this work is Geoff Riley.
+%
+%% This package may be freely used, especially by, but not limited to,
+%% students, lecturers and staff of the Open University. No acknowledgement
+%% is _required_ for using this package within the production of a _Tutor
+%% Marked Assessment._
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\RequirePackage{expl3}
+\RequirePackage{doc}
+\SetupDoc{reportchangedates}
+\ExplSyntaxOn
+
+%% Store State
+\tl_new:N   \g__doc_changes_target_tl
+\seq_new:N  \g__doc_changes_stack_seq
+\prop_new:N \g__doc_changes_stream_prop
+\bool_new:N \g__doc_changes_setup_bool
+
+%% Remember original \glossary and install dispatcher (once)
+\cs_new_protected:Npn \doc_changes_setup:
+{
+    \bool_if:NF \g__doc_changes_setup_bool
+    {
+        \cs_set_eq:NN \doc_changes_glossary_orig: \glossary
+        \cs_set_protected:Npn \glossary ##1 { \doc_changes_glossary:n {##1} }
+        \bool_gset_true:N \g__doc_changes_setup_bool
+    }
+}
+\cs_new_eq:NN \doc_changes_glossary_orig: \scan_stop:
+
+%% Ensure a stream exists & is open: name -> iow csname
+\cs_new_protected:Npn \doc_changes_stream_ensure_open:n #1
+{
+    \prop_if_in:NnF \g__doc_changes_stream_prop {#1}
+    {
+        \iow_new:c { g__doc_changes_iow_#1 }
+        \exp_args:Nc \iow_open:Nn { g__doc_changes_iow_#1 } { \jobname-#1.glo }
+        \prop_put:Nnx \g__doc_changes_stream_prop {#1} { g__doc_changes_iow_#1 }
+    }
+}
+
+%% Current target (no stack)
+\cs_new_protected:Npn \doc_changes_set_target:n #1
+{
+    \doc_changes_setup:
+    \doc_changes_stream_ensure_open:n {#1}
+    \tl_gset:Nn \g__doc_changes_target_tl {#1}
+}
+\cs_new_protected:Npn \doc_changes_clear_target:
+{ \tl_gclear:N \g__doc_changes_target_tl }
+
+%% Push / Pop targets
+\cs_new_protected:Npn \doc_changes_push_target:n #1
+{
+    \seq_gpush:NV \g__doc_changes_stack_seq \g__doc_changes_target_tl
+    \doc_changes_set_target:n {#1}
+}
+\cs_new_protected:Npn \doc_changes_pop_target:
+{
+    \seq_gpop:NN \g__doc_changes_stack_seq \l_tmpa_tl
+    \tl_if_blank:VTF \l_tmpa_tl
+    { \doc_changes_clear_target: }
+    { \tl_gset:NV \g__doc_changes_target_tl \l_tmpa_tl }
+}
+
+%% Declare (open) a list of streams now
+\cs_new_protected:Npn \doc_changes_declare_streams:n #1
+{ \clist_map_inline:nn {#1} { \doc_changes_stream_ensure_open:n {##1} } }
+
+%% Dispatcher replacing \glossary
+\cs_new_protected:Npn \doc_changes_glossary:n #1
+{
+    \tl_if_blank:VTF \g__doc_changes_target_tl
+    { % No active target -> pass through to original doc \glossary
+        \doc_changes_glossary_orig:{#1}
+    }
+    {
+        % Lookup iow for current target
+        \prop_get:NVN \g__doc_changes_stream_prop \g__doc_changes_target_tl \l_tmpa_tl
+        % Freeze page number now
+        \tl_set:Nx \l_tmpb_tl { \thepage }
+        % Mirror doc.sty: \protected@write<stream>{}{\string\glossaryentry{#1}{<page>}}
+        \exp_args:Nc \protected@write { \l_tmpa_tl } {} {%
+          \string\glossaryentry{#1}{\l_tmpb_tl}%
+        }%
+    }
+}
+
+%% Close all streams at end of document
+\cs_new_protected:Npn \doc_changes_close_all:
+{
+    \prop_map_inline:Nn \g__doc_changes_stream_prop
+    { \exp_args:Nc \iow_close:N {##2} }
+}
+\AtEndDocument{ \doc_changes_close_all: }
+%    \end{macrocode}
+%
+% \subsection{Single-column printing support for theglossary}
+%
+%    \begin{macrocode}
+\int_new:N \g__doc_changes_sc_depth_int
+\cs_new_eq:NN \doc_changes_orig_theglossary_begin: \scan_stop:
+\cs_new_eq:NN \doc_changes_orig_theglossary_end:   \scan_stop:
+
+\cs_new_protected:Npn \doc_changes_singlecolumn_begin:
+{
+    \int_compare:nNnTF { \g__doc_changes_sc_depth_int } = { 0 }
+    {
+        % First activation: capture originals
+        \cs_if_exist:NT \theglossary   { \cs_set_eq:NN \doc_changes_orig_theglossary_begin: \theglossary }
+        \cs_if_exist:NT \endtheglossary{ \cs_set_eq:NN \doc_changes_orig_theglossary_end:   \endtheglossary }
+        % Install single-column 'theglossary'
+        \cs_set_protected:Npn \theglossary
+        {
+            % Minimal single-column list layout compatible with gglo.ist entries
+            \par\bigskip
+            \begingroup
+            \parindent\z@ \parskip\z@ \relax
+            % Basic index-style paragraph items:
+            \providecommand\indexspace{\par \vskip 10pt plus 2pt minus 2pt\relax}
+            \providecommand\@idxitem{\par\hangindent 40\p@}
+            \providecommand\subitem{\@idxitem\hspace*{20\p@}}
+            \providecommand\subsubitem{\@idxitem\hspace*{30\p@}}
+            \let\item\@idxitem
+        }
+        \cs_set_protected:Npn \endtheglossary
+        { \par \endgroup }
+    }
+    { } % nested activation: keep our replacement
+    \int_gincr:N \g__doc_changes_sc_depth_int
+}
+
+\cs_new_protected:Npn \doc_changes_singlecolumn_end:
+{
+    \int_gdecr:N \g__doc_changes_sc_depth_int
+    \int_compare:nNnT { \g__doc_changes_sc_depth_int } = { 0 }
+    {
+        % Restore originals when last guard unwinds
+        \cs_if_eq:NNF \doc_changes_orig_theglossary_begin: \scan_stop:
+        { \cs_set_eq:NN \theglossary   \doc_changes_orig_theglossary_begin: }
+        \cs_if_eq:NNF \doc_changes_orig_theglossary_end:   \scan_stop:
+        { \cs_set_eq:NN \endtheglossary \doc_changes_orig_theglossary_end: }
+    }
+}
+%    \end{macrocode}
+%
+% \changesCHG{0.3}{2025-11-13}{Documenting Public API}
+% \subsection{Public API (document commands)}
+%
+% \begin{description}
+%     \ItemDescribeMacro[changes]{\DocChangeDeclareStreams}\marg{change sets} Comman separated list of change sets required.
+%     \ItemDescribeMacro[changes]{\DocChangeSet}\marg{change set} Set the active change set.
+%     \ItemDescribeMacro[changes]{\DocChangeClear} Save the current change set.
+%     \ItemDescribeMacro[changes]{\DocChangePush}\marg{change set} Switch to the indicated change set, but remember which was active before.
+%     \ItemDescribeMacro[changes]{\DocChangePop} Restore the previously active change set.
+%     \ItemDescribeMacro[changes]{\DocChangeSingleColumnOn} Set single column glossary printing.
+%     \ItemDescribeMacro[changes]{\DocChangeSingleColumnOff} Set double column glossary printing.
+%     \ItemDescribeMacro[changes]{\DocChangePrint}\oarg{title}\marg{change set} Print the change set as a glossary using the provided title.
+% \end{description}
+%
+%    \begin{macrocode}
+\NewDocumentCommand \DocChangeDeclareStreams { m }
+{ \doc_changes_declare_streams:n {#1} }
+
+\NewDocumentCommand \DocChangeSet   { m } { \doc_changes_set_target:n  {#1} }
+\NewDocumentCommand \DocChangeClear {   } { \doc_changes_clear_target:      }
+\NewDocumentCommand \DocChangePush  { m } { \doc_changes_push_target:n {#1} }
+\NewDocumentCommand \DocChangePop   {   } { \doc_changes_pop_target:        }
+
+%% Convenience: globally enable/disable single-column glossary layout
+\NewDocumentCommand \DocChangeSingleColumnOn  { } { \doc_changes_singlecolumn_begin: }
+\NewDocumentCommand \DocChangeSingleColumnOff { } { \doc_changes_singlecolumn_end:   }
+
+%% Print helper (single-column during print)
+\NewDocumentCommand \DocChangePrint { O{} m }
+{
+    \par\bigskip
+    \tl_if_blank:nF {#1} { \section*{#1} }
+    \doc_changes_singlecolumn_begin:
+    \InputIfFileExists{ \jobname-#2.gls }{}{ \emph{No~changes~recorded.} }
+    \doc_changes_singlecolumn_end:
+}
+
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</doc-changes.sty>
+% \fi
+
+
 % \Finale
-% \PrintChanges
+
+% \makeatletter
+% \makeatother
+% \clearpage
+% \printchangesTMA
+% \bigskip
+% \printchangesSUP
+% \bigskip
+% \printchangesCHG
+% \clearpage
 % \PrintIndex
+%
+% \endinput

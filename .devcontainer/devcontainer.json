@@ -1,0 +1,12 @@
+{
+  "name": "ou-tma TeX Live",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "remoteUser": "root",
+  "postCreateCommand": "pdflatex --version || true"
+}

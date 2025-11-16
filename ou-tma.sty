@@ -4,23 +4,23 @@
 %%
 %% The original source files were:
 %%
-%% ou-tma.dtx  (with options: `package')
-%% 
+%% ou-tma.dtx  (with options: `ou-tma.sty')
+%%
 %% This is a generated file.
-%% 
+%%
 %% Copyright (C) 2025 by G. I. Riley <geoffr@adaso.com>
 %% --------------------------------------------------------------------------
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
 %% of this license or (at your option) any later version.
 %% The latest version of this license is in
-%%   http://www.latex-project.org/lppl.txt
+%% http://www.latex-project.org/lppl.txt
 %% and version 1.3 or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
-%% 
+%%
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
-\ProvidesPackage{ou-tma}
-  [2025-10-10 v1.21.1 OU-TMA package]
+\ProvidesExplPackage{ou-tma}
+  {2025-11-12} {v1.21.3} {OU-TMA package}
 %% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -60,9 +60,12 @@
 \ExplSyntaxOff
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
+\NewDocumentCommand{\tma@questionalignment}{}{r}
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
-\NewDocumentCommand{\setquestionstring}{m}{%
-\RenewDocumentCommand{\tma@questionstring}{}{#1}}
+\NewDocumentCommand{\setquestionstring}{O{r} m}{%
+    \RenewDocumentCommand{\tma@questionalignment}{}{#1}%
+    \RenewDocumentCommand{\tma@questionstring}{}{#2}%
+}
 \setdate{\today}
 %% Package Loading
 
@@ -79,6 +82,7 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{geometry}
 \RequirePackage{calc}
+\RequirePackage{etoolbox}
 \RequirePackage[UKenglish]{isodate} % use UK format for date
 \cleanlookdateon % remove th,st, rd from date
 
@@ -186,18 +190,18 @@ linkcolor=blue,%
 urlcolor=blue,%
 pdfstartview=FitH,%
 pdftitle={TMA~\tma}, %
-  pdfauthor={\name~\textemdash~\pin}, %
+pdfauthor={\name~\textemdash~\pin}, %
 pdfkeywords={OUCU:~\pin, TMA~\tma}, %
 pdfsubject=\course%
 }%
 }
-\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}
+\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}
 \fi
 
 \iftma@usecleveref
 \@ifpackageloaded{hyperref}%
 {}%
-{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
+{\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}}
 \RequirePackage{cleveref}
 \RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
 \RenewDocumentCommand{\tma@stepcounter}{m}{\refstepcounter{#1}}
@@ -211,7 +215,6 @@ pdfsubject=\course%
 \fi
 
 \setquestionstring{Q}
-
 %% Question Environment
 
 \iftma@usecleveref
@@ -219,13 +222,12 @@ pdfsubject=\course%
 \tma@crefname{qpart}{part}{parts}
 \tma@crefname{qsubpart}{section}{sections}
 \fi
-
 \NewDocumentEnvironment{question}{O{0}}{%
 \ifthenelse{#1>0}{\setcounter{question}{#1-1}}{\relax}%
 \tma@stepcounter{question}%
 \tma@bookmark{Question \thequestion}%
 {question\thequestion}%
-\makebox[0em][r]{\large{\tma@questionstring~\thequestion%
+\makebox[0em][\tma@questionalignment]{\large{\tma@questionstring~\thequestion%
         \hspace{0.3em}}}\par%
 }{%
 \par \vspace{3em}%
@@ -249,7 +251,6 @@ pdfsubject=\course%
 {\par}{}%
 \hspace{-2em}\makebox[2em][l]{\large{(\theqsubpart)}}%
 }
-
 %% Mathematical Commands
 
 %% Differential Operators
@@ -309,22 +310,76 @@ pdfsubject=\course%
 \ProvideDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
-
 %% Theorem Environment
+\@ifpackageloaded{hyperref}%
+{}%
+{\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}}
+\RequirePackage{cleveref}
+\ExplSyntaxOn
+\tl_new:N \g_sanitise_tag_tl
+\tl_new:N \l_sanitise_result_tl
 
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
+\def\NOTAG{NOTAG}
+
+\cs_new_protected:Npn \sanitisetag_check:n #1
+{
+    \tl_set:Nn \l_tmpb_tl {#1}
+    \regex_replace_all:nnN { [^a-z0-9:\.\-_]+ } { - } \l_tmpb_tl
+    \tl_put_right:Nx \l_sanitise_result_tl \l_tmpb_tl
+}
+
+\cs_set:Npn \ConcatSanitisedTag #1 {
+    #1 : \tl_use:N \g_sanitise_tag_tl
+}
+
+\NewDocumentCommand{\SanitiseTag}{m}
+{
+    \group_begin:
+    \tl_set:Nn \l_sanitise_result_tl {}
+    \tl_set:Nx \l_tmpa_tl {\text_lowercase:n {#1}}
+    \str_map_function:NN \l_tmpa_tl \sanitisetag_check:n
+    \tl_gset_eq:NN \g_sanitise_tag_tl \l_sanitise_result_tl
+    \group_end:
+}
+\ExplSyntaxOff
+\NewDocumentCommand{\NewTheoremWithAutoLabel}{m m O{section} O{#2}}
+{
+    \newtheorem{#2}{#1}[#3]
+    % Define the wrapper environment
+    \NewDocumentEnvironment{#1}{O{\NOTAG}}{
+        % Save the original version of \the<counter>
+        \expandafter\let\csname tma@orig@the#2\expandafter\endcsname
+            \csname the#2\endcsname
+        \ifstrequal{##1}{\NOTAG}{
+            % No tag: use standard numbering
+            \csname #2\endcsname%
+        }{
+            % Tag provided: use the tag and suppress numbering
+            \addtocounter{#2}{-1}
+            \expandafter\renewcommand\csname the#2\endcsname{##1}
+            \SanitiseTag{##1}
+            \edef\@auto@label{\ConcatSanitisedTag{#4}}
+            \csname #2\endcsname%
+            \label{\@auto@label}
+        }
+    }{
+        %\csname end#2\endcsname
+        % Restore the original \the<counter>
+        %\expandafter\let\csname the#2\endcsname
+        %    \csname tma@orig@the#2\endcsname
+    }
+}
+\NewTheoremWithAutoLabel{Lemma}{lemma}[][lem]
+\NewTheoremWithAutoLabel{Theorem}{theorem}[][thm]
 \ProvideDocumentCommand{\blacksmiley}{}{%
 \ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
-
 %% Miscellaneous Settings
 
 \RenewDocumentCommand{\thefootnote}{}{\fnsymbol{footnote}}
 \numberwithin{equation}{question}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.3ex minus 0.2ex}
-
 %% Header and Footer Settings
 
 \pagestyle{fancy}
@@ -334,7 +389,8 @@ pdfsubject=\course%
 \fancyhead[R]{\textrm{Page \thepage\ of \tma@pageref{LastPage}}}
 \RenewDocumentCommand{\headrulewidth}{}{0pt} % Remove header rule
 
-%% End of Package
+%% End of Package ou-tma
+
 
 \endinput
 %%
