@@ -42,7 +42,8 @@
     }
   }
 }
-\usepackage{doc,dtxdescribe}
+\usepackage{doc}
+\usepackage{dtxdescribe}
 \usepackage{expl3,xparse}
 % \OnlyDescription
 \listfiles
@@ -126,8 +127,8 @@
 %
 % \makeatother
 %
-% \newcommand{\stma}{\textsf{ou-tma}}
-% \newcommand{\stmas}{\textsf{ou-tma-sup}}
+% \newcommand{\stma}{\pkg{ou-tma}}
+% \newcommand{\stmas}{\pkg{ou-tma-sup}}
 % \newcommand{\TMA}{\acro{TMA}}
 % \newcommand{\OU}{\acro{OU}}
 % \DoNotIndex{\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname,\else}
@@ -169,7 +170,7 @@
 %
 % \section{Compiling and installing \stma}
 %
-% To compile the \stma\ package:
+% To compile the \stma\ package (extract the \filenm{.sty} files):
 %
 % \userentry{pdflatex tma.ins}
 %
@@ -209,11 +210,11 @@
 % \end{quote}
 % The following options are available:
 % \begin{description}
-%    \ItemDescribeOption{alph} (default) question numbering as 1(b)(iii);
-%    \ItemDescribeOption{roman} varies question numbering to sequence used by M381 i.e. 1(ii)(c);
-%    \ItemDescribeOption{cleveref} question numbering creates automatic referencing for use with cleveref package;
-%    \ItemDescribeOption{pdfbookmark} add PDF bookmarks for each question using hyperref package; and
-%    \ItemDescribeOption{legacy} enables old definitions of |\vec| and |\C| for backward compatibility.
+%    \ItemDescribeOption[c=package options]{alph} (default) question numbering as 1(b)(iii);
+%    \ItemDescribeOption[c=package options]{roman} varies question numbering to sequence used by M381 i.e. 1(ii)(c);
+%    \ItemDescribeOption[c=package options]{cleveref} question numbering creates automatic referencing for use with cleveref package;
+%    \ItemDescribeOption[c=package options]{pdfbookmark} add PDF bookmarks for each question using hyperref package; and
+%    \ItemDescribeOption[c=package options]{legacy} enables old definitions of |\vec| and |\C| for backward compatibility.
 % \end{description}
 %
 % \subsection{Macros and environments}
@@ -224,18 +225,20 @@
 %
 % The document-level commands are intended for use within the document's preamble. They generally affect what appears on the title page and the headers/footers.
 %
-% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the \OU\ allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}. This is distinct from the \acro{OUCU}, or \OU\ Computer User identifier that is used to log in to the \OU\ website.
-% Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
-% The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro{\setdate}\cs{setdate}. This will override the default of using the compile date.
+% The most essential part of an assignment is to identify who it has been written by and what it has been written for. To this end, the \DescribeMacro[c=header]{\myname}\cs{myname} macro is used to specify your name: this should be your name as recorded with the University. As names are not unique, the \OU\ allocates a Personal Identification Number (or PIN) as a unique identifier for each student; this should be declared with the \DescribeMacro[c=header]{\mypin}\cs{mypin} macro. It is formed by a letter, followed by seven digits---or six digits and a letter \texttt{X}. This is distinct from the \acro{OUCU}, or \OU\ Computer User identifier that is used to log in to the \OU\ website.
+%
+% Once the personal identification has been done, the module being worked needs to be declared, the course code of your module should be given with the \DescribeMacro[c=header]{\mycourse}\cs{mycourse} macro and the number of the assignment using the \DescribeMacro[c=header]{\mytma}\cs{mytma} macro. Note that this is just the assignment number; there is no need to include the characters |TMA|.
+%
+% The final document level command is used if you wish to set a specific date that will be displayed on the compiled document title page; you may use \DescribeMacro[c=header]{\setdate}\cs{setdate}. This will override the default of using the compile date.
 %
 % Example:
-% \begin{verbatim}
+% \begin{sourceverb}
 %    \myname{Anthony Neil Other}
 %    \mypin{A1234567}
 %    \mycourse{M101} % The original Maths introduction module
 %    \mytma{02} % TMA02
 %    \setdate{March 2025}
-% \end{verbatim}
+% \end{sourceverb}
 %
 % \subsubsection{Question environment commands}
 %
@@ -244,17 +247,17 @@
 % \changesTMA{v1.21.1}{2025-10-10}{Typo notified just after previous errors corrected.
 %    Minor error in \cs{setquestionstri\textbf{m}g} instead of \cs{setquestionstring}.}
 % \changesTMA{v1.21.2}{2025-10-28}{Added alignment variation for question string, suggested by Bruce Ramsey.}
-% Within a \TMA, each answer should be placed in a \DescribeEnv{question}\env{question} environment. The question number is printed across the left margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro{\setquestionstring}\cs{setquestionstring}\oarg{alignment}\marg{required question number introduction}. By setting \emph{alignment} to `\texttt{l}' it is possible to left align the question string and number from the margin rather than into it, this is particularly useful for languages where the translation of `Question' is long enough to disappear past the left hand edge of the page: the default is `\texttt{r}' for right aligned. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
+% Within a \TMA, each answer should be placed in a \DescribeEnv[c=question]{question}\env{question} environment. The question number is printed across the left margin, preceded by the question string which defaults to `Q' but may be redefined by use of the command \DescribeMacro[c=question]{\setquestionstring}\cs{setquestionstring}\oarg{alignment}\marg{required question number introduction}. By setting \emph{alignment} to `\texttt{l}' it is possible to left align the question string and number from the margin rather than into it, this is particularly useful for languages where the translation of `Question' is long enough to disappear past the left hand edge of the page: the default is `\texttt{r}' for right aligned. The question number itself is automatically incremented unless one is specified in the optional parameter. Since the question is presented as an environment, it may be convenient to place each question in a separate file to be included in the main paper.
 %
-% Often questions are comprised of multiple parts, therefore, \DescribeMacro{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
+% Often questions are comprised of multiple parts, therefore, \DescribeMacro[c=question]{\qpart}\cs{qpart} indicates the start of a question part. It will set the part identifier within the left-hand margin space. Normally, the parts are lettered as |a|, |b|, |c|\dots unless the option \optn{roman} has been given to the \stma\ package when the parts are numbered as |i|, |ii|, |iii|\dots
 % As with the actual questions, this is an auto-incrementing value unless an optional value is given.
 % Note that the value should be numerical even if the parts are lettered or in Roman numerals. Each new question restarts the numbering at $1$, which will be rendered as |a| or |i| as dictated by the options in effect.
 %
-% There are frequent occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{qpart}, both marginal markers will be set on the same line.
+% There are frequent occasions that the parts of questions may be further divided into sub-parts; these may be declared using the \DescribeMacro[c=question]{\qsubpart}\cs{qsubpart} macro. As with \cs{qpart}, this is set in the left margin and automatically incremented: an option to choose the sub-part number is also available. If a \cs{qsubpart} immediately follows a \cs{qpart}, both marginal markers will be set on the same line.
 %
-% Infrequetly, there may arise the need for alternative questioning paths. This is most frequetly the case when there has been some form of practical that may not be feasible for all students to take part in. Under these circumstances questions get issued with tracking version, so there with be a question line `1' and a question line `2', to accomodate these the \DescribeMacro{\qsubparte}\cs{qsubparte} macro is made available. As with the standard \cs{qsubpart} macro, it may be followed by an optional number to restart the sequence, but it has, in addition, a required parameter to give the track number. \emph{This is included in the \stmas\ package.}
+% Infrequetly, there may arise the need for alternative questioning paths. This is most frequetly the case when there has been some form of practical that may not be feasible for all students to take part in. Under these circumstances questions get issued with tracking version, so there with be a question line `1' and a question line `2', to accomodate these the \DescribeMacro[c=question]{\qsubparte}\cs{qsubparte} macro is made available. As with the standard \cs{qsubpart} macro, it may be followed by an optional number to restart the sequence, but it has, in addition, a required parameter to give the track number. \emph{This is included in the \stmas\ package.}
 %
-% Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart} and \cs{qsubpart} are both macros that lay down titles in the margin and are designed to be used on a line on their own.
+% Note that \env{question} is an environment to be used with the \cs{begin}\thinbrspace\dots\cs{end} structure, \cs{qpart}, \cs{qsubpart} and \cs{qsubparte} are all macros that lay down markers in the margin, and are designed to be used within the \env{question} environment on their own.
 %
 % Example:
 % \begin{quote}
@@ -278,7 +281,9 @@
 % \begin{description}
 % \item[Differential operators] \DescribeMacro{\dd}\DescribeMacro{\e}\DescribeMacro{\ii}The general advise for most \OU\ modules is to use an upright letter `d' when specifying differential variables, thus \cs{dd} is provided to allow simple accomodation of this. Similarly, Euler's number and the imaginary unit representation of $\sqrt{-1}$ are both usually given upright letters of `e', (\cs{e}), and `i', (\cs{ii}), respectively.
 %
-%\emph{Remember that it is always the exception that proves the rule: follow the the module guidebook for the course being completed.}
+%\begin{docsidebar}[Note]
+% Remember that it is the exception that proves the rule: always follow the the module guidebook for course being completed.
+% \end{docsidebar}
 % \begin{dtxexample}*{Differential}
 % In display mode, compare \dd\ with $d$:
 % \[
@@ -392,9 +397,48 @@
 %   so please be aware of this if used.
 %
 % \begin{description}
-%   \ItemDescribeMacro{\C} is the original version of \cs{Complex}
-%   \ItemDescribeMacro{\vec} is the original version of \cs{vect}
+%   \ItemDescribeMacro[c=legacy]{\C} is the original version of \cs{Complex}
+%   \ItemDescribeMacro[c=legacy]{\vec} is the original version of \cs{vect}
 % \end{description}
+%
+% \item[Theorem and Lemma] When setting Theorem and Lemma it is normal to number them for referencing. However, there are also occasions that require `named' statements.
+% \begin{description}
+%    \ItemDescribeEnv{Theorem}\oarg{title} If no title is provided then an automatically incrementing counter will be added after the word \env{Theorem}, however, if a title is provided then that will be inserted after the word \env{Theorem} when output and a reference label automatically generated in the form \texttt{thm:\textlangle title\textrangle}.
+%
+%     \begin{Theorem}{
+%       Without a title, a theory is just numbered. If a reference
+%       label is required, then it must be applied using the normal
+%       \cs{label} tag.
+%     }\end{Theorem}
+%     \begin{Theorem}[with a title]{
+%       With a title, a theory becomes multi-talented. It is viewed as
+%       something special, so it automatcially gets a label created,
+%       in this case it would be \texttt{thm:with-a-title}.
+%     }\end{Theorem}
+%     \begin{Theorem}{
+%       A further theorem can easily reference back to a previous
+%       labelled theorem with `see \Cref{thm:with-a-title} on \cpageref{thm:with-a-title}'.
+%     }\end{Theorem}
+%
+%    \ItemDescribeEnv{Lemma}\oarg{title} In exactly the same way as the \env{Theorem} environment above is used, so is the \env{Lemma} environment.
+%
+% \end{description}
+%
+%   Similar environments may be created by using the command\\
+% \DescribeMacro{NewTheoremWithAutoLabel}\cs{NewTheoremWithAutoLabel}\marg{class}\marg{base}\oarg{wrapper}\oarg{prefix}\\
+%   Where:
+%    \begin{itemize}
+%        \ItemDescribeArgument[c=newtheorem]{class} The name of the class of entities this will be used as the main title of the output
+%        \ItemDescribeArgument[c=newtheorem]{base} The base name of the underlying \pkg{amsthm} counter. If two or more classes share the same base, they will also share the same counter.
+%        \ItemDescribeArgument[c=newtheorem]{wrapper} Optional. The wrapper is the name of the outer environment that will provide the first part of the count number. The default value is \env{section}, but it could be \env{chapter} or even blank if the requirement is for a single value counter.
+%        \ItemDescribeArgument[c=newtheorem]{prefix} The prefix is a short character sequence used when creating the automatic labels for titled environments. It is usually a three or four character string. For example, the \env{Theory} environment uses `thm' and the \env{Lemma} environment uses `lem'.
+%    \end{itemize}
+% Example:\\
+% \cs{NewTheoremWithAutoLabel}|{Corollory}{corollory}[][cor]|
+% \NewTheoremWithAutoLabel{Corollory}{corollory}[][cor]
+% \begin{Corollory}
+%   A Corollory!
+% \end{Corollory}
 %
 % \end{description}
 %
@@ -817,7 +861,7 @@
 		pdfsubject=\course%
 	}%
 }
-\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}
+\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}
 \fi
 
 % Load cleveref if necessary
@@ -825,7 +869,7 @@
 % Ensure hyperref is loaded before cleveref
 \@ifpackageloaded{hyperref}%
 {}%
-{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
+{\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}}
 \RequirePackage{cleveref}
 % Redefine commands for cleveref
 \RenewDocumentCommand{\tma@crefname}{mmm}{\crefname{#1}{#2}{#3}}
@@ -977,7 +1021,7 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \@ifpackageloaded{hyperref}%
 {}%
-{\RequirePackage[pdfencoding=unicode,psdextra]{hyperref}}
+{\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}}
 \RequirePackage{cleveref}
 \ExplSyntaxOn
 % Declare global variables to store the sanitised tag
@@ -1090,7 +1134,6 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% End of Package ou-tma
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %\endinput
 %    \end{macrocode}
 % \iffalse
@@ -1114,7 +1157,7 @@
 %% Marked Assessment._
 %    \end{macrocode}
 %
-% This is the OU TMA supplementary file. It's purpose is to contain commands
+% This is the \OU\ \TMA\ supplementary file. It's purpose is to contain commands
 % that are less commonly used, probably used by only one or two modules; and
 % for experimental commands that may be included for testing by a wider
 % audience but may be deemed unnecessary in the long run.
