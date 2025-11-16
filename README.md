@@ -29,10 +29,11 @@ If the `ou-tma.sty` and `ou-tma-sup.sty` files are not provided, and you have, i
 -  - `pdflatex ou-tma.dtx` (repeated several times)
 -  - `makeindex -s gglo.ist -o ou-tma-chg-tma.gls ou-tma-chg-tma.glo`
 -  - `makeindex -s gglo.ist -o ou-tma-chg-sup.gls ou-tma-chg-sup.glo`
+-  - `makeindex -s gglo.ist -o ou-tma-chg-chg.gls ou-tma-chg-chg.glo`
 -  - `makeindex -s gind.ist ou-tma`
 -  - `pdflatex ou-tma.dtx` (several times again)
 
-The `ou-tma.sty` and `ou-tma-sup.sty` files should be placed in an appropriate location within the TeX directory structure. For example in a directory such as tex/latex/ou-tma.
+The `ou-tma.sty` and `ou-tma-sup.sty` files should be placed in an appropriate location within the TeX directory structure. For example in a directory such as tex/latex/ou-tma. The file `doc-changes.sty` is only used for formatting this documentation and may safely be ignore thereafter.
 
 ## Usage
 

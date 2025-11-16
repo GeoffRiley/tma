@@ -185,7 +185,7 @@
 % \userentry{pdflatex ou-tma.dtx}
 % \fqquad(several times)
 %
-% The files \filenm{ou-tma.sty} and \filenm{ou-tma-sup.sty} should be placed in an appropriate location within the \TeX\ directory structure. For example in a directory such as \filenm{tex/latex/tma}. The file \filenm{doc-changes.sty} is only used for formatting this documentation and may safely be ignored thereafter.
+% The files \filenm{ou-tma.sty} and \filenm{ou-tma-sup.sty} should be placed in an appropriate location within the \TeX\ directory structure. For example in a directory such as \filenm{tex/latex/ou-tma}. The file \filenm{doc-changes.sty} is only used for formatting this documentation and may safely be ignored thereafter.
 %
 % \section{Usage}
 %
@@ -193,7 +193,8 @@
 % of your \LaTeX\ document:
 % \begin{quote}
 %    \cs{documentclass}|[a4paper,11pt]{article}|\\
-%    \cs{usepackage}|{ou-tma}|\\
+%    \cs{usepackage}|[|\textlangle options\textrangle|]{ou-tma}|\\
+%	 \cs{usepackage}|{ou-tma-sup}| \qquad |% if required| \\
 %    \vdots\\
 %    \cs{begin}|{document}|\\
 %    \vdots\\

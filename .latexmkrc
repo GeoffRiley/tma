@@ -2,10 +2,12 @@
 
 # Build PDF with pdflatex (adjust if you prefer lualatex/xelatex).
 $pdf_mode = 1;
-$pdflatex  = 'pdflatex %O -interaction=nonstopmode -file-line-error %S';
+# $pdflatex  = 'pdflatex %O -interaction=nonstopmode -file-line-error %S';
+set_tex_cmds('-shell-escape -synctex=1 -file-line-error %O %S');
+$max_repeat = 5;
 
 # Quiet(er) logs if you like:
-$silent = 1;                   # comment out if you prefer chatter
+#$silent = 1;                   # comment out if you prefer chatter
 
 # --- Let latexmk call make for missing files --------------------------------
 $use_make = 1;          # same as passing -use-make on the CLI
@@ -33,11 +35,80 @@ sub makeindex_gglo {
 
 # --- Housekeeping --------------------------------------------------------
 # Teach latexmk which generated files to clean as auxiliaries
-$clean_ext = ' %R.glo %R.gls %R.glg %R.idx %R.ind %R.ilg';
+my @clean_ext = qw(
+  %R-blx.aux
+  %R-blx.bib
+  acn
+  acr
+  alg
+  aux
+  bbl
+  bcf
+  blg
+  brf
+  cb
+  cb2
+  cpt
+  cut
+  dvi
+  fdb_latexmk
+  fls
+  fmt
+  fot
+  glg
+  glo
+  gls
+  glsdefs
+  idx
+  ilg
+  ind
+  ist
+  lb
+  listing
+  loa
+  loe
+  lof
+  log
+  lol
+  lot
+  lox
+  nav
+  out
+  pdfsync
+  pre
+  run.xml
+  snm
+  soc
+  synctex
+  synctex(busy)
+  synctex.gz
+  synctex.gz(busy)
+  tdo
+  thm
+  toc
+  upa
+  upb
+  vrb
+  xcp
+  xdv
+  xmpi
+  xyc
+  *-converted-to.*
+  */*-converted-to.*
+  */*/*-converted-to.*
+  */*/*/*-converted-to.*
+);
+$clean_ext = join ' ', @clean_ext;
 
-# Optional: continuous preview default (you can still call -pvc explicitly)
-# $preview_continuous_mode = 1;
+no warnings 'redefine';
 
-# Optional: if your doc uses biblatex/biber, latexmk auto-detects it.
-# If you want to force biber:
-# $bibtex_use = 2;
+# Overwrite `cleanup1` functions to support more general pattern in $clean_ext.
+# Ref: https://github.com/e-dschungel/latexmk-config/blob/master/latexmkrc
+sub cleanup1 {
+    my $dir = fix_pattern( shift );
+    my $root_fixed = fix_pattern( $root_filename );
+    foreach (@_) {
+        (my $name = (/%R/ || /[\*\?]/) ? $_ : "%R.$_") =~ s/%R/$dir$root_fixed/;
+        unlink_or_move( glob( "$name" ) );
+    }
+}
