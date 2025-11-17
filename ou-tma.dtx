@@ -25,7 +25,7 @@
 %</driver>
 %<ou-tma.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<ou-tma.sty>\ProvidesExplPackage{ou-tma}
-%<ou-tma.sty>  {2025-11-12} {v1.21.3} {OU-TMA package}
+%<ou-tma.sty>  {2025-11-17} {v1.21.4} {OU-TMA package}
 %<ou-tma-sup.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
 %<ou-tma-sup.sty>  {2025-10-28} {v0.12} {OU-TMA-SUP package}
@@ -61,6 +61,15 @@
 \fancyhead[L]{\textsf{ou-tma}\ and \textsf{ou-tma-sup}}
 \fancyhead[R]{\textrm{\thepage}}
 \RenewDocumentCommand{\headrulewidth}{}{1pt} % Remove header rule
+
+\def\MakePrivateLetters{%
+   \makeatletter
+   \catcode`\_11
+   \catcode`\:11}
+\def\ClearPrivateLetters{%
+    \makeatother
+    \catcode`\_8
+    \catcode`\:12}
 
 \makeatletter
 
@@ -131,6 +140,7 @@
 % \newcommand{\stmas}{\pkg{ou-tma-sup}}
 % \newcommand{\TMA}{\acro{TMA}}
 % \newcommand{\OU}{\acro{OU}}
+% \MakePrivateLetters
 % \DoNotIndex{\!,\@ifpackageloaded,\ ,\AtBeginDocument,\author,\crefname,\else}
 % \DoNotIndex{\endinput,\ensuremath,\ExplSyntaxOff,\ExplSyntaxOn,\fancyhead}
 % \DoNotIndex{\fancyhf,\fi,\frac,\g,\geometry,\headrulewidth,\hspace,\ifthenelse}
@@ -141,7 +151,17 @@
 % \DoNotIndex{\refstepcounter,\relax,\renewcommand,\RenewDocumentCommand}
 % \DoNotIndex{\RequirePackage,\setcounter,\setlength,\space,\sqsubset,\sqsupset}
 % \DoNotIndex{\setcounter,\textbf,\textrm,\textsuperscript,\tl,\typeout}
-% \DoNotIndex{\unicode,\vspace,\DeclareMathOperator,\DeclareOption}
+% \DoNotIndex{\unicode,\vspace,\DeclareMathOperator,\DeclareOption,\l,\cs,\doc}
+% \DoNotIndex{\,,\-,\.,\;,\arabic,\begingroup,\endgroup,\bigskip,\def,\draw}
+% \DoNotIndex{\emph,\startcsname,\endcsname,\expandafter,\hangindent}
+% \DoNotIndex{\IfNoValueF,\ifstrequal,\InputIfFileExists,\jobname,\footnotesize}
+% \DoNotIndex{\label,\left,\right,\node,\pageref,\pagestyle,\protected@write}
+% \DoNotIndex{\providecommand,\ProvidesExplPackage,\thepage,\theglossary}
+% \DoNotIndex{\tikzset,\regex,\section,\SetupDoc,\stepcounter,\sisetup,\string}
+% \DoNotIndex{\subitem,\subsubitem,\text,\textemdash,\textit,\the,\thefootnote}
+% \DoNotIndex{\usepgfplotslibrary,\usetikzlibrary,\vskip,\Wnd,\XGap}
+% \DoNotIndex{\cs_new:Npn}
+% \ClearPrivateLetters
 % \title{The \stma\ and \stmas\ Packages\thanks{This document
 %  corresponds to \stma\ \outmaversion, dated~\outmadate, and \stmas\ \outmasupversion, dated~\outmasupdate.}}
 % \author{Geoff Riley \\ \href{mailto:geoffr@adaso.com}{geoffr@adaso.com}}
@@ -159,7 +179,10 @@
 % package provides a number of extra macros that may be useful for some modules.
 % \end{abstract}
 %
+% \addtocontents{toc}{\protect\begin{multicols}{2}}
+% { \parskip 0pt
 % \tableofcontents
+% }
 %
 % \section{Introduction}
 %
@@ -193,7 +216,7 @@
 % of your \LaTeX\ document:
 % \begin{quote}
 %    \cs{documentclass}|[a4paper,11pt]{article}|\\
-%    \cs{usepackage}|[|\textlangle options\textrangle|]{ou-tma}|\\
+%    \cs{usepackage}\oarg{options}|{ou-tma}|\\
 %	 \cs{usepackage}|{ou-tma-sup}| \qquad |% if required| \\
 %    \vdots\\
 %    \cs{begin}|{document}|\\
@@ -435,15 +458,25 @@
 %        \ItemDescribeArgument[c=newtheorem]{prefix} The prefix is a short character sequence used when creating the automatic labels for titled environments. It is usually a three or four character string. For example, the \env{Theory} environment uses `thm' and the \env{Lemma} environment uses `lem'.
 %    \end{itemize}
 % Example:\\
-% \cs{NewTheoremWithAutoLabel}|{Corollory}{corollory}[][cor]|
-% \NewTheoremWithAutoLabel{Corollory}{corollory}[][cor]
-% \begin{Corollory}
-%   A Corollory!
-% \end{Corollory}
+% \cs{NewTheoremWithAutoLabel}|{Corollary}{corollary}[][cor]|
+% \NewTheoremWithAutoLabel{Corollary}{corollary}[][cor]
+% \begin{Corollary}
+%   A Corollary!
+% \end{Corollary}
 %
 % \end{description}
 %
-% \MaybeStop{}
+% \MaybeStop{
+%  \clearpage
+%  \printchangesTMA
+%  \bigskip
+%  \printchangesSUP
+%  \bigskip
+%  \printchangesCHG
+%  \clearpage
+%  \addtocontents{toc}{\protect\end{multicols}}
+%  \PrintIndex
+%}
 %
 % \section{Implementation of \stma}
 %
@@ -497,6 +530,9 @@
 % To use a package option, place the option(s) before the package name:\\\nopagebreak
 % \fqquad\cs{usepackage}|[roman,cleveref]{ou-tma}|
 %
+% \changesTMA{v1.21.4}{25-11-17}{
+%	 Added functions \cs{MakePrivateLetters} and \cs{ClearPrivateLetters} to allow
+%    \pkg{expl3} elements to be indexed.}
 % \changesTMA{v1.20}{2025-04-07}{
 %    Package name changed from `tma' to `ou-tma' to become a
 %    little more descriptive and to abide by the minimum package
@@ -619,6 +655,8 @@
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
 %    \end{macrocode}
+%
+% \makeatletter
 % In order to allow the question introduction string to be modified, a general \LaTeX\ string is created along with a macro to set it.
 % \begin{description}
 %   \ItemDescribeMacro{\tma@questionalignment} Holds the string alignment to the left margin, the default is `r'. This is particularly useful for question strings that might otherwise extend beyond the left hand reach of the left hand page border.
@@ -626,6 +664,8 @@
 %   \ItemDescribeMacro{\tma@questionstring} Hold the string to be printed before the question number, the default is `Q'.
 %   \ItemDescribeMacro{\setquestionstring}\oarg{char}\marg{string} Set the string to precede the question number
 % \end{description}
+% \makeatother
+%
 %    \begin{macrocode}
 \NewDocumentCommand{\tma@questionalignment}{}{r}
 \NewDocumentCommand{\tma@questionstring}{}{\relax}
@@ -730,7 +770,7 @@
 %    \end{macrocode}
 %
 % \subsection{Option Handling}
-%
+% \makeatletter
 % In order to handle the incoming options for the \stma\ package, we create a set of four new boolean tokens.
 % \begin{description}
 %     \ItemDescribeBoolean{tma@roman} False indicates `alph' numbering, true indicates `roman' numbering of parts and subpart.
@@ -738,6 +778,7 @@
 %     \ItemDescribeBoolean{tma@usepdfbookmark} True indicated that the \pkg{pdfbookmark} package is requested.
 %     \ItemDescribeBoolean{tma@legacy} True indicted that the commands \cs{Complex} and \cs{vect} will be redefined to the legacy commands \cs{C} and \cs{vec}.
 % \end{description}
+% \makeatother
 %
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -756,6 +797,7 @@
 \tma@legacyfalse         % Default is not to use legacy definitions
 %    \end{macrocode}
 %
+% \makeatletter
 % We now set up the default states and commands for the \stma\ package operation.
 % \begin{description}
 %    \ItemDescribeMacro{\theqpart} returns the current question part number as either an alpha or roman index.
@@ -765,6 +807,7 @@
 %    \ItemDescribeMacro{\tma@bookmark}\oarg{level}\marg{text}\marg{name} The level is optional, numerical, the default is zero, the top level. The text is what will appear in the bookmark panel, and the name is what may be used as a reference to the location from other parts of the document.
 %    \ItemDescribeMacro{\tma@pageref}\marg{name} returns the page number, if known, that contains the bookmark with the label name.
 % \end{description}
+% \makeatother
 %
 %    \begin{macrocode}
 % Define commands with default values
@@ -1061,10 +1104,10 @@
 %
 % The resultant commands will create numerically sequenced entities, each with the option of having the numerical index being replaced by a supplied tag.
 % \begin{description}
-%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Wrapper} The wrapper is the name of the class of entities that you wish to use. It will be used as the title of the declaration preceding either the number or the tag.
-%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Base} The base is the name of the underlying \textsf{asmthm} counter. If two or more wrappers share the same base, they will share the same count.
-%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Outer wrapper} The outer wrapper is an optional parameter (default: section) which will supply the first half of a dot separated counter. Any bounding environment with an associated count will be acceptable such as `chapter' or `section'. Giving a blank outer wrapper eliminates the wrapper from the counter.
-%    \ItemDescribeArgument[NewTheoremWithAutoLabel]{Prefix} The prefix is a short character sequence used to categorise automatically created labels. The default is to use the base name, but tradition dictates that a three or four letter abbreviation is provided such as `thm' for theorem or `lem' for lemma.
+%    \ItemDescribeArgument[c=NewTheoremAL]{Wrapper} The wrapper is the name of the class of entities that you wish to use. It will be used as the title of the declaration preceding either the number or the tag.
+%    \ItemDescribeArgument[c=NewTheoremAL]{Base} The base is the name of the underlying \textsf{asmthm} counter. If two or more wrappers share the same base, they will share the same count.
+%    \ItemDescribeArgument[c=NewTheoremAL]{Outer wrapper} The outer wrapper is an optional parameter (default: section) which will supply the first half of a dot separated counter. Any bounding environment with an associated count will be acceptable such as `chapter' or `section'. Giving a blank outer wrapper eliminates the wrapper from the counter.
+%    \ItemDescribeArgument[c=NewTheoremAL]{Prefix} The prefix is a short character sequence used to categorise automatically created labels. The default is to use the base name, but tradition dictates that a three or four letter abbreviation is provided such as `thm' for theorem or `lem' for lemma.
 %\end{description}
 %
 % An example declaration would be\\
@@ -1093,10 +1136,6 @@
             \label{\@auto@label}
         }
     }{
-        \csname end#2\endcsname
-        % Restore the original \the<counter>
-        \expandafter\let\csname the#2\endcsname
-            \csname tma@orig@the#2\endcsname
     }
 }
 \NewTheoremWithAutoLabel{Lemma}{lemma}[][lem]
@@ -1182,13 +1221,13 @@
 %
 % \DescribeMacro{\tmasf}\oarg{options}\marg{value(s)}\oarg{units}: Round to <n> significant figures
 %
-% \DescribeArgument[rounding]{value(s)}: should be a comma separated lists giving either two or three numbers:
+% \DescribeArgument[c=rounding]{value(s)}: should be a comma separated lists giving either two or three numbers:
 % \begin{itemize}
 %   \item  |{x, n}|    for one value to n dp/sf
 %   \item  |{x, y, n}| for a range from x to y to n dp/sf
 % \end{itemize}
 %
-% \DescribeArgument[rounding]{options}: may be one or more pairs of strings joined by an equals sign. Currently defined are the mutually exclusive:
+% \DescribeArgument[c=rounding]{options}: may be one or more pairs of strings joined by an equals sign. Currently defined are the mutually exclusive:
 % \begin{itemize}
 %   \item   |style=bracket|       for bracketed range: (x, y)
 %   \item   |style=to| (default)  for range using: `x to y'
@@ -1208,12 +1247,12 @@
 %     Draws a 5-number summary diagram using \TikZ.
 %
 % \begin{description}
-%    \ItemDescribeArgument[fivestats]{n}: (Optional) number of samples
-%    \ItemDescribeArgument[fivestats]{min}: Extreme minimum value
-%    \ItemDescribeArgument[fivestats]{max}: Extreme Maximum value
-%    \ItemDescribeArgument[fivestats]{median}: Median average
-%    \ItemDescribeArgument[fivestats]{Q1}: First quartile value
-%    \ItemDescribeArgument[fivestats]{Q3}: Third quartile value
+%    \ItemDescribeArgument[c=fivestats]{n}: (Optional) number of samples
+%    \ItemDescribeArgument[c=fivestats]{min}: Extreme minimum value
+%    \ItemDescribeArgument[c=fivestats]{max}: Extreme Maximum value
+%    \ItemDescribeArgument[c=fivestats]{median}: Median average
+%    \ItemDescribeArgument[c=fivestats]{Q1}: First quartile value
+%    \ItemDescribeArgument[c=fivestats]{Q3}: Third quartile value
 % \end{description}
 %
 %     e.g. |\FiveStats[30]{1}{10}{5.5}{3}{8}|
@@ -1245,32 +1284,32 @@
 %
 %
 % \subsection{\TikZ\ styles for solid and hollow dots}
-%\changesSUP{v0.12}{2025-10-28}{Added \TikZ\ styles for solid and hollow dots used in inclusive and exclusive number lines}
+% \changesSUP{v0.12}{2025-10-28}{Added \TikZ\ styles for solid and hollow dots used in inclusive and exclusive number lines}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TikZ styles for solid and hollow dots
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \end{macrocode}
 % Create \TikZ\ styles for solid and hollow dots: used to mark included and excluded points on number lines and graphs etc. For example $(2,5]\cup[8,10]\cup[12,16)$:
-%\begin{tikzpicture}[x=0.5cm, y=1cm, thick]
-%% --- number line ---
-%\draw[->] (0,0) -- (18,0) node[below right] {$x$};
-%% --- tick marks and labels (adjust as you like) ---
-%\foreach \x in {0,2,4,6,8,10,12,14,16}
-%{
-%    \draw (\x,0.1) -- (\x,-0.1);
-%    \node[below] at (\x,-0.1) {\x};
-%}
-%% intervals
-%\draw[very thick] (2,0.3) -- (5,0.3);
-%\draw[very thick] (8,0.3) -- (9,0.3);
-%\draw[very thick] (13,0.3) -- (16,0.3);
-%% use your styles here:
-%\node[hollowdot] at (2,0.3) {}; \node[soliddot] at (5,0.3) {};
-%\node[soliddot] at (8,0.3) {}; \node[soliddot] at (9,0.3) {};
-%\node[soliddot] at (13,0.3) {}; \node[hollowdot] at (16,0.3) {};
-%\end{tikzpicture}
-
+% \begin{tikzpicture}[x=0.5cm, y=1cm, thick]
+% % --- number line ---
+% \draw[->] (0,0) -- (18,0) node[below right] {$x$};
+% % --- tick marks and labels (adjust as you like) ---
+% \foreach \x in {0,2,4,6,8,10,12,14,16}
+% {
+%     \draw (\x,0.1) -- (\x,-0.1);
+%     \node[below] at (\x,-0.1) {\x};
+% }
+% % intervals
+% \draw[very thick] (2,0.3) -- (5,0.3);
+% \draw[very thick] (8,0.3) -- (9,0.3);
+% \draw[very thick] (13,0.3) -- (16,0.3);
+% % use your styles here:
+% \node[hollowdot] at (2,0.3) {}; \node[soliddot] at (5,0.3) {};
+% \node[soliddot] at (8,0.3) {}; \node[soliddot] at (9,0.3) {};
+% \node[soliddot] at (13,0.3) {}; \node[hollowdot] at (16,0.3) {};
+% \end{tikzpicture}
+%
 %    \begin{macrocode}
 \tikzset{
     soliddot/.style={
@@ -1299,7 +1338,7 @@
 %% Question subpart with extention
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \end{macrocode}
-
+%
 % Make a question subpart with an extension, eg: Q1.a.i-1\\
 % Usage:\\
 % |\qsubparte[n]{ext}|\\
@@ -1319,7 +1358,6 @@
         \qsubpart[#1]
     }
 }
-
 %    \end{macrocode}
 %
 % \DescribeMacro{\tmadp}\oarg{options}\marg{values}\oarg{units}\\
@@ -1337,7 +1375,7 @@
 % \tmadp[style=bracket]{2.25,7.25,2}[\gram]
 %
 % \subsection{Macros to render appropriate decimal places and significant figures}
-%\changesSUP{v0.12}{2025-10-28}{Added \cs{tmadp} and \cs{tmasf} for setting d.p. amd s.f. texts}
+% \changesSUP{v0.12}{2025-10-28}{Added \cs{tmadp} and \cs{tmasf} for setting d.p. amd s.f. texts}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Decimal places and significant figures
@@ -1363,8 +1401,6 @@
     labels / dp-sf  .code:n = { \tl_set:Nn \l__tma_label_style_tl { abbr } },
     labels          .initial:n = abbr,
 }
-
-%% Public commands
 %    \end{macrocode}
 %
 % Parameters for |\tmadp|\oarg{keyval}\marg{data}\oarg{units} and |\tmasf|\oarg{keyval}\marg{data}\oarg{units}:
@@ -1376,16 +1412,15 @@
 % \end{itemize}
 %
 %    \begin{macrocode}
+%% Public commands
 \NewDocumentCommand{\tmadp}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{dp} }
 \NewDocumentCommand{\tmasf}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{sf} }
-
 % Entry point: parse style and data
 \cs_new_protected:Nn \tma_format:nnnn
 {
     \keys_set:nn { tma } {#1}
     \tma_parse:nnn {#2}{#3}{#4}
 }
-
 % Parse 2- or 3-item list
 \cs_new_protected:Nn \tma_parse:nnn
 {
@@ -1410,7 +1445,6 @@
     }
     { \textbf{Error: expected 2 or 3 comma-separated values.} }
 }
-
 % Single number (optional unit)
 \cs_new_protected:Nn \tma_format_single:nnnn
 {
@@ -1422,7 +1456,6 @@
         \text{~(to~#2~\tma_mode_label:nn {#4}{\l__tma_label_style_tl})}
     }
 }
-
 % Range (optional unit) with style switch
 \cs_new_protected:Nn \tma_format_range:nnnnn
 {
@@ -1445,7 +1478,6 @@
         }
     }
 }
-
 % Core: locally apply siunitx rounding then typeset #3
 %   #1 = mode code dp/sf/off, #2 = precision, #3 = content
 \cs_new_protected:Nn \tma_with_rounding:nnn
@@ -1456,7 +1488,6 @@
     #3
     \group_end:
 }
-
 % Bracketed style output; handles math/text mode parens
 \cs_new_protected:Nn \tma_output_bracketed_range:nnnnn
 {
@@ -1473,7 +1504,6 @@
         }
     }
 }
-
 % Mapping + label text
 \cs_new:Npn \tma_mode_map:n #1
 {
@@ -1481,7 +1511,6 @@
     { {dp}{places} {sf}{figures} {off}{off} }
     { places }
 }
-
 \cs_new:Npn \tma_mode_label:nn #1#2
 {
     \str_case:nnF {#2}
@@ -1492,7 +1521,6 @@
     }
     { \tma_label_abbr:n {#1} }
 }
-
 \cs_new:Npn \tma_label_words:n #1
 {
     \str_case:nnF {#1} { {dp}{places} {sf}{figures} {off}{off} } {places}
@@ -1504,12 +1532,10 @@
     { {dp}{decimal~places} {sf}{significant~figures} {off}{off} }
     { decimal~places }
 }
-
 \cs_new:Npn \tma_label_abbr:n #1
 {
     \str_case:nnF {#1} { {dp}{dp} {sf}{sf} {off}{off} } { dp }
 }
-
 \ExplSyntaxOff
 %    \end{macrocode}
 %
@@ -1522,7 +1548,7 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NewDocumentCommand{\Pounds}{m}{%
-    \pounds\,\num[round-precision=2,round-mode=places,round-integer-to-decimal]{#1}%
+    \pounds\,\num[round-precision=2,round-mode=places]{#1}%
 }
 %    \end{macrocode}
 %
@@ -1826,14 +1852,14 @@
 % \subsection{Public API (document commands)}
 %
 % \begin{description}
-%     \ItemDescribeMacro[changes]{\DocChangeDeclareStreams}\marg{change sets} Comman separated list of change sets required.
-%     \ItemDescribeMacro[changes]{\DocChangeSet}\marg{change set} Set the active change set.
-%     \ItemDescribeMacro[changes]{\DocChangeClear} Save the current change set.
-%     \ItemDescribeMacro[changes]{\DocChangePush}\marg{change set} Switch to the indicated change set, but remember which was active before.
-%     \ItemDescribeMacro[changes]{\DocChangePop} Restore the previously active change set.
-%     \ItemDescribeMacro[changes]{\DocChangeSingleColumnOn} Set single column glossary printing.
-%     \ItemDescribeMacro[changes]{\DocChangeSingleColumnOff} Set double column glossary printing.
-%     \ItemDescribeMacro[changes]{\DocChangePrint}\oarg{title}\marg{change set} Print the change set as a glossary using the provided title.
+%     \ItemDescribeMacro[c=changes]{\DocChangeDeclareStreams}\marg{change sets} Comman separated list of change sets required.
+%     \ItemDescribeMacro[c=changes]{\DocChangeSet}\marg{change set} Set the active change set.
+%     \ItemDescribeMacro[c=changes]{\DocChangeClear} Save the current change set.
+%     \ItemDescribeMacro[c=changes]{\DocChangePush}\marg{change set} Switch to the indicated change set, but remember which was active before.
+%     \ItemDescribeMacro[c=changes]{\DocChangePop} Restore the previously active change set.
+%     \ItemDescribeMacro[c=changes]{\DocChangeSingleColumnOn} Set single column glossary printing.
+%     \ItemDescribeMacro[c=changes]{\DocChangeSingleColumnOff} Set double column glossary printing.
+%     \ItemDescribeMacro[c=changes]{\DocChangePrint}\oarg{title}\marg{change set} Print the change set as a glossary using the provided title.
 % \end{description}
 %
 %    \begin{macrocode}
@@ -1864,19 +1890,7 @@
 % \iffalse
 %</doc-changes.sty>
 % \fi
-
-
+%
 % \Finale
-
-% \makeatletter
-% \makeatother
-% \clearpage
-% \printchangesTMA
-% \bigskip
-% \printchangesSUP
-% \bigskip
-% \printchangesCHG
-% \clearpage
-% \PrintIndex
 %
 % \endinput

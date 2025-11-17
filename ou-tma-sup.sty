@@ -50,11 +50,6 @@
     positioning,
     decorations.markings}
 %% TikZ styles for solid and hollow dots
-%% --- number line ---
-%% --- tick marks and labels (adjust as you like) ---
-%% intervals
-%% use your styles here:
-
 \tikzset{
     soliddot/.style={
         fill=black,
@@ -73,7 +68,6 @@
     },
 }
 %% Question subpart with extention
-
 \NewDocumentCommand{\qsubparte}{O{0}m}{
     {
         \iftma@roman
@@ -84,7 +78,6 @@
         \qsubpart[#1]
     }
 }
-
 %% Decimal places and significant figures
 
 \ExplSyntaxOn
@@ -107,7 +100,6 @@
     labels / dp-sf  .code:n = { \tl_set:Nn \l__tma_label_style_tl { abbr } },
     labels          .initial:n = abbr,
 }
-
 %% Public commands
 \NewDocumentCommand{\tmadp}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{dp} }
 \NewDocumentCommand{\tmasf}{O{}mO{}}{ \tma_format:nnnn {#1}{#2}{#3}{sf} }
@@ -239,7 +231,7 @@
 %% Pound Sterling value
 
 \NewDocumentCommand{\Pounds}{m}{%
-    \pounds\,\num[round-precision=2,round-mode=places,round-integer-to-decimal]{#1}%
+    \pounds\,\num[round-precision=2,round-mode=places]{#1}%
 }
 %% Five value statistical summary diagram
 \NewDocumentCommand{\FiveStats}{o mmmmm}{%
@@ -313,8 +305,6 @@
 
 %% End of Package ou-tma-sup
 
-
-
-\endinput
+%% 
 %%
 %% End of file `ou-tma-sup.sty'.
