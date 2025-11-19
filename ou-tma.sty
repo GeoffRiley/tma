@@ -20,7 +20,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
 \ProvidesExplPackage{ou-tma}
-  {2025-11-12} {v1.21.3} {OU-TMA package}
+  {2025-11-19} {v1.21.5} {OU-TMA package}
 %% ou-tma.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -32,31 +32,31 @@
 \RequirePackage{expl3} % LaTeX3 "experimental"
 %% Package Initialization
 \ExplSyntaxOn
-\tl_new:N \g_tma_constant_name
-\tl_new:N \g_tma_constant_tma
-\tl_new:N \g_tma_constant_course
-\tl_new:N \g_tma_constant_pin
-\tl_new:N \g_tma_constant_thedate
-\tl_gset:Nn \g_tma_constant_name {name}
-\tl_gset:Nn \g_tma_constant_tma {tma}
-\tl_gset:Nn \g_tma_constant_course {course}
-\tl_gset:Nn \g_tma_constant_pin {pin}
-\tl_gset:Nn \g_tma_constant_thedate {the~date}
-\newcommand{\name}{\g_tma_constant_name}
-\newcommand{\tma}{\g_tma_constant_tma}
-\newcommand{\course}{\g_tma_constant_course}
-\newcommand{\pin}{\g_tma_constant_pin}
-\newcommand{\thedate}{\g_tma_constant_thedate}
+\tl_new:N \g__tma_constant_name
+\tl_new:N \g__tma_constant_tma
+\tl_new:N \g__tma_constant_course
+\tl_new:N \g__tma_constant_pin
+\tl_new:N \g__tma_constant_thedate
+\tl_gset:Nn \g__tma_constant_name {name}
+\tl_gset:Nn \g__tma_constant_tma {tma}
+\tl_gset:Nn \g__tma_constant_course {course}
+\tl_gset:Nn \g__tma_constant_pin {pin}
+\tl_gset:Nn \g__tma_constant_thedate {the~date}
+\newcommand{\name}{\g__tma_constant_name}
+\newcommand{\tma}{\g__tma_constant_tma}
+\newcommand{\course}{\g__tma_constant_course}
+\newcommand{\pin}{\g__tma_constant_pin}
+\newcommand{\thedate}{\g__tma_constant_thedate}
 \NewDocumentCommand{\myname}{m}{%
-\tl_gset:Nn \g_tma_constant_name{#1}}
+\tl_gset:Nn \g__tma_constant_name{#1}}
 \NewDocumentCommand{\mytma}{m}{%
-\tl_gset:Nn \g_tma_constant_tma{#1}}
+\tl_gset:Nn \g__tma_constant_tma{#1}}
 \NewDocumentCommand{\mycourse}{m}{%
-\tl_gset:Nn \g_tma_constant_course{#1}}
+\tl_gset:Nn \g__tma_constant_course{#1}}
 \NewDocumentCommand{\mypin}{m}{%
-\tl_gset:Nn \g_tma_constant_pin{#1}}
+\tl_gset:Nn \g__tma_constant_pin{#1}}
 \NewDocumentCommand{\setdate}{m}{%
-\date{#1}\tl_gset:Nn \g_tma_constant_thedate{#1}}
+\date{#1}\tl_gset:Nn \g__tma_constant_thedate{#1}}
 \ExplSyntaxOff
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
