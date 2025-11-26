@@ -20,7 +20,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
 \ProvidesExplPackage{ou-tma-sup}
-  {2025-11-19} {v0.13} {OU-TMA-SUP package}
+  {2025-11-25} {v0.14} {OU-TMA-SUP package}
 %% ou-tma-sup.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -285,15 +285,128 @@
     \group_end:
     \right)
 }
-
 \ExplSyntaxOff
+\newcommand\ou@tma@regularpolygon[2]{%
+  \tikz[x=1ex, y=1ex, baseline=0pt]{%
+    \pgfmathtruncatemacro{\N}{#2}%
+    \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathsetmacro{\start}{-90 + 180/\N}%
+    \pgfmathsetmacro{\rad}{0.5/cos(180/\N)}%
+    \pgfmathsetmacro{\shift}{0.5}%
+    \draw[line width=0.12ex,#1]
+      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
+      \foreach \x in {1,...,\NmOne}{%
+        -- ({\rad*cos(\start + 360*\x/\N)},
+            {\shift + \rad*sin(\start + 360*\x/\N)})%
+      } -- cycle;
+  }%
+}
+
+\newcommand\ou@tma@regularpolygonopscale{1.2}
+
+\newcommand\ou@tma@regularpolygonop[2]{%
+  \tikz[x=1ex, y=1ex, baseline=0pt]{%
+    \pgfmathtruncatemacro{\N}{#2}%
+    \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathsetmacro{\start}{-90 + 180/\N}%
+    \pgfmathsetmacro{\rad}{0.5/cos(180/\N) * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\shift}{0.5 * \ou@tma@regularpolygonopscale}%
+    \draw[line width=0.12ex,#1]
+      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
+      \foreach \x in {1,...,\NmOne}{%
+        -- ({\rad*cos(\start + 360*\x/\N)},
+            {\shift + \rad*sin(\start + 360*\x/\N)})%
+      } -- cycle;
+  }%
+}
+
+\newcommand\ou@tma@regularstar[3]{%
+  \tikz[x=1ex, y=1ex, baseline=0pt]{%
+    \pgfmathtruncatemacro{\N}{#2}%
+    \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathsetmacro{\start}{-90 + 180/\N}%
+    \pgfmathsetmacro{\rad}{0.5/cos(180/\N)}%
+    \pgfmathsetmacro{\shift}{0.5}%
+    \draw[line width=0.12ex,#1]
+      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
+      \foreach \t in {1,...,\NmOne}{%
+        -- ({\rad*cos(\start + 360*\t*#3/\N)},
+            {\shift + \rad*sin(\start + 360*\t*#3/\N)})%
+      } -- cycle;
+  }%
+}
+
+\newcommand\ou@tma@regularstarop[3]{%
+  \tikz[x=1ex, y=1ex, baseline=0pt]{%
+    \pgfmathtruncatemacro{\N}{#2}%
+    \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathsetmacro{\start}{-90 + 180/\N}%
+    \pgfmathsetmacro{\rad}{0.5/cos(180/\N) * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\shift}{0.5 * \ou@tma@regularpolygonopscale}%
+    \draw[line width=0.12ex,#1]
+      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
+      \foreach \t in {1,...,\NmOne}{%
+        -- ({\rad*cos(\start + 360*\t*#3/\N)},
+            {\shift + \rad*sin(\start + 360*\t*#3/\N)})%
+      } -- cycle;
+  }%
+}
+
+\ExplSyntaxOn
+
+
+\cs_new_protected:Npn \__tmasup_mregularpolygon:nn #1#2
+  { \mathord{ \ou@tma@regularpolygon{#1}{#2} } }
+
+\cs_new_protected:Npn \__tmasup_mregularpolygon_op:nn #1#2
+  { \mathbin{ \ou@tma@regularpolygonop{#1}{#2} } }
+
+\cs_new_protected:Npn \__tmasup_mregularstar:nnn #1#2#3
+  { \mathord{ \ou@tma@regularstar{#1}{#2}{#3} } }
+
+\cs_new_protected:Npn \__tmasup_mregularstar_op:nnn #1#2#3
+  { \mathbin{ \ou@tma@regularstarop{#1}{#2}{#3} } }
+
+
+\NewDocumentCommand{\mregularpolygon}{O{} m}
+  { \__tmasup_mregularpolygon:nn {#1} {#2} }
+
+\NewDocumentCommand{\mregularpolygonfill}{O{} m}
+  { \__tmasup_mregularpolygon:nn { fill,#1 } {#2} }
+
+\NewDocumentCommand{\mregularpolygonop}{O{} m}
+  { \__tmasup_mregularpolygon_op:nn {#1} {#2} }
+
+\NewDocumentCommand{\mregularpolygonfillop}{O{} m}
+  { \__tmasup_mregularpolygon_op:nn { fill,#1 } {#2} }
+
+\NewDocumentCommand{\mregularstar}{O{} m m}
+  { \__tmasup_mregularstar:nnn {#1} {#2} {#3} }
+
+\NewDocumentCommand{\mregularstarfill}{O{} m m}
+  { \__tmasup_mregularstar:nnn { fill,#1 } {#2} {#3} }
+
+\NewDocumentCommand{\mregularstarop}{O{} m m}
+  { \__tmasup_mregularstar_op:nnn {#1} {#2} {#3} }
+
+\NewDocumentCommand{\mregularstarfillop}{O{} m m}
+  { \__tmasup_mregularstar_op:nnn { fill,#1 } {#2} {#3} }
+
+\NewDocumentCommand{\moctagon}{}       { \mregularpolygon{8} }
+\NewDocumentCommand{\moctagonfill}{}   { \mregularpolygonfill{8} }
+\NewDocumentCommand{\moctagonop}{}     { \mregularpolygonop{8} }
+\NewDocumentCommand{\moctagonfillop}{}{ \mregularpolygonfillop{8} }
+
+\NewDocumentCommand{\mpentagram}{}       { \mregularstar{5}{2} }
+\NewDocumentCommand{\mpentagramfill}{}   { \mregularstarfill{5}{2} }
+\NewDocumentCommand{\mpentagramop}{}     { \mregularstarop{5}{2} }
+\NewDocumentCommand{\mpentagramfillop}{}{ \mregularstarfillop{5}{2} }
 %% Extra macros
 \NewDocumentCommand{\pflag}{}{\ensuremath{[+]}}
 \NewDocumentCommand{\nflag}{}{\ensuremath{[-]}}
 \NewDocumentCommand{\ld}{}{\ensuremath{\lambda}}
 
 %% End of Package ou-tma-sup
-
 %% 
 %%
 %% End of file `ou-tma-sup.sty'.

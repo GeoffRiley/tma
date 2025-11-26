@@ -1,0 +1,51 @@
+% !TeX encoding = UTF-8
+\documentclass[a4paper,12pt]{article}
+\usepackage{xparse}
+\usepackage{tikz}
+\usepackage{ou-tma-sup}
+
+\begin{document}
+
+Inline:\quad $S(\moctagon)$
+
+Filled:\quad $S(\moctagonfill)$
+
+Normalised heights:\quad
+$\mregularpolygon{3},\
+  \mregularpolygon{4},\
+  \mregularpolygon{5},\
+  \mregularpolygon{6},\
+  \mregularpolygon{7},\
+  \mregularpolygon{8}$
+
+Styled:\quad
+$\mregularpolygon[draw=blue]{8},\
+  \mregularpolygonfill[fill=gray!30]{8},\
+  \mregularpolygonfill[fill=black]{8}$
+
+As a binary operator:\quad
+$G \moctagonop H$
+
+Filled operator:\quad
+$G \moctagonfillop H$
+
+Other n-gon operators:\quad
+$A \mregularpolygonop{3} B,\quad
+ C \mregularpolygonop{5} D$
+
+Symbol-sized shapes:\quad
+$S(\moctagon)$, $S(\mpentagram)$
+
+Filled symbols:\quad
+$S(\moctagonfill)$, $S(\mpentagramfill)$
+
+Operator-sized:\quad
+$G \moctagonop H,\quad G \mpentagramop H$
+
+General stars:\quad
+$\mregularstar{5}{2},\ \mregularstar{7}{2},\ \mregularstar{7}{3}$
+
+Filled operators:\quad
+$A \mregularstarfillop{7}{3} B$
+
+\end{document}

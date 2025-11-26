@@ -27,7 +27,7 @@
 %<ou-tma.sty>\ProvidesExplPackage{ou-tma}
 %<ou-tma.sty>  {2025-11-19} {v1.21.5} {OU-TMA package}
 %<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
-%<ou-tma-sup.sty>  {2025-11-19} {v0.13} {OU-TMA-SUP package}
+%<ou-tma-sup.sty>  {2025-11-25} {v0.14} {OU-TMA-SUP package}
 %<doc-changes.sty>\ProvidesExplPackage{doc-changes}
 %<doc-changes.sty>  {2025-11-19} {v0.4} {Split change logs to per-stream doc glossaries (single column printing)}
 %<*driver>
@@ -1658,8 +1658,210 @@
     \group_end:
     \right)
 }
-
+%    \end{macrocode}
+%
+%
+% \changesSUP{v0.14}{2025-11-25}{
+%	 Added polygon routines for entering symbols such as octagons directly
+%	 in maths mode.}
+% \subsection{Regular Polygons and Star Polygons in Mathematics Mode}
+%
+% The \pkg{ou-tma-sup} package provides commands for typesetting regular
+% polygons and regular stars directly in mathematics mode.  These symbols
+% are constructed with \pkg{TikZ} and designed to harmonise with the height
+% and visual weight of standard mathematical symbols.
+%
+% All figures produced by the commands in this section:
+% \begin{itemize}
+%   \item sit on the mathematics baseline;
+%   \item have symbol-sized versions approximately one x-height tall;
+%   \item have enlarged operator versions spaced as \verb|\mathbin|;
+%   \item support both outline and filled variants via TikZ options;
+%   \item include regular $n$-gons and star polygons~$\{n/k\}$.
+% \end{itemize}
+%
+% \DescribeMacro{\mregularpolygon}
+%   \cs{mregularpolygon}\oarg{tikz-options}\marg{n}
+%
+%   Produces a regular polygon with \meta{n} sides, drawn as a symbol-sized
+%   mathematical object.  The optional argument allows arbitrary TikZ drawing
+%   options such as \verb|draw=blue|, \verb|thick|, or \verb|fill=gray!20|.
+%
+% \DescribeMacro{\mregularpolygonfill}
+%   As \cs{mregularpolygon}, but filled by default.
+%
+% \DescribeMacro{\moctagon}
+%   A convenience macro expanding to \verb|\mregularpolygon{8}|, useful in
+%   group-theoretic notation such as \verb|$S(\moctagon)$|.
+%
+% \DescribeMacro{\mregularpolygonop}
+%   A binary-operator-sized version of a regular \meta{n}-gon.  These symbols
+%   behave as \verb|\mathbin|.  Their enlargement factor can be adjusted by
+%   redefining the internal macro \cs{ou@tma@regularpolygonopscale}.
+%
+% \DescribeMacro{\mregularpolygonfillop}
+%   As \cs{mregularpolygonop}, but filled by default.
+%
+% \DescribeMacro{\mregularstar}
+%   \cs{mregularstar}\oarg{tikz-options}\marg{n}\marg{k}
+%
+%   Produces the regular star polygon~$\{n/k\}$, using the same baseline and
+%   height conventions as regular polygons.
+%
+% \DescribeMacro{\mregularstarfill}
+%   As \cs{mregularstar}, but filled.
+%
+% \DescribeMacro{\mregularstarop}
+%   Binary-operator-sized version of the star polygon $\{n/k\}$.
+%
+% \DescribeMacro{\mregularstarfillop}
+%   Filled variant of the operator-sized star polygon.
+%
+% \DescribeMacro{\mpentagram}
+%   Convenience macro expanding to the star polygon~$\{5/2\}$.
+%
+% Example usage:
+%
+% \begin{quote}
+%   \verb|$S(\moctagon)$| \\
+%   \verb|$G \moctagonop H$| \\
+%   \verb|$\mregularstar{5}{2}$| \\
+%   \verb|$\mregularstarfillop{7}{3}$|
+% \end{quote}
+%
+%
+%    \begin{macrocode}
+% -----------------------------------------
+% Low-level TikZ helpers (normal catcodes)
+% -----------------------------------------
 \ExplSyntaxOff
+% Regular polygon: symbol size
+\newcommand\ou@tma@regularpolygon[2]{%
+  \tikz[x=1ex, y=1ex, baseline=0pt]{%
+    \pgfmathtruncatemacro{\N}{#2}%
+    \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathsetmacro{\start}{-90 + 180/\N}%
+    \pgfmathsetmacro{\rad}{0.5/cos(180/\N)}%
+    \pgfmathsetmacro{\shift}{0.5}%
+    \draw[line width=0.12ex,#1]
+      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
+      \foreach \x in {1,...,\NmOne}{%
+        -- ({\rad*cos(\start + 360*\x/\N)},
+            {\shift + \rad*sin(\start + 360*\x/\N)})%
+      } -- cycle;
+  }%
+}
+
+% Operator-size scale factor
+\newcommand\ou@tma@regularpolygonopscale{1.2}
+
+% Regular polygon: operator size
+\newcommand\ou@tma@regularpolygonop[2]{%
+  \tikz[x=1ex, y=1ex, baseline=0pt]{%
+    \pgfmathtruncatemacro{\N}{#2}%
+    \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathsetmacro{\start}{-90 + 180/\N}%
+    \pgfmathsetmacro{\rad}{0.5/cos(180/\N) * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\shift}{0.5 * \ou@tma@regularpolygonopscale}%
+    \draw[line width=0.12ex,#1]
+      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
+      \foreach \x in {1,...,\NmOne}{%
+        -- ({\rad*cos(\start + 360*\x/\N)},
+            {\shift + \rad*sin(\start + 360*\x/\N)})%
+      } -- cycle;
+  }%
+}
+
+% Regular star polygon: symbol size
+\newcommand\ou@tma@regularstar[3]{%
+  \tikz[x=1ex, y=1ex, baseline=0pt]{%
+    \pgfmathtruncatemacro{\N}{#2}%
+    \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathsetmacro{\start}{-90 + 180/\N}%
+    \pgfmathsetmacro{\rad}{0.5/cos(180/\N)}%
+    \pgfmathsetmacro{\shift}{0.5}%
+    \draw[line width=0.12ex,#1]
+      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
+      \foreach \t in {1,...,\NmOne}{%
+        -- ({\rad*cos(\start + 360*\t*#3/\N)},
+            {\shift + \rad*sin(\start + 360*\t*#3/\N)})%
+      } -- cycle;
+  }%
+}
+
+% Regular star polygon: operator size
+\newcommand\ou@tma@regularstarop[3]{%
+  \tikz[x=1ex, y=1ex, baseline=0pt]{%
+    \pgfmathtruncatemacro{\N}{#2}%
+    \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathsetmacro{\start}{-90 + 180/\N}%
+    \pgfmathsetmacro{\rad}{0.5/cos(180/\N) * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\shift}{0.5 * \ou@tma@regularpolygonopscale}%
+    \draw[line width=0.12ex,#1]
+      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
+      \foreach \t in {1,...,\NmOne}{%
+        -- ({\rad*cos(\start + 360*\t*#3/\N)},
+            {\shift + \rad*sin(\start + 360*\t*#3/\N)})%
+      } -- cycle;
+  }%
+}
+
+\ExplSyntaxOn
+
+% -----------------------------------------
+% expl3 wrappers
+% -----------------------------------------
+
+\cs_new_protected:Npn \@@_mregularpolygon:nn #1#2
+  { \mathord{ \ou@tma@regularpolygon{#1}{#2} } }
+
+\cs_new_protected:Npn \@@_mregularpolygon_op:nn #1#2
+  { \mathbin{ \ou@tma@regularpolygonop{#1}{#2} } }
+
+\cs_new_protected:Npn \@@_mregularstar:nnn #1#2#3
+  { \mathord{ \ou@tma@regularstar{#1}{#2}{#3} } }
+
+\cs_new_protected:Npn \@@_mregularstar_op:nnn #1#2#3
+  { \mathbin{ \ou@tma@regularstarop{#1}{#2}{#3} } }
+
+% -----------------------------------------
+% User commands
+% -----------------------------------------
+
+\NewDocumentCommand{\mregularpolygon}{O{} m}
+  { \@@_mregularpolygon:nn {#1} {#2} }
+
+\NewDocumentCommand{\mregularpolygonfill}{O{} m}
+  { \@@_mregularpolygon:nn { fill,#1 } {#2} }
+
+\NewDocumentCommand{\mregularpolygonop}{O{} m}
+  { \@@_mregularpolygon_op:nn {#1} {#2} }
+
+\NewDocumentCommand{\mregularpolygonfillop}{O{} m}
+  { \@@_mregularpolygon_op:nn { fill,#1 } {#2} }
+
+\NewDocumentCommand{\mregularstar}{O{} m m}
+  { \@@_mregularstar:nnn {#1} {#2} {#3} }
+
+\NewDocumentCommand{\mregularstarfill}{O{} m m}
+  { \@@_mregularstar:nnn { fill,#1 } {#2} {#3} }
+
+\NewDocumentCommand{\mregularstarop}{O{} m m}
+  { \@@_mregularstar_op:nnn {#1} {#2} {#3} }
+
+\NewDocumentCommand{\mregularstarfillop}{O{} m m}
+  { \@@_mregularstar_op:nnn { fill,#1 } {#2} {#3} }
+
+% Convenience aliases
+\NewDocumentCommand{\moctagon}{}       { \mregularpolygon{8} }
+\NewDocumentCommand{\moctagonfill}{}   { \mregularpolygonfill{8} }
+\NewDocumentCommand{\moctagonop}{}     { \mregularpolygonop{8} }
+\NewDocumentCommand{\moctagonfillop}{}{ \mregularpolygonfillop{8} }
+
+\NewDocumentCommand{\mpentagram}{}       { \mregularstar{5}{2} }
+\NewDocumentCommand{\mpentagramfill}{}   { \mregularstarfill{5}{2} }
+\NewDocumentCommand{\mpentagramop}{}     { \mregularstarop{5}{2} }
+\NewDocumentCommand{\mpentagramfillop}{}{ \mregularstarfillop{5}{2} }
 %    \end{macrocode}
 %
 %
@@ -1677,8 +1879,6 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% End of Package ou-tma-sup
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\endinput
 %    \end{macrocode}
 % \iffalse
 %</ou-tma-sup.sty>
