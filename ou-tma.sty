@@ -284,6 +284,9 @@ pdfsubject=\course%
 %% Combinatorial Notations
 \NewDocumentCommand{\comb}{mm}{\ensuremath{{}^{#1}C_{#2}}}
 \NewDocumentCommand{\perm}{mm}{\ensuremath{{}^{#1}\!P_{#2}}}
+%% Group Theory Notation
+\NewDocumentCommand{\gen}{m}{\ensuremath{\langle #1\rangle}}
+\NewDocumentCommand{\Ord}{m}{\ensuremath{\left\lvert{#1}\right\rvert}}
 
 %% Mathematical Operators
 \DeclareMathOperator{\re}{Re}
@@ -311,62 +314,10 @@ pdfsubject=\course%
 \RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
 %% Theorem Environment
-\@ifpackageloaded{hyperref}%
-{}%
-{\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}}
-\RequirePackage{cleveref}
-\ExplSyntaxOn
-\tl_new:N \g_sanitise_tag_tl
-\tl_new:N \l_sanitise_result_tl
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
 
-\def\NOTAG{NOTAG}
-
-\cs_new_protected:Npn \sanitisetag_check:n #1
-{
-    \tl_set:Nn \l_tmpb_tl {#1}
-    \regex_replace_all:nnN { [^a-z0-9:\.\-_]+ } { - } \l_tmpb_tl
-    \tl_put_right:Nx \l_sanitise_result_tl \l_tmpb_tl
-}
-
-\cs_set:Npn \ConcatSanitisedTag #1 {
-    #1 : \tl_use:N \g_sanitise_tag_tl
-}
-
-\NewDocumentCommand{\SanitiseTag}{m}
-{
-    \group_begin:
-    \tl_set:Nn \l_sanitise_result_tl {}
-    \tl_set:Nx \l_tmpa_tl {\text_lowercase:n {#1}}
-    \str_map_function:NN \l_tmpa_tl \sanitisetag_check:n
-    \tl_gset_eq:NN \g_sanitise_tag_tl \l_sanitise_result_tl
-    \group_end:
-}
-\ExplSyntaxOff
-\NewDocumentCommand{\NewTheoremWithAutoLabel}{m m O{section} O{#2}}
-{
-    \newtheorem{#2}{#1}[#3]
-    % Define the wrapper environment
-    \NewDocumentEnvironment{#1}{O{\NOTAG}}{
-        % Save the original version of \the<counter>
-        \expandafter\let\csname tma@orig@the#2\expandafter\endcsname
-            \csname the#2\endcsname
-        \ifstrequal{##1}{\NOTAG}{
-            % No tag: use standard numbering
-            \csname #2\endcsname%
-        }{
-            % Tag provided: use the tag and suppress numbering
-            \addtocounter{#2}{-1}
-            \expandafter\renewcommand\csname the#2\endcsname{##1}
-            \SanitiseTag{##1}
-            \edef\@auto@label{\ConcatSanitisedTag{#4}}
-            \csname #2\endcsname%
-            \label{\@auto@label}
-        }
-    }{
-    }
-}
-\NewTheoremWithAutoLabel{Lemma}{lemma}[][lem]
-\NewTheoremWithAutoLabel{Theorem}{theorem}[][thm]
 \ProvideDocumentCommand{\blacksmiley}{}{%
 \ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}
