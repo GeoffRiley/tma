@@ -20,7 +20,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
 \ProvidesExplPackage{ou-tma-sup}
-  {2025-11-25} {v0.14} {OU-TMA-SUP package}
+  {2025-12-29} {v0.15} {OU-TMA-SUP package}
 %% ou-tma-sup.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -263,10 +263,10 @@
 
 \NewDocumentCommand{\prob}{m}
 {
-    \prob_prob:n { #1 }
+    \__tmasup_prob_prob:n { #1 }
 }
 
-\cs_new_protected:Nn \prob_prob:n
+\cs_new_protected:Nn \__tmasup_prob_prob:n
 {
     \mathrm{P}\left(
     \group_begin:
@@ -401,6 +401,59 @@
 \NewDocumentCommand{\mpentagramfill}{}   { \mregularstarfill{5}{2} }
 \NewDocumentCommand{\mpentagramop}{}     { \mregularstarop{5}{2} }
 \NewDocumentCommand{\mpentagramfillop}{}{ \mregularstarfillop{5}{2} }
+\cs_new_protected:Npn \__tmasup_hb:nn #1 #2
+{
+    % Base text
+    \textsc{hb}\,
+    % Optional page/range
+    \IfNoValueF{#1}
+    { p#1 }
+    % Optional section/range
+    \IfNoValueF{#2}
+    { \,\S#2 }
+}
+
+\NewDocumentCommand{\HB}{ o o }
+{
+    \__tmasup_hb:nn { #1 } { #2 }
+}
+\cs_new_protected:Npn \__tmasup_augmatrix:nnnnn #1 #2 #3 #4 #5
+  {
+    \begin{array}{@{} c @{\;} c @{\;} c @{}}
+      % Left material
+      \IfBooleanTF {#1}
+        { % starred: raw
+          \tl_if_blank:nTF {#4} { } {#4}
+        }
+        { % unstarred: row-aligned
+          \tl_if_blank:nTF {#4} { } { \begin{array}{c} #4 \end{array} }
+        }
+      &
+      % The augmented matrix itself
+      \begin{pmatrix}
+        \begin{array}{#2}
+          #3
+        \end{array}
+      \end{pmatrix}
+      &
+      % Right material
+      \IfBooleanTF {#1}
+        { % starred: raw
+          \tl_if_blank:nTF {#5} { } {#5}
+        }
+        { % unstarred: row-aligned
+          \tl_if_blank:nTF {#5} { } { \begin{array}{l} #5 \end{array} }
+        }
+    \end{array}
+  }
+
+
+\NewDocumentCommand{\AugMatrix}{ s O{c|c} m O{} O{} }
+  {
+    \__tmasup_augmatrix:nnnnn {#1} {#2} {#3} {#4} {#5}
+  }
+
+\ExplSyntaxOff
 %% Extra macros
 \NewDocumentCommand{\pflag}{}{\ensuremath{[+]}}
 \NewDocumentCommand{\nflag}{}{\ensuremath{[-]}}

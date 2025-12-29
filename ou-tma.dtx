@@ -25,9 +25,9 @@
 %</driver>
 %<ou-tma.sty|ou-tma-sup.sty|doc-changes.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<ou-tma.sty>\ProvidesExplPackage{ou-tma}
-%<ou-tma.sty>  {2025-11-19} {v1.21.5} {OU-TMA package}
+%<ou-tma.sty>  {2025-12-15} {v1.21.6} {OU-TMA package}
 %<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
-%<ou-tma-sup.sty>  {2025-11-25} {v0.14} {OU-TMA-SUP package}
+%<ou-tma-sup.sty>  {2025-12-29} {v0.15} {OU-TMA-SUP package}
 %<doc-changes.sty>\ProvidesExplPackage{doc-changes}
 %<doc-changes.sty>  {2025-11-19} {v0.4} {Split change logs to per-stream doc glossaries (single column printing)}
 %<*driver>
@@ -181,10 +181,21 @@
 % package provides a number of extra macros that may be useful for some modules.
 % \end{abstract}
 %
-% \addtocontents{toc}{\protect\begin{multicols}{2}}
-% { \parskip 0pt
-% \tableofcontents
+% \makeatletter
+% \renewcommand\tableofcontents{%
+%   \section*{\contentsname
+%     \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+%   \begingroup
+%     \setlength{\parskip}{0pt}%
+%     \setlength{\parindent}{0pt}%
+%     \begin{multicols}{2}%
+%       \@starttoc{toc}%
+%     \end{multicols}%
+%   \endgroup
 % }
+% \makeatother
+%
+% \tableofcontents
 %
 % \section{Introduction}
 %
@@ -418,12 +429,117 @@
 %    For example |\Pounds{2.56}| renders as \Pounds{2.56}. \emph{This is an \stmas\ macro.}
 % \end{description}
 %
-% \item[Statistics devices] A common device in statistics is the `Five value statistic summary', it is communicated via a standardised graphic.\\
+% \item[Statistics devices] A common device in statistics is the `Five value statistic summary', it is communicated via a standardised graphic.
+% 
 % \DescribeMacro{\FiveStats}\oarg{n}\marg{min}\marg{max}\marg{median}\marg{Q1}\marg{Q3}
 %  \cs{FiveStats} uses \TikZ\ to draw the appropriate diagram. For example:\\
 %  |\FiveStats[30]{1}{10}{5.5}{3}{8}| results in \FiveStats[30]{1}{10}{5.5}{3}{8}
 %
 % The count of values, $n$, is optional. \emph{This is part of the \stmas\ package.}
+%
+% \item[Supplementary commands] Extra commands supporting specific tasks.
+%
+%  \changesSUP{v0.15}{2025-12-29}{Added \cs{AugMatrix} command for augmented matrix typesetting.}
+%  \DescribeMacro{\AugMatrix}
+%  \cs{AugMatrix} typesets an augmented matrix (using \cs{pmatrix}) with
+% optional material to the left and/or right of the matrix.
+%
+%  \medskip
+%  \noindent
+%  \textbf{Syntax}
+%  \begin{quote}
+%	 \cs{AugMatrix}\oarg{colspec}\marg{body}\\
+%	 \cs{AugMatrix}\oarg{colspec}\marg{body}\oarg{left}\oarg{right}\\
+%	 \cs{AugMatrix*}\oarg{colspec}\marg{body}\oarg{left}\oarg{right}\\
+%  \end{quote}
+%
+%  \medskip
+%  \noindent
+%  \textbf{Arguments}
+%  \begin{description}
+%    \item[\meta{colspec}] The array preamble used for the matrix body,
+%      e.g.\ |rrr|, |r r r|, or |rr| \verb+|+ |r|
+%      to indicate an augmented column. The default is |c| \verb+|+ |c|.
+%    \item[\meta{body}] The matrix rows, using |&| and |\\| as usual.
+%    \item[\meta{left}] Optional material to be placed to the left of the matrix.
+%    \item[\meta{right}] Optional material to be placed to the right of the matrix.
+%  \end{description}
+%
+%  \medskip
+%  \noindent
+%  \textbf{Starred vs.\ unstarred}
+%
+%  In the unstarred form, the left and right arguments (if non-empty) are
+%  typeset as single-column arrays so that their rows align with the rows of
+%  the matrix. The left column is centred (|c|) and the right column is
+%  left-aligned (|l|).
+%
+%  In the starred form, the left and right arguments are inserted \emph{raw}
+%  (no automatic alignment structure is added). This is useful if you want
+%  complete control, for example to insert your own alignment, delimiters,
+%  or multi-line constructions.
+%
+%  \medskip
+%  \noindent
+%  \textbf{Examples}
+%  \begin{quote}
+%  \verb+\AugMatrix[rr|r]{1 & 2 & 3\\4 & 5 & 6}+ \\
+%  produces an augmented matrix with a vertical rule between the second and
+%  third columns.
+%
+%  \medskip
+%  \verb+\AugMatrix[rr|r]{1 & 2 & 3\\4 & 5 & 6}[R_1\\R_2][\text{pivot}\\\text{row}]+ \\
+%  places row labels on the left and annotations on the right, aligned to the
+%  matrix rows.
+%
+%  \medskip
+%  \verb+\AugMatrix*[rr|r]{1 & 2 & 3\\4 & 5 & 6}[\left\{][\right\}]+ \\
+%  inserts the braces raw (starred form), allowing custom structures not
+%  constrained to row alignment.
+%  \end{quote}
+%
+%  \medskip
+%  \noindent
+%  Internally, \cs{AugMatrix} uses an outer three-column \texttt{array} to position
+%  left material, the matrix, and right material with compact spacing.
+%
+% 
+%  \changesSUP{v0.15}{2025-12-29}{Added shortcut for module handbook references.}
+%  \DescribeMacro{\HB}
+%
+%  \cs{HB} typesets a compact reference to the \emph{Handbook}, with optional
+%  page and section references.
+%
+%  \medskip
+%  \noindent
+%  \textbf{Syntax}
+%  \begin{quote}
+%    |\HB| \\
+%    |\HB|\oarg{page} \\
+%    |\HB|\oarg{page}\oarg{section}
+%  \end{quote}
+%
+%  \medskip
+%  \noindent
+%  \textbf{Description}
+%
+%  The command produces the small-caps text \textsc{hb}, followed by
+%  optional page and section qualifiers. The first optional argument
+%  specifies a page number or page range; the second optional argument
+%  specifies a section or section range.
+%
+%  \medskip
+%  \noindent
+%  \textbf{Examples}
+%  \begin{quote}
+%    \verb|\HB| \quad produces \textsc{hb} \\
+%    \verb|\HB[23]| \quad produces \textsc{hb}\,p23 \\
+%    \verb|\HB[23][4]| \quad produces \textsc{hb}\,p23\,\S4
+%  \end{quote}
+%
+%  \medskip
+%  \noindent
+%  The command is robust and implemented using \texttt{expl3} conventions.
 %
 % \item[Legacy elements] There are a couple of macros which become enabled when
 %   using the \optn{legacy} option. These are now deprecated and may be removed
@@ -445,7 +561,6 @@
 %  \bigskip
 %  \printchangesCHG
 %  \clearpage
-%  \addtocontents{toc}{\protect\end{multicols}}
 %  \PrintIndex
 %}
 %
@@ -454,6 +569,7 @@
 % \iffalse
 %<*ou-tma.sty>
 % \fi
+% From this point, where you see the double ``at'' symbol, you should read it as though it is `tma'.\\
 %<@@=tma>
 %    \begin{macrocode}
 %% ou-tma.sty
@@ -502,8 +618,8 @@
 % To use a package option, place the option(s) before the package name:\\\nopagebreak
 % \fqquad\cs{usepackage}|[roman,cleveref]{ou-tma}|
 %
-% \changes{v1.21.5}{2025-11-19}{
-%    Started updateing code to use the double-at prefixes to the localised code.}
+% \changesTMA{v1.21.5}{2025-11-19}{
+%    Started updating code to use the double-at prefixes to the localised code.}
 % \changesTMA{v1.21.4}{2025-11-17}{
 %	 Added functions \cs{MakePrivateLetters} and \cs{ClearPrivateLetters} to allow
 %    \pkg{expl3} elements to be indexed.}
@@ -1089,7 +1205,6 @@
 % \iffalse
 %</ou-tma.sty>
 % \fi
-%<@@=tmasup>
 %
 % \setcounter{CodelineNo}{0}
 % \section{Implementation of \stmas}
@@ -1097,6 +1212,8 @@
 % \iffalse
 %<*ou-tma-sup.sty>
 % \fi
+% From this point, where you see the double ``at'' symbol, you should read it as though it is `tmasup'.\\
+%<@@=tmasup>
 %    \begin{macrocode}
 %% ou-tma-sup.sty
 %% Copyright 2025 G. I. Riley <geoffr@adaso.com>
@@ -1540,11 +1657,11 @@
 % Main \prob command
 \NewDocumentCommand{\prob}{m}
 {
-    \prob_prob:n { #1 }
+    \@@_prob_prob:n { #1 }
 }
 
 % Internal implementation with local keyword overrides
-\cs_new_protected:Nn \prob_prob:n
+\cs_new_protected:Nn \@@_prob_prob:n
 {
     \mathrm{P}\left(
     \group_begin:
@@ -1770,6 +1887,81 @@
 %    \end{macrocode}
 %
 %
+% \subsection{General utilitarian shorcuts}
+%
+% \changesSUP{v0.15}{2025-12-29}{Added shortcut for module handbook references.}
+%
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_hb:nn #1 #2
+{
+    % Base text
+    \textsc{hb}\,
+    % Optional page/range
+    \IfNoValueF{#1}
+    { p#1 }
+    % Optional section/range
+    \IfNoValueF{#2}
+    { \,\S#2 }
+}
+
+\NewDocumentCommand{\HB}{ o o }
+{
+    \@@_hb:nn { #1 } { #2 }
+}
+%    \end{macrocode}
+%
+% \changesSUP{v0.15}{2025-12-29}{Added \cs{AugMatrix} command for augmented matrix typesetting.}
+%
+%    \begin{macrocode}
+% Base internal function
+\cs_new_protected:Npn \@@_augmatrix:nnnnn #1 #2 #3 #4 #5
+  {
+    \begin{array}{@{} c @{\;} c @{\;} c @{}}
+      % Left material
+      \IfBooleanTF {#1}
+        { % starred: raw
+          \tl_if_blank:nTF {#4} { } {#4}
+        }
+        { % unstarred: row-aligned
+          \tl_if_blank:nTF {#4} { } { \begin{array}{c} #4 \end{array} }
+        }
+      &
+      % The augmented matrix itself
+      \begin{pmatrix}
+        \begin{array}{#2}
+          #3
+        \end{array}
+      \end{pmatrix}
+      &
+      % Right material
+      \IfBooleanTF {#1}
+        { % starred: raw
+          \tl_if_blank:nTF {#5} { } {#5}
+        }
+        { % unstarred: row-aligned
+          \tl_if_blank:nTF {#5} { } { \begin{array}{l} #5 \end{array} }
+        }
+    \end{array}
+  }
+
+% Normal version: row-aligned side material
+% \AugMatrix[<colspec>]{<body>}[<left>][<right>]
+%   <colspec> is the array preamble, e.g. rrrr|r
+%   <body> is the rows, using & and \\ as usual
+%   <left> (optional) is a column aligned with rows, e.g. r_1\\r_2\\...
+%   <right> (optional) is a column aligned with rows, e.g. \text{...}\\...
+
+% \AugMatrix(*)[<colspec>]{<body>}[<left>][<right>]
+% Unstarred: left/right are row-aligned arrays (c and l).
+% Starred:   left/right are inserted raw (you provide any structure you like).
+\NewDocumentCommand{\AugMatrix}{ s O{c|c} m O{} O{} }
+  {
+    \@@_augmatrix:nnnnn {#1} {#2} {#3} {#4} {#5}
+  }
+
+\ExplSyntaxOff
+%    \end{macrocode}
+%
 % \subsection{Extra macros}
 %\changesSUP{v0.12}{2025-10-28}{Added shortcuts for plus and minus flags used in sign tables.}
 %\changesSUP{v0.12}{2025-10-28}{Added shortcut \cs{ld} for \cs{lambda}.}
@@ -1797,6 +1989,7 @@
 % \iffalse
 %<*doc-changes.sty>
 % \fi
+% From this point, where you see the double ``at'' symbol, you should read it as though it is `dchg'.\\
 %<@@=dchg>
 %    \begin{macrocode}
 %% doc-changes.sty
