@@ -25,7 +25,7 @@
 %</driver>
 %<ou-tma.sty|ou-tma-sup.sty|doc-changes.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<ou-tma.sty>\ProvidesExplPackage{ou-tma}
-%<ou-tma.sty>  {2025-12-15} {v1.21.6} {OU-TMA package}
+%<ou-tma.sty>  {2026-11-16} {v1.22} {OU-TMA package}
 %<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
 %<ou-tma-sup.sty>  {2025-12-29} {v0.15} {OU-TMA-SUP package}
 %<doc-changes.sty>\ProvidesExplPackage{doc-changes}
@@ -356,15 +356,22 @@
 %     \end{itemize}
 % \end{dtxexample}
 %
-% \item[Vector notation] \DescribeMacro{\vect}\DescribeMacro{\ve}Two different vector representations are typically used on \OU\ modules, there is the two, or more, letter with an over arrow version given with \cs{vect}; and the emboldened upright letter version \cs{ve}---the latter is commonly handwritten as an underlined letter.
+% \item[Vector notation] \DescribeMacro{\vect}\DescribeMacro{\ve}\DescribeMacro{\vi}\DescribeMacro{\vj}\DescribeMacro{\vk}\DescribeMacro{\Mag}Two different vector representations are typically used on \OU\ modules, there is the two, or more, letter with an over arrow version given with \cs{vect}; and the emboldened upright letter version \cs{ve}---the latter is commonly handwritten as an underlined letter.
+%
+% The three vectors \vi, \vj and \vk are usually reserved to indicate the unit vectors within a system.
+%
+% The magnitude of a vector is the scalar length of that vector, irrespective of direction. This is commonly represented by the use of vertical bars, \Mag{\ve{vector}}, using this command automatically resizes the vertical bars to accomodate the contents.
 %
 % \begin{dtxexample}*{Vectors}
 %    Given a point $A$ at the co-ordinate $(6, 3)$ and a
 %    point $B$ at the co-ordinate $(-4, 8)$, the vector
 %    $\vect{AB}$ has a gradient of $\frac{8-3}{-4-6} =
-%    \frac{5}{-10} = -\frac{1}{2}$
-%    The standard unit vectors are \ve{i} and \ve{j}.
+%    \frac{5}{-10} = -\frac{1}{2}$, and a magnitude of
+%    \Mag{\vect{AB}}.
+%    The standard unit vectors in 2-D space are \vi and \vj.
 %    They are usually at right angles to each other.
+%    The vector $\vect{AB}$ may be represented by a bold
+%    letter such as \ve{v}.
 %\end{dtxexample}
 %
 % \item[Ordinal indicators] \DescribeMacro{\st}\DescribeMacro{\nd}\DescribeMacro{\rd}\DescribeMacro{\nth}The use of ordinal indicators is not specific to \OU\ modules, but frequently is a useful element that is just inconvenient to produce.
@@ -406,11 +413,14 @@
 % \end{description}
 %
 % \item[Derivatives] There are three derivative forms defined specifically for
-%  speeding calculas entry and accuracy. One used the $\dd x$ form and two use
+%  speeding calculas entry and accuracy. One used the $\dd x$ form, with an
+%  optional variant to specify the degree, and two use
 %  the partial, $\partial x$, form.
 %
+% \changesTMA{v1.22}{2026-11-16}{Allow optional argument to be added to the \cs{deriv}\ command specifying the degree of the derivation.}
 % \begin{description}
 % 	\ItemDescribeMacro{\deriv}\marg{y}\marg{x} $\mapsto \deriv{y}{x}$
+% 	\ItemDescribeMacro{\deriv}\oarg{degree}\marg{y}\marg{x} $\mapsto \deriv[2]{y}{x}$
 % 	\ItemDescribeMacro{\pderiv}\marg{y}\marg{x} $\mapsto \pderiv{y}{x}$
 % 	\ItemDescribeMacro{\psderiv}\marg{y}\marg{x}\marg{z} $\mapsto \psderiv{y}{x}{z}$
 % \end{description}
@@ -791,6 +801,7 @@
 \RequirePackage{geometry}
 \RequirePackage{calc}
 \RequirePackage{etoolbox}
+\RequirePackage{xspace}
 \RequirePackage[UKenglish]{isodate} % use UK format for date
 \cleanlookdateon % remove th,st, rd from date
 
@@ -1094,7 +1105,15 @@
 %% Vector Notation
 \NewDocumentCommand{\vect}{m}{%
 	\ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
-\NewDocumentCommand{\ve}{m}{\ensuremath{\textbf{#1}}}
+%    \end{macrocode}
+%    \changesTMA{v1.22}{2026-11-16}{Changed \cs{ve}\ command to use \cs{mathbf}\ rather than \cs{textbf}\ in order to allow maths characters to be represented as vectors.}
+%    \changesTMA{v1.22}{2026-11-16}{Added \cs{vi}, \cs{vj}, \cs{vk}\ and \cs{Mag}\ to set the three main unit vectors plus the vertical bar representation of a vector magnitude, bars auto-resize.}
+%    \begin{macrocode}
+\NewDocumentCommand{\ve}{m}{\ensuremath{\mathbf{#1}}}
+\NewDocumentCommand{\vi}{}{\ve{i}\ifmmode\else\xspace\fi}
+\NewDocumentCommand{\vj}{}{\ve{j}\ifmmode\else\xspace\fi}
+\NewDocumentCommand{\vk}{}{\ve{k}\ifmmode\else\xspace\fi}
+\NewDocumentCommand{\Mag}{m}{\ensuremath{\left\lvert{#1}\right\rvert}}
 
 %% Ordinal Indicators
 \NewDocumentCommand{\st}{}{\textsuperscript{st}}
@@ -1131,9 +1150,16 @@
 \DeclareMathOperator{\Stab}{Stab}
 \DeclareMathOperator{\Fix}{Fix}
 
+%    \end{macrocode}
+%    \changesTMA{v1.22}{2026-11-16}{Allow optional argument to be added to the \cs{deriv}\ command specifying the degree of the derivation.}
+%    \begin{macrocode}
 %% Derivatives
-\NewDocumentCommand{\deriv}{mm}{%
-	\frac{\dd{}#1}{\dd{}#2}}
+\NewDocumentCommand{\deriv}{O{1}mm}{%
+    \frac{\dd{}%
+    \ifthenelse{#1>1}{^{#1}}{}%
+    #2}{\dd{}#3%
+    \ifthenelse{#1>1}{^{#1}}{}%
+}}
 \NewDocumentCommand{\pderiv}{mm}{%
 	\frac{\partial #1}{\partial #2}}
 \NewDocumentCommand{\psderiv}{mmm}{%
