@@ -1,9 +1,8 @@
 # ou-tma and ou-tma-sup Packages
 
-## Versions
+## Version
 
 v1.22 (2026/11/16)
-v0.13 (2025/11/19)
 
 ## Author
 
