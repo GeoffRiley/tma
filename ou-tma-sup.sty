@@ -311,7 +311,8 @@
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
     \pgfmathsetmacro{\c}{cos(180/\N)}%
-    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\rad}{(isodd(\N) ? 1/(1+\c) : 0.5/\c) *%
+      \ou@tma@regularpolygonopscale}%
     \pgfmathsetmacro{\shift}{\rad*\c}%
     \draw[line width=0.12ex,#1]
       ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
@@ -353,7 +354,8 @@
     \pgfmathtruncatemacro{\Mm}{#2/\D-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
     \pgfmathsetmacro{\c}{cos(180/\N)}%
-    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\rad}{(isodd(\N) ? 1/(1+\c) : 0.5/\c) *%
+      \ou@tma@regularpolygonopscale}%
     \pgfmathsetmacro{\shift}{\rad*\c}%
     \foreach \j in {0,...,\Dm}{%
       \draw[line width=0.12ex,#1]
@@ -406,14 +408,14 @@
 \NewDocumentCommand{\mregularstarfillop}{O{} m m}
   { \__tmasup_mregularstar_op:nnn { fill,#1 } {#2} {#3} }
 
-\NewDocumentCommand{\moctagon}{}       { \mregularpolygon{8} }
-\NewDocumentCommand{\moctagonfill}{}   { \mregularpolygonfill{8} }
-\NewDocumentCommand{\moctagonop}{}     { \mregularpolygonop{8} }
-\NewDocumentCommand{\moctagonfillop}{}{ \mregularpolygonfillop{8} }
+\NewDocumentCommand{\moctagon}{}        { \mregularpolygon{8} }
+\NewDocumentCommand{\moctagonfill}{}    { \mregularpolygonfill{8} }
+\NewDocumentCommand{\moctagonop}{}      { \mregularpolygonop{8} }
+\NewDocumentCommand{\moctagonfillop}{}  { \mregularpolygonfillop{8} }
 
-\NewDocumentCommand{\mpentagram}{}       { \mregularstar{5}{2} }
-\NewDocumentCommand{\mpentagramfill}{}   { \mregularstarfill{5}{2} }
-\NewDocumentCommand{\mpentagramop}{}     { \mregularstarop{5}{2} }
+\NewDocumentCommand{\mpentagram}{}      { \mregularstar{5}{2} }
+\NewDocumentCommand{\mpentagramfill}{}  { \mregularstarfill{5}{2} }
+\NewDocumentCommand{\mpentagramop}{}    { \mregularstarop{5}{2} }
 \NewDocumentCommand{\mpentagramfillop}{}{ \mregularstarfillop{5}{2} }
 \cs_new_protected:Npn \__tmasup_hb:nn #1 #2
 {

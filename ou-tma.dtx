@@ -26,7 +26,7 @@
 %</driver>
 %<ou-tma.sty|ou-tma-sup.sty|doc-changes.sty>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
 %<ou-tma.sty>\ProvidesExplPackage{ou-tma}
-%<ou-tma.sty>  {2026-11-16} {v1.22} {OU-TMA package}
+%<ou-tma.sty>  {2026-11-17} {v1.23} {OU-TMA package}
 %<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
 %<ou-tma-sup.sty>  {2026-11-17} {v0.16} {OU-TMA-SUP package}
 %<doc-changes.sty>\ProvidesExplPackage{doc-changes}
@@ -1183,11 +1183,12 @@
 % \subsection{Theorem Environment}
 %    \changesTMA{v1.21.3}{2025-11-12}{Experimental extentions to theorem code allowing a name to override the given number, and for an automatic label to be appllied using the name.}
 %	 \changesTMA{v1.21.6}{2025-12-15}{Removed experimental theorem code returning the original AMS theorem, lemma and corollary definitions.}
+%    \changesTMA{v1.23}{2026-11-17}{Reset documentation to reflect lowercase `theorem`, `lemma` and `corollary`.}
 % Theorems, Lemmas and Corrolaries. Predefined environments for setting\dots the obvious.
 % \begin{description}
-%     \ItemDescribeEnv{Theory}\oarg{title} If a title is given, then it will placed in parentheses following the theorem number.
-%     \ItemDescribeEnv{Lemma}\oarg{title} As with `Theory' above, specifying a title will place such in parentheses following the lemma number.
-%     \ItemDescribeEnv{Corollary}\oarg{title} Ditto.
+%     \ItemDescribeEnv{theorem}\oarg{title} If a title is given, then it will placed in parentheses following the theorem number.
+%     \ItemDescribeEnv{lemma}\oarg{title} As with `theorem' above, specifying a title will place such in parentheses following the lemma number.
+%     \ItemDescribeEnv{corollary}\oarg{title} Ditto.
 % \end{description}
 %    \begin{macrocode}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1717,6 +1718,8 @@
 % \changesSUP{v0.14}{2025-11-25}{
 %	 Added polygon routines for entering symbols such as octagons directly
 %	 in maths mode.}
+% \changesSUP{v0.16}{2026-11-17}{
+%    Improved documentation for star drawing routines, examples provided.}
 % \subsection{Regular Polygons and Star Polygons in Mathematics Mode}
 %
 % The \pkg{ou-tma-sup} package provides commands for typesetting regular
@@ -1738,25 +1741,33 @@
 %
 %   Produces a regular polygon with \meta{n} sides, drawn as a symbol-sized
 %   mathematical object.  The optional argument allows arbitrary TikZ drawing
-%   options such as \verb|draw=blue|, \verb|thick|, or \verb|fill=gray!20|.
+%   options such as \verb|draw=blue| ($\mregularpolygon[draw=blue]{5}$),
+%   \verb|thick| ($\mregularpolygon[thick]{5}$), or \verb|fill=gray!20|
+%   ($\mregularpolygon[fill=gray!20]{5}$).
 %
 % \DescribeMacro{\mregularpolygonfill}
 %   As \cs{mregularpolygon}, but filled by default.
 %
 % \DescribeMacro{\moctagon}
 %   A convenience macro expanding to \verb|\mregularpolygon{8}|, useful in
-%   group-theoretic notation such as \verb|$S(\moctagon)$|.
+%   group-theoretic notation such as \verb|$S(\moctagon)$| ($S(\moctagon)$).
 %
 % \DescribeMacro{\mregularpolygonop}
 %   A binary-operator-sized version of a regular \meta{n}-gon.  These symbols
 %   behave as \verb|\mathbin|.  Their enlargement factor can be adjusted by
-%   redefining the internal macro \cs{ou@tma@regularpolygonopscale}.
+%   redefining the internal macro \cs{ou@tma@regularpolygonopscale}, default
+%   $=1.2$: e.g. $G \moctagonop H$.
 %
 % \DescribeMacro{\mregularpolygonfillop}
 %   As \cs{mregularpolygonop}, but filled by default.
 %
 % \DescribeMacro{\mregularstar}
 %   \cs{mregularstar}\oarg{tikz-options}\marg{n}\marg{k}
+%
+%   \DescribeArgument[c=stars]{n} $n$ is the number of points to be depicted in the star.
+%
+%   \DescribeArgument[c=stars]{k} $k$ is the step count between star points. See examples
+%   below.
 %
 %   Produces the regular star polygon~$\{n/k\}$, using the same baseline and
 %   height conventions as regular polygons.
@@ -1774,13 +1785,19 @@
 %   Convenience macro expanding to the star polygon~$\{5/2\}$.
 %
 % Example usage:
-%
-% \begin{quote}
-%   \verb|$S(\moctagon)$| \\
-%   \verb|$G \moctagonop H$| \\
-%   \verb|$\mregularstar{5}{2}$| \\
-%   \verb|$\mregularstarfillop{7}{3}$|
-% \end{quote}
+% \begin{tabbing}
+% \hspace{7cm} \= \kill\\
+%   \verb|$S(\moctagon)$| \> $S(\moctagon)$\\
+%   \verb|$G \moctagonop H$| \> $G \moctagonop H$\\
+%   \verb|$\mregularstar{5}{2}$| \> $\mregularstar{5}{2}$\\
+%   \verb|$\mregularstarfillop{7}{1}$| \> $\mregularstarfillop{7}{1}$\\
+%   \verb|$\mregularstarop{7}{2}$| \> $\mregularstarop{7}{2}$\\
+%   \verb|$\mregularstarop{7}{3}$| \> $\mregularstarop{7}{3}$\\
+%   \verb|$\mregularstarop{8}{1}$| \> $\mregularstarop{8}{1}$\\
+%   \verb|$\mregularstarop{8}{2}$| \> $\mregularstarop{8}{2}$\\
+%   \verb|$\mregularstarop{8}{3}$| \> $\mregularstarop{8}{3}$\\
+%   \verb|$\mregularstarop{8}{4}$| \> $\mregularstarop{8}{4}$\\
+% \end{tabbing} 
 %
 %    \changesSUP{v0.16}{2026-11-17}{Fixed polygon sizing and path drawing errors on stars when $n$ and $k$ share a common factor.}
 %    \begin{macrocode}
@@ -1816,7 +1833,8 @@
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
     \pgfmathsetmacro{\c}{cos(180/\N)}%
-    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\rad}{(isodd(\N) ? 1/(1+\c) : 0.5/\c) *%
+      \ou@tma@regularpolygonopscale}%
     \pgfmathsetmacro{\shift}{\rad*\c}%
     \draw[line width=0.12ex,#1]
       ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
@@ -1860,7 +1878,8 @@
     \pgfmathtruncatemacro{\Mm}{#2/\D-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
     \pgfmathsetmacro{\c}{cos(180/\N)}%
-    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\rad}{(isodd(\N) ? 1/(1+\c) : 0.5/\c) *%
+      \ou@tma@regularpolygonopscale}%
     \pgfmathsetmacro{\shift}{\rad*\c}%
     \foreach \j in {0,...,\Dm}{%
       \draw[line width=0.12ex,#1]
@@ -1920,14 +1939,14 @@
   { \@@_mregularstar_op:nnn { fill,#1 } {#2} {#3} }
 
 % Convenience aliases
-\NewDocumentCommand{\moctagon}{}       { \mregularpolygon{8} }
-\NewDocumentCommand{\moctagonfill}{}   { \mregularpolygonfill{8} }
-\NewDocumentCommand{\moctagonop}{}     { \mregularpolygonop{8} }
-\NewDocumentCommand{\moctagonfillop}{}{ \mregularpolygonfillop{8} }
+\NewDocumentCommand{\moctagon}{}        { \mregularpolygon{8} }
+\NewDocumentCommand{\moctagonfill}{}    { \mregularpolygonfill{8} }
+\NewDocumentCommand{\moctagonop}{}      { \mregularpolygonop{8} }
+\NewDocumentCommand{\moctagonfillop}{}  { \mregularpolygonfillop{8} }
 
-\NewDocumentCommand{\mpentagram}{}       { \mregularstar{5}{2} }
-\NewDocumentCommand{\mpentagramfill}{}   { \mregularstarfill{5}{2} }
-\NewDocumentCommand{\mpentagramop}{}     { \mregularstarop{5}{2} }
+\NewDocumentCommand{\mpentagram}{}      { \mregularstar{5}{2} }
+\NewDocumentCommand{\mpentagramfill}{}  { \mregularstarfill{5}{2} }
+\NewDocumentCommand{\mpentagramop}{}    { \mregularstarop{5}{2} }
 \NewDocumentCommand{\mpentagramfillop}{}{ \mregularstarfillop{5}{2} }
 %    \end{macrocode}
 %
