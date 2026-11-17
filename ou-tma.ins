@@ -17,7 +17,15 @@
 %% doc-changes.sty.
 %%
 
-\input docstrip.tex
+% Figure out if we have l3docstrip to use instead of docstrip.
+\openin 15 = l3docstrip.tex
+\ifeof 15
+  \def\InsInputDocstrip{\input docstrip.tex }
+\else
+  \def\InsInputDocstrip{\input l3docstrip.tex }
+\fi
+\closein 15
+\InsInputDocstrip
 \keepsilent
 
 \usedir{tex/latex/ou-tma}

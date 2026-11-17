@@ -20,7 +20,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
 \ProvidesExplPackage{ou-tma-sup}
-  {2025-12-29} {v0.15} {OU-TMA-SUP package}
+  {2026-11-17} {v0.16} {OU-TMA-SUP package}
 %% ou-tma-sup.sty
 %% Copyright 2025-2026 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
@@ -291,8 +291,9 @@
     \pgfmathtruncatemacro{\N}{#2}%
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
-    \pgfmathsetmacro{\rad}{0.5/cos(180/\N)}%
-    \pgfmathsetmacro{\shift}{0.5}%
+    \pgfmathsetmacro{\c}{cos(180/\N)}%
+    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c}%
+    \pgfmathsetmacro{\shift}{\rad*\c}%
     \draw[line width=0.12ex,#1]
       ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
       \foreach \x in {1,...,\NmOne}{%
@@ -309,8 +310,9 @@
     \pgfmathtruncatemacro{\N}{#2}%
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
-    \pgfmathsetmacro{\rad}{0.5/cos(180/\N) * \ou@tma@regularpolygonopscale}%
-    \pgfmathsetmacro{\shift}{0.5 * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\c}{cos(180/\N)}%
+    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\shift}{\rad*\c}%
     \draw[line width=0.12ex,#1]
       ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
       \foreach \x in {1,...,\NmOne}{%
@@ -324,15 +326,21 @@
   \tikz[x=1ex, y=1ex, baseline=0pt]{%
     \pgfmathtruncatemacro{\N}{#2}%
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathtruncatemacro{\D}{gcd(#2,#3)}%
+    \pgfmathtruncatemacro{\Dm}{\D-1}%
+    \pgfmathtruncatemacro{\Mm}{#2/\D-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
-    \pgfmathsetmacro{\rad}{0.5/cos(180/\N)}%
-    \pgfmathsetmacro{\shift}{0.5}%
-    \draw[line width=0.12ex,#1]
-      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
-      \foreach \t in {1,...,\NmOne}{%
-        -- ({\rad*cos(\start + 360*\t*#3/\N)},
-            {\shift + \rad*sin(\start + 360*\t*#3/\N)})%
-      } -- cycle;
+    \pgfmathsetmacro{\c}{cos(180/\N)}%
+    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c}%
+    \pgfmathsetmacro{\shift}{\rad*\c}%
+    \foreach \j in {0,...,\Dm}{%
+      \draw[line width=0.12ex,#1]
+        ({\rad*cos(\start+360*\j/\N)},{\shift+\rad*sin(\start+360*\j/\N)})
+        \foreach \t in {1,...,\Mm}{%
+          -- ({\rad*cos(\start+360*(\j+\t*#3)/\N)},
+              {\shift+\rad*sin(\start+360*(\j+\t*#3)/\N)})%
+        } -- cycle;%
+    }%
   }%
 }
 
@@ -340,15 +348,21 @@
   \tikz[x=1ex, y=1ex, baseline=0pt]{%
     \pgfmathtruncatemacro{\N}{#2}%
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathtruncatemacro{\D}{gcd(#2,#3)}%
+    \pgfmathtruncatemacro{\Dm}{\D-1}%
+    \pgfmathtruncatemacro{\Mm}{#2/\D-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
-    \pgfmathsetmacro{\rad}{0.5/cos(180/\N) * \ou@tma@regularpolygonopscale}%
-    \pgfmathsetmacro{\shift}{0.5 * \ou@tma@regularpolygonopscale}%
-    \draw[line width=0.12ex,#1]
-      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
-      \foreach \t in {1,...,\NmOne}{%
-        -- ({\rad*cos(\start + 360*\t*#3/\N)},
-            {\shift + \rad*sin(\start + 360*\t*#3/\N)})%
-      } -- cycle;
+    \pgfmathsetmacro{\c}{cos(180/\N)}%
+    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\shift}{\rad*\c}%
+    \foreach \j in {0,...,\Dm}{%
+      \draw[line width=0.12ex,#1]
+        ({\rad*cos(\start+360*\j/\N)},{\shift+\rad*sin(\start+360*\j/\N)})
+        \foreach \t in {1,...,\Mm}{%
+          -- ({\rad*cos(\start+360*(\j+\t*#3)/\N)},
+              {\shift+\rad*sin(\start+360*(\j+\t*#3)/\N)})%
+        } -- cycle;%
+    }%
   }%
 }
 
@@ -404,16 +418,14 @@
 \cs_new_protected:Npn \__tmasup_hb:nn #1 #2
 {
     % Base text
-    \textsc{hb}\,
+    \textsc{hb}
     % Optional page/range
-    \IfNoValueF{#1}
-    { p#1 }
+    \tl_if_blank:nF {#1} { \,p#1 }
     % Optional section/range
-    \IfNoValueF{#2}
-    { \,\S#2 }
+    \tl_if_blank:nF {#2} { \,\S#2 }
 }
 
-\NewDocumentCommand{\HB}{ o o }
+\NewDocumentCommand{\HB}{ O{} O{} }
 {
     \__tmasup_hb:nn { #1 } { #2 }
 }

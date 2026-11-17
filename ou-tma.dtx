@@ -28,7 +28,7 @@
 %<ou-tma.sty>\ProvidesExplPackage{ou-tma}
 %<ou-tma.sty>  {2026-11-16} {v1.22} {OU-TMA package}
 %<ou-tma-sup.sty>\ProvidesExplPackage{ou-tma-sup}
-%<ou-tma-sup.sty>  {2025-12-29} {v0.15} {OU-TMA-SUP package}
+%<ou-tma-sup.sty>  {2026-11-17} {v0.16} {OU-TMA-SUP package}
 %<doc-changes.sty>\ProvidesExplPackage{doc-changes}
 %<doc-changes.sty>  {2025-11-19} {v0.4} {Split change logs to per-stream doc glossaries (single column printing)}
 %<*driver>
@@ -499,20 +499,24 @@
 %  third columns.
 %
 %  \medskip
-%  \verb+\AugMatrix[rr|r]{1 & 2 & 3\\4 & 5 & 6}[R_1\\R_2][\text{pivot}\\\text{row}]+ \\
+%  \verb+\AugMatrix[rr|r]{1 & 2 & 3\\4 & 5 & 6}[R_1\\R_2]%+ \\
+%  \verb+    [\text{pivot}\\ \text{row}]+ \\
 %  places row labels on the left and annotations on the right, aligned to the
 %  matrix rows.
 %
-%  \medskip
-%  \verb+\AugMatrix*[rr|r]{1 & 2 & 3\\4 & 5 & 6}[\left\{][\right\}]+ \\
-%  inserts the braces raw (starred form), allowing custom structures not
-%  constrained to row alignment.
+%  ^^A\medskip
+%  ^^A\verb+\AugMatrix*[rr|r]{1 & 2 & 3\\4 & 5 & 6}[\left\{][\right\}]+ \\
+%  ^^Ainserts the braces raw (starred form), allowing custom structures not
+%  ^^Aconstrained to row alignment.
 %  \end{quote}
 %
 %  \medskip
 %  \noindent
 %  Internally, \cs{AugMatrix} uses an outer three-column \texttt{array} to position
 %  left material, the matrix, and right material with compact spacing.
+%
+%  \textit{Note:} This command is currently fragile and will not line up if, for
+%  example, \cs{dfrac} fractions are contained within the matrix.
 %
 % 
 %  \changesSUP{v0.15}{2025-12-29}{Added shortcut for module handbook references.}
@@ -1778,7 +1782,7 @@
 %   \verb|$\mregularstarfillop{7}{3}$|
 % \end{quote}
 %
-%
+%    \changesSUP{v0.16}{2026-11-17}{Fixed polygon sizing and path drawing errors on stars when $n$ and $k$ share a common factor.}
 %    \begin{macrocode}
 % -----------------------------------------
 % Low-level TikZ helpers (normal catcodes)
@@ -1790,8 +1794,9 @@
     \pgfmathtruncatemacro{\N}{#2}%
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
-    \pgfmathsetmacro{\rad}{0.5/cos(180/\N)}%
-    \pgfmathsetmacro{\shift}{0.5}%
+    \pgfmathsetmacro{\c}{cos(180/\N)}%
+    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c}%
+    \pgfmathsetmacro{\shift}{\rad*\c}%
     \draw[line width=0.12ex,#1]
       ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
       \foreach \x in {1,...,\NmOne}{%
@@ -1810,8 +1815,9 @@
     \pgfmathtruncatemacro{\N}{#2}%
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
-    \pgfmathsetmacro{\rad}{0.5/cos(180/\N) * \ou@tma@regularpolygonopscale}%
-    \pgfmathsetmacro{\shift}{0.5 * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\c}{cos(180/\N)}%
+    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\shift}{\rad*\c}%
     \draw[line width=0.12ex,#1]
       ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
       \foreach \x in {1,...,\NmOne}{%
@@ -1826,15 +1832,21 @@
   \tikz[x=1ex, y=1ex, baseline=0pt]{%
     \pgfmathtruncatemacro{\N}{#2}%
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathtruncatemacro{\D}{gcd(#2,#3)}%
+    \pgfmathtruncatemacro{\Dm}{\D-1}%
+    \pgfmathtruncatemacro{\Mm}{#2/\D-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
-    \pgfmathsetmacro{\rad}{0.5/cos(180/\N)}%
-    \pgfmathsetmacro{\shift}{0.5}%
-    \draw[line width=0.12ex,#1]
-      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
-      \foreach \t in {1,...,\NmOne}{%
-        -- ({\rad*cos(\start + 360*\t*#3/\N)},
-            {\shift + \rad*sin(\start + 360*\t*#3/\N)})%
-      } -- cycle;
+    \pgfmathsetmacro{\c}{cos(180/\N)}%
+    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c}%
+    \pgfmathsetmacro{\shift}{\rad*\c}%
+    \foreach \j in {0,...,\Dm}{%
+      \draw[line width=0.12ex,#1]
+        ({\rad*cos(\start+360*\j/\N)},{\shift+\rad*sin(\start+360*\j/\N)})
+        \foreach \t in {1,...,\Mm}{%
+          -- ({\rad*cos(\start+360*(\j+\t*#3)/\N)},
+              {\shift+\rad*sin(\start+360*(\j+\t*#3)/\N)})%
+        } -- cycle;%
+    }%
   }%
 }
 
@@ -1843,15 +1855,21 @@
   \tikz[x=1ex, y=1ex, baseline=0pt]{%
     \pgfmathtruncatemacro{\N}{#2}%
     \pgfmathtruncatemacro{\NmOne}{#2-1}%
+    \pgfmathtruncatemacro{\D}{gcd(#2,#3)}%
+    \pgfmathtruncatemacro{\Dm}{\D-1}%
+    \pgfmathtruncatemacro{\Mm}{#2/\D-1}%
     \pgfmathsetmacro{\start}{-90 + 180/\N}%
-    \pgfmathsetmacro{\rad}{0.5/cos(180/\N) * \ou@tma@regularpolygonopscale}%
-    \pgfmathsetmacro{\shift}{0.5 * \ou@tma@regularpolygonopscale}%
-    \draw[line width=0.12ex,#1]
-      ({\rad*cos(\start)},{\shift + \rad*sin(\start)})
-      \foreach \t in {1,...,\NmOne}{%
-        -- ({\rad*cos(\start + 360*\t*#3/\N)},
-            {\shift + \rad*sin(\start + 360*\t*#3/\N)})%
-      } -- cycle;
+    \pgfmathsetmacro{\c}{cos(180/\N)}%
+    \pgfmathsetmacro{\rad}{isodd(\N) ? 1/(1+\c) : 0.5/\c * \ou@tma@regularpolygonopscale}%
+    \pgfmathsetmacro{\shift}{\rad*\c}%
+    \foreach \j in {0,...,\Dm}{%
+      \draw[line width=0.12ex,#1]
+        ({\rad*cos(\start+360*\j/\N)},{\shift+\rad*sin(\start+360*\j/\N)})
+        \foreach \t in {1,...,\Mm}{%
+          -- ({\rad*cos(\start+360*(\j+\t*#3)/\N)},
+              {\shift+\rad*sin(\start+360*(\j+\t*#3)/\N)})%
+        } -- cycle;%
+    }%
   }%
 }
 
@@ -1917,21 +1935,20 @@
 % \subsection{General utilitarian shorcuts}
 %
 % \changesSUP{v0.15}{2025-12-29}{Added shortcut for module handbook references.}
+% \changesSUP{v0.16}{2026-11-17}{Updated \cs{HB} to avoid possible partial printing if empty parameters are passed.}
 %
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_hb:nn #1 #2
 {
     % Base text
-    \textsc{hb}\,
+    \textsc{hb}
     % Optional page/range
-    \IfNoValueF{#1}
-    { p#1 }
+    \tl_if_blank:nF {#1} { \,p#1 }
     % Optional section/range
-    \IfNoValueF{#2}
-    { \,\S#2 }
+    \tl_if_blank:nF {#2} { \,\S#2 }
 }
 
-\NewDocumentCommand{\HB}{ o o }
+\NewDocumentCommand{\HB}{ O{} O{} }
 {
     \@@_hb:nn { #1 } { #2 }
 }
