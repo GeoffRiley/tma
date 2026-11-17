@@ -8,21 +8,21 @@
 %% 
 %% This is a generated file.
 %% 
-%% Copyright (C) 2025 by G. I. Riley <geoffr@adaso.com>
+%% Copyright (C) 2025-2026 by G. I. Riley <geoffr@adaso.com>
 %% --------------------------------------------------------------------------
 %% This work may be distributed and/or modified under the
-%% conditions of the LaTeX Project Public License, either version 1.3
+%% conditions of the LaTeX Project Public License, either version 1.3c
 %% of this license or (at your option) any later version.
 %% The latest version of this license is in
 %% http://www.latex-project.org/lppl.txt
-%% and version 1.3 or later is part of all distributions of LaTeX
+%% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
 %% 
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
 \ProvidesExplPackage{ou-tma}
-  {2025-11-12} {v1.21.3} {OU-TMA package}
+  {2026-11-17} {v1.23} {OU-TMA package}
 %% ou-tma.sty
-%% Copyright 2025 G. I. Riley <geoffr@adaso.com>
+%% Copyright 2025-2026 G. I. Riley <geoffr@adaso.com>
 %% This package may be freely used, especially by, but not limited to,
 %% students, lecturers and staff of the Open University. It was created
 %% by the efforts of many who are now or have been connected with the
@@ -32,31 +32,31 @@
 \RequirePackage{expl3} % LaTeX3 "experimental"
 %% Package Initialization
 \ExplSyntaxOn
-\tl_new:N \g_tma_constant_name
-\tl_new:N \g_tma_constant_tma
-\tl_new:N \g_tma_constant_course
-\tl_new:N \g_tma_constant_pin
-\tl_new:N \g_tma_constant_thedate
-\tl_gset:Nn \g_tma_constant_name {name}
-\tl_gset:Nn \g_tma_constant_tma {tma}
-\tl_gset:Nn \g_tma_constant_course {course}
-\tl_gset:Nn \g_tma_constant_pin {pin}
-\tl_gset:Nn \g_tma_constant_thedate {the~date}
-\newcommand{\name}{\g_tma_constant_name}
-\newcommand{\tma}{\g_tma_constant_tma}
-\newcommand{\course}{\g_tma_constant_course}
-\newcommand{\pin}{\g_tma_constant_pin}
-\newcommand{\thedate}{\g_tma_constant_thedate}
+\tl_new:N \g__tma_constant_name
+\tl_new:N \g__tma_constant_tma
+\tl_new:N \g__tma_constant_course
+\tl_new:N \g__tma_constant_pin
+\tl_new:N \g__tma_constant_thedate
+\tl_gset:Nn \g__tma_constant_name {name}
+\tl_gset:Nn \g__tma_constant_tma {tma}
+\tl_gset:Nn \g__tma_constant_course {course}
+\tl_gset:Nn \g__tma_constant_pin {pin}
+\tl_gset:Nn \g__tma_constant_thedate {the~date}
+\newcommand{\name}{\g__tma_constant_name}
+\newcommand{\tma}{\g__tma_constant_tma}
+\newcommand{\course}{\g__tma_constant_course}
+\newcommand{\pin}{\g__tma_constant_pin}
+\newcommand{\thedate}{\g__tma_constant_thedate}
 \NewDocumentCommand{\myname}{m}{%
-\tl_gset:Nn \g_tma_constant_name{#1}}
+\tl_gset:Nn \g__tma_constant_name{#1}}
 \NewDocumentCommand{\mytma}{m}{%
-\tl_gset:Nn \g_tma_constant_tma{#1}}
+\tl_gset:Nn \g__tma_constant_tma{#1}}
 \NewDocumentCommand{\mycourse}{m}{%
-\tl_gset:Nn \g_tma_constant_course{#1}}
+\tl_gset:Nn \g__tma_constant_course{#1}}
 \NewDocumentCommand{\mypin}{m}{%
-\tl_gset:Nn \g_tma_constant_pin{#1}}
+\tl_gset:Nn \g__tma_constant_pin{#1}}
 \NewDocumentCommand{\setdate}{m}{%
-\date{#1}\tl_gset:Nn \g_tma_constant_thedate{#1}}
+\date{#1}\tl_gset:Nn \g__tma_constant_thedate{#1}}
 \ExplSyntaxOff
 \title{\textbf{TMA: \course-\tma}}
 \author{\textbf{\name\space\pin}}
@@ -83,6 +83,7 @@
 \RequirePackage{geometry}
 \RequirePackage{calc}
 \RequirePackage{etoolbox}
+\RequirePackage{xspace}
 \RequirePackage[UKenglish]{isodate} % use UK format for date
 \cleanlookdateon % remove th,st, rd from date
 
@@ -270,7 +271,11 @@ pdfsubject=\course%
 %% Vector Notation
 \NewDocumentCommand{\vect}{m}{%
 \ensuremath{\overrightarrow{#1}}} % Changed from \vec to \vect
-\NewDocumentCommand{\ve}{m}{\ensuremath{\textbf{#1}}}
+\NewDocumentCommand{\ve}{m}{\ensuremath{\mathbf{#1}}}
+\NewDocumentCommand{\vi}{}{\ve{i}\ifmmode\else\xspace\fi}
+\NewDocumentCommand{\vj}{}{\ve{j}\ifmmode\else\xspace\fi}
+\NewDocumentCommand{\vk}{}{\ve{k}\ifmmode\else\xspace\fi}
+\NewDocumentCommand{\Mag}{m}{\ensuremath{\left\lvert{#1}\right\rvert}}
 
 %% Ordinal Indicators
 \NewDocumentCommand{\st}{}{\textsuperscript{st}}
@@ -284,6 +289,9 @@ pdfsubject=\course%
 %% Combinatorial Notations
 \NewDocumentCommand{\comb}{mm}{\ensuremath{{}^{#1}C_{#2}}}
 \NewDocumentCommand{\perm}{mm}{\ensuremath{{}^{#1}\!P_{#2}}}
+%% Group Theory Notation
+\NewDocumentCommand{\gen}{m}{\ensuremath{\langle #1\rangle}}
+\NewDocumentCommand{\Ord}{m}{\ensuremath{\left\lvert{#1}\right\rvert}}
 
 %% Mathematical Operators
 \DeclareMathOperator{\re}{Re}
@@ -298,8 +306,12 @@ pdfsubject=\course%
 \DeclareMathOperator{\Fix}{Fix}
 
 %% Derivatives
-\NewDocumentCommand{\deriv}{mm}{%
-\frac{\dd{}#1}{\dd{}#2}}
+\NewDocumentCommand{\deriv}{O{1}mm}{%
+    \frac{\dd{}%
+    \ifthenelse{#1>1}{^{#1}}{}%
+    #2}{\dd{}#3%
+    \ifthenelse{#1>1}{^{#1}}{}%
+}}
 \NewDocumentCommand{\pderiv}{mm}{%
 \frac{\partial #1}{\partial #2}}
 \NewDocumentCommand{\psderiv}{mmm}{%
@@ -311,62 +323,10 @@ pdfsubject=\course%
 \RenewDocumentCommand{\C}{}{\ensuremath{\mathbb{C}}}
 \fi
 %% Theorem Environment
-\@ifpackageloaded{hyperref}%
-{}%
-{\RequirePackage[hyperindex=false,pdfencoding=unicode,psdextra]{hyperref}}
-\RequirePackage{cleveref}
-\ExplSyntaxOn
-\tl_new:N \g_sanitise_tag_tl
-\tl_new:N \l_sanitise_result_tl
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
 
-\def\NOTAG{NOTAG}
-
-\cs_new_protected:Npn \sanitisetag_check:n #1
-{
-    \tl_set:Nn \l_tmpb_tl {#1}
-    \regex_replace_all:nnN { [^a-z0-9:\.\-_]+ } { - } \l_tmpb_tl
-    \tl_put_right:Nx \l_sanitise_result_tl \l_tmpb_tl
-}
-
-\cs_set:Npn \ConcatSanitisedTag #1 {
-    #1 : \tl_use:N \g_sanitise_tag_tl
-}
-
-\NewDocumentCommand{\SanitiseTag}{m}
-{
-    \group_begin:
-    \tl_set:Nn \l_sanitise_result_tl {}
-    \tl_set:Nx \l_tmpa_tl {\text_lowercase:n {#1}}
-    \str_map_function:NN \l_tmpa_tl \sanitisetag_check:n
-    \tl_gset_eq:NN \g_sanitise_tag_tl \l_sanitise_result_tl
-    \group_end:
-}
-\ExplSyntaxOff
-\NewDocumentCommand{\NewTheoremWithAutoLabel}{m m O{section} O{#2}}
-{
-    \newtheorem{#2}{#1}[#3]
-    % Define the wrapper environment
-    \NewDocumentEnvironment{#1}{O{\NOTAG}}{
-        % Save the original version of \the<counter>
-        \expandafter\let\csname tma@orig@the#2\expandafter\endcsname
-            \csname the#2\endcsname
-        \ifstrequal{##1}{\NOTAG}{
-            % No tag: use standard numbering
-            \csname #2\endcsname%
-        }{
-            % Tag provided: use the tag and suppress numbering
-            \addtocounter{#2}{-1}
-            \expandafter\renewcommand\csname the#2\endcsname{##1}
-            \SanitiseTag{##1}
-            \edef\@auto@label{\ConcatSanitisedTag{#4}}
-            \csname #2\endcsname%
-            \label{\@auto@label}
-        }
-    }{
-    }
-}
-\NewTheoremWithAutoLabel{Lemma}{lemma}[][lem]
-\NewTheoremWithAutoLabel{Theorem}{theorem}[][thm]
 \ProvideDocumentCommand{\blacksmiley}{}{%
 \ensuremath{\unicode{263B}}} % Unicode for blacksmiley emoji
 \RenewDocumentCommand{\qedsymbol}{}{\blacksmiley}

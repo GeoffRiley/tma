@@ -12,7 +12,7 @@
 % Define which module and TMA is being answered.
 \mycourse{\LaTeX 101}	% normally your module, like: \mycourse{M208}
 \mytma{sample}			% normally your TMA number: \mytma{01} or \mytma{02}...
-\date{30 Sep, 2025} 	% If you want a specific date to appear, use this
+\date{16 Nov, 2026} 	% If you want a specific date to appear, use this
 						% otherwise the data of compilation is used.
 
 % Three extra packages used during the descriptions in this text.
@@ -40,7 +40,7 @@
 \begin{document}
 \maketitle
 
-\hfill\fbox{Update for 2025/09/30 v1.21}
+\hfill\fbox{Update for 2026/11/16 v1.22}
 
 %% Notes for the latest update
 \begin{notebox}[width=\linewidth]
@@ -221,8 +221,9 @@ y_p=px^2+qx+r
 \begin{equation}
 \Rightarrow \deriv{y_p}{x}=2px+q
 \end{equation}
+% Using the optional parameter enables the automatic building of second order derivitives
 \begin{equation}
-\Rightarrow \deriv{^2y_p}{x^2}=2p
+\Rightarrow \deriv[2]{y_p}{x}=2p
 \end{equation}
 Substituting the trial particular integral into equation \ref{e}
 \begin{equation}
